@@ -1,0 +1,32 @@
+#mainSearch {
+    min-width: 50%;
+}
+
+main.home-main {
+    margin-bottom: 100px;
+}
+
+a.home-underline {
+    text-decoration: none;
+}
+
+a.home-underline:hover {
+    text-decoration: underline;
+}
+
+button.navi-btn {
+    min-width: 74px;
+}
+
+button.social-login {
+    width: 80px;
+    height: 80px;
+}
+
+.two-line-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}

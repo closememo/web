@@ -1,0 +1,16 @@
+schema: 'src/apollo/schema/**/*.t.graphql'
+documents: 'src/apollo/schema/**/*.d.graphql'
+generates:
+  src/apollo/generated/types.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+  src/apollo/generated/hooks.ts:
+    preset: 'import-types'
+    presetConfig:
+      typesPath: 'apollo/generated/types'
+    plugins:
+      - 'typescript-react-apollo'
+hooks:
+  afterAllFileWrite:
+    - prettier --write

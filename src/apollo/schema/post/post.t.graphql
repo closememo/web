@@ -1,0 +1,32 @@
+type Query {
+    posts: [SimplePost]!
+    post(id: ID!): Post!
+}
+
+type Mutation {
+    createNewPost(title: String, content: String, tags: [String]): PostCreateResponse
+    deletePost(id: ID!): Boolean
+    deletePosts(ids: [ID!]): Boolean
+    updatePost(id: ID!, title: String content: String, tags: [String]): PostCreateResponse
+}
+
+type SimplePost {
+    id: ID!
+    title: String
+    preview: String
+    tags: [String!]
+    createdAt: String
+}
+
+type Post {
+    id: ID!
+    title: String
+    content: String!
+    tags: [String!]
+    createdAt: String
+}
+
+type PostCreateResponse {
+    success: Boolean!
+    id: ID!
+}

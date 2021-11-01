@@ -1,0 +1,5 @@
+query GetLoggedInUser {
+    me {
+        isLoggedIn
+    }
+}

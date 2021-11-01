@@ -1,0 +1,40 @@
+query GetPostList {
+    posts {
+        id
+        title
+        preview
+        tags
+        createdAt
+    }
+}
+
+query GetPost($id: ID!) {
+    post(id: $id) {
+        id
+        title
+        content
+        tags
+    }
+}
+
+mutation CreateNewPost($title: String, $content: String, $tags: [String]) {
+    createNewPost(title: $title, content: $content, tags: $tags) {
+        success
+        id
+    }
+}
+
+mutation DeletePost($id: ID!) {
+    deletePost(id: $id)
+}
+
+mutation DeletePosts($ids: [ID!]) {
+    deletePosts(ids: $ids)
+}
+
+mutation UpdatePost($id: ID!, $title: String, $content: String, $tags: [String]) {
+    updatePost(id: $id, title: $title, content: $content, tags: $tags) {
+        success
+        id
+    }
+}
