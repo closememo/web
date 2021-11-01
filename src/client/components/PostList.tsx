@@ -67,6 +67,9 @@ function PostList() {
   };
 
   const handleAllCheckedDeleteClick = () => {
+    if (checkedIds.size === 0) {
+      return;
+    }
 
     const ids: string[] = Array.from(checkedIds);
 
