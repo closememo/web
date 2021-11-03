@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import Navigation from 'client/components/Navigation';
 import { Container } from 'react-bootstrap';
-import WritePost from 'client/components/WritePost';
+import PostForm from 'client/components/PostForm';
 import { useGetLoggedInUserQuery } from 'apollo/generated/hooks';
 
 function Write() {
@@ -21,7 +21,7 @@ function Write() {
       </Helmet>
       <Navigation isLoggedIn={isLoggedIn} />
       <Container as='main'>
-        <WritePost id={null} />
+        <PostForm />
       </Container>
     </>
   );

@@ -4,11 +4,17 @@ import {
   GetPostDocument,
   GetPostListDocument,
   useCreateNewPostMutation,
-  useGetPostQuery,
   useUpdatePostMutation,
 } from 'apollo/generated/hooks';
 import { useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
+
+interface PostFormParams {
+  id?: string | null,
+  currentTitle?: string | null,
+  currentContent?: string | null,
+  currentTags?: string[] | null
+}
 
 interface Tag {
   id: number,
@@ -22,38 +28,25 @@ interface ErrorModalInfo {
 const TITLE_MAX_LENGTH = 100;
 const CONTENT_MAX_LENGTH = 5000;
 
-function WritePost({ id }: { id: string | null }) {
+function PostForm({ id, currentTitle, currentContent, currentTags }: PostFormParams) {
+
+  currentTitle = currentTitle || '';
+  currentContent = currentContent || '';
+  currentTags = currentTags || [];
 
   const history = useHistory();
 
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [newTagId, setNewTagId] = useState(0);
+  const [title, setTitle] = useState(currentTitle);
+  const [content, setContent] = useState(currentContent);
+  const [tags, setTags] = useState<Tag[]>(currentTags.map((tag, index): Tag => ({ id: index, name: tag })));
+
+  const [newTagId, setNewTagId] = useState(currentTags.length);
   const [newTagName, setNewTagName] = useState('');
 
   const [errorModalShow, setErrorModalShow] = useState(false);
   const [errorModalInfo, setErrorModalInfo] = useState<ErrorModalInfo>({ content: '' });
 
   const isNew = !id;
-
-  if (!isNew) {
-    useGetPostQuery({
-      variables: { id },
-      onCompleted: (data) => {
-        if (data.post) {
-          setContent(data.post.content);
-        }
-        if (data.post?.title) {
-          setTitle(data.post.title);
-        }
-        if (data.post?.tags) {
-          setTags(data.post.tags.map((tag, index): Tag => ({ id: index, name: tag })));
-          setNewTagId(data.post.tags.length);
-        }
-      },
-    });
-  }
 
   const [createNewPost] = useCreateNewPostMutation({
     refetchQueries: [
@@ -208,4 +201,4 @@ function WritePost({ id }: { id: string | null }) {
   );
 }
 
-export default WritePost;
+export default PostForm;
