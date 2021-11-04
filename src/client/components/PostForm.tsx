@@ -25,8 +25,10 @@ interface ErrorModalInfo {
   content: string
 }
 
-const TITLE_MAX_LENGTH = 100;
-const CONTENT_MAX_LENGTH = 5000;
+const MAX_TITLE_LENGTH = 100;
+const MAX_CONTENT_LENGTH = 5000;
+const MAX_TAG_LENGTH = 25;
+const VALID_TAG_CHARS = /[_\dA-Za-zㄱ-ㆎ가-힣ힰ-ퟆퟋ-ퟻＡ-Ｚａ-ｚｦ-ﾾￂ-ￇￊ-ￏￒ-ￗￚ-ￜ]+/g;
 
 function PostForm({ id, currentTitle, currentContent, currentTags }: PostFormParams) {
 
@@ -79,6 +81,18 @@ function PostForm({ id, currentTitle, currentContent, currentTags }: PostFormPar
 
   const handleNewTagChange = (event: ChangeEvent) => {
     const element: HTMLInputElement = event.target as HTMLInputElement;
+
+    const newTag = element.value;
+    const checkResult = newTag.match(VALID_TAG_CHARS);
+
+    if (!checkResult || (checkResult && checkResult[0] !== newTag)) {
+      return;
+    }
+
+    if (newTag.length > MAX_TAG_LENGTH) {
+      return;
+    }
+
     setNewTagName(element.value);
   };
 
@@ -108,8 +122,8 @@ function PostForm({ id, currentTitle, currentContent, currentTags }: PostFormPar
   const submitForm = (event: FormEvent) => {
     event.preventDefault();
 
-    if (title.length > TITLE_MAX_LENGTH) {
-      setErrorModalInfo({ content: `제목은 ${TITLE_MAX_LENGTH} 자 를 넘을 수 없습니다.` });
+    if (title.length > MAX_TITLE_LENGTH) {
+      setErrorModalInfo({ content: `제목은 ${MAX_TITLE_LENGTH} 자 를 넘을 수 없습니다.` });
       setErrorModalShow(true);
       return;
     }
@@ -120,8 +134,8 @@ function PostForm({ id, currentTitle, currentContent, currentTags }: PostFormPar
       return;
     }
 
-    if (content.length > CONTENT_MAX_LENGTH) {
-      setErrorModalInfo({ content: `본문은 ${CONTENT_MAX_LENGTH} 자 를 넘을 수 없습니다.` });
+    if (content.length > MAX_CONTENT_LENGTH) {
+      setErrorModalInfo({ content: `본문은 ${MAX_CONTENT_LENGTH} 자 를 넘을 수 없습니다.` });
       setErrorModalShow(true);
       return;
     }
@@ -163,7 +177,7 @@ function PostForm({ id, currentTitle, currentContent, currentTags }: PostFormPar
         </Form.Group>
         <Form.Group controlId='content' className='mb-3 d-grid'>
           <Form.Control as='textarea' value={content} onChange={handleContentChange} rows={10} />
-          <div className='ms-auto'>{'(' + content.length + '/' + CONTENT_MAX_LENGTH + ')'}</div>
+          <div className='ms-auto'>{'(' + content.length + '/' + MAX_CONTENT_LENGTH + ')'}</div>
         </Form.Group>
         <InputGroup className='mb-2'>
           <Form.Control
