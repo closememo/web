@@ -8,6 +8,7 @@ type Mutation {
     deletePost(id: ID!): Boolean
     deletePosts(ids: [ID!]): Boolean
     updatePost(id: ID!, title: String content: String, tags: [String]): PostCreateResponse
+    mailPosts(ids: [ID!]): Boolean
 }
 
 type SimplePost {

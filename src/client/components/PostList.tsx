@@ -1,12 +1,12 @@
 import React, { ChangeEvent, MouseEvent, useState } from 'react';
-import { useDeletePostMutation, useDeletePostsMutation, useGetPostListQuery } from 'apollo/generated/hooks';
-import { Button, Form, ListGroup, Modal } from 'react-bootstrap';
+import { useDeletePostsMutation, useGetPostListQuery, useMailPostsMutation } from 'apollo/generated/hooks';
+import { Button, Form, ListGroup, Modal, OverlayTrigger, Spinner, Tooltip } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
 import { convertDateString } from 'shared/utils/dateUtils';
 
 interface ModalInfo {
-  id: string
+  ids: string[]
 }
 
 function PostList() {
@@ -16,11 +16,12 @@ function PostList() {
   const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
 
   const [modalShow, setModalShow] = useState(false);
-  const [modalInfo, setModalInfo] = useState<ModalInfo>({ id: '' });
+  const [modalInfo, setModalInfo] = useState<ModalInfo>({ ids: [] });
+  const [waitingModalShow, setWaitingModalShow] = useState(false);
 
   const { data, error, loading } = useGetPostListQuery();
-  const [deletePost] = useDeletePostMutation();
   const [deletePosts] = useDeletePostsMutation();
+  const [mailPosts] = useMailPostsMutation();
 
   if (loading) return <p>Loading...</p>;
   if (error || !data) return <p>Error</p>;
@@ -29,14 +30,21 @@ function PostList() {
     event.stopPropagation();
   };
 
-  const removePostAndSendMail = (event: MouseEvent, id: string) => {
+  const removePostAndSendMail = (event: MouseEvent, ids: string[]) => {
+    if (typeof (ids) === 'undefined' || ids.length === 0) return;
     event.stopPropagation();
+    handleClose();
+    waitingModalHandleShow();
+    mailPosts({ variables: { ids } })
+      .then(() => {
+        history.go(0);
+      });
   };
 
-  const removePost = (event: MouseEvent, id: string) => {
-    if (!id) return;
+  const removePost = (event: MouseEvent, ids: string[]) => {
+    if (typeof (ids) === 'undefined' || ids.length === 0) return;
     event.stopPropagation();
-    deletePost({ variables: { id } })
+    deletePosts({ variables: { ids } })
       .then(() => {
         history.go(0);
       });
@@ -72,18 +80,18 @@ function PostList() {
     }
 
     const ids: string[] = Array.from(checkedIds);
-
-    deletePosts({ variables: { ids } })
-      .then(() => {
-        history.go(0);
-      });
+    setModalInfo({ ids });
+    setModalShow(true);
   };
 
   const handleClose = () => setModalShow(false);
   const handleShow = (id: string) => {
-    setModalInfo({ id });
+    setModalInfo({ ids: [id] });
     setModalShow(true);
   };
+
+  const waitingModalHandleClose = () => setWaitingModalShow(false);
+  const waitingModalHandleShow = () => setWaitingModalShow(true);
 
   return (
     <>
@@ -96,7 +104,10 @@ function PostList() {
         <Button variant='info' className='mx-1' onClick={handleAllCheckButtonClick}>
           {(data.posts.length === checkedIds.size) ? '전체취소' : '전체선택'}
         </Button>
-        <Button variant='danger' className='me-1' onClick={handleAllCheckedDeleteClick}>삭제</Button>
+        <Button variant='danger' className='me-1'
+                onClick={handleAllCheckedDeleteClick} disabled={checkedIds.size === 0}>
+          삭제
+        </Button>
         <Button variant='warning'>이동</Button>
       </div>
       <div className='py-2'>
@@ -135,14 +146,28 @@ function PostList() {
           <Button variant='secondary' onClick={handleClose}>
             취소
           </Button>
-          <Button variant='warning'
-                  onClick={(event: MouseEvent) => removePostAndSendMail(event, modalInfo.id)}>
-            전송+삭제
-          </Button>
-          <Button variant='danger' onClick={(event: MouseEvent) => removePost(event, modalInfo.id)}>
+          <OverlayTrigger placement='bottom'
+                          overlay={<Tooltip>메모를 메일로 전송한 후<br /> 삭제합니다.</Tooltip>}>
+            <Button variant='warning'
+                    onClick={(event: MouseEvent) => removePostAndSendMail(event, modalInfo.ids)}>
+              전송+삭제
+            </Button>
+          </OverlayTrigger>
+          <Button variant='danger' onClick={(event: MouseEvent) => removePost(event, modalInfo.ids)}>
             삭제
           </Button>
         </Modal.Footer>
+      </Modal>
+      <Modal size='sm' show={waitingModalShow} onHide={waitingModalHandleClose} backdrop='static'
+             keyboard={false} centered>
+        <Modal.Header>
+          <Modal.Title as="h5">응답을 기다리는 중입니다.</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className='d-flex justify-content-center'>
+          <Spinner animation='border' role='status'>
+            <span className='visually-hidden'>Loading...</span>
+          </Spinner>
+        </Modal.Body>
       </Modal>
     </>
   );

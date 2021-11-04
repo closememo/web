@@ -16,6 +16,7 @@ export type Mutation = {
   createNewPost?: Maybe<PostCreateResponse>;
   deletePost?: Maybe<Scalars['Boolean']>;
   deletePosts?: Maybe<Scalars['Boolean']>;
+  mailPosts?: Maybe<Scalars['Boolean']>;
   updatePost?: Maybe<PostCreateResponse>;
 };
 
@@ -30,6 +31,10 @@ export type MutationDeletePostArgs = {
 };
 
 export type MutationDeletePostsArgs = {
+  ids?: Maybe<Array<Scalars['ID']>>;
+};
+
+export type MutationMailPostsArgs = {
   ids?: Maybe<Array<Scalars['ID']>>;
 };
 
@@ -159,6 +164,12 @@ export type UpdatePostMutation = {
     | null
     | undefined;
 };
+
+export type MailPostsMutationVariables = Exact<{
+  ids?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
+}>;
+
+export type MailPostsMutation = { __typename?: 'Mutation'; mailPosts?: boolean | null | undefined };
 
 export type GetLoggedInUserQueryVariables = Exact<{ [key: string]: never }>;
 

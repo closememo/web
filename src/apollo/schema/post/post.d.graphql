@@ -38,3 +38,7 @@ mutation UpdatePost($id: ID!, $title: String, $content: String, $tags: [String])
         id
     }
 }
+
+mutation MailPosts($ids: [ID!]) {
+    mailPosts(ids: $ids)
+}

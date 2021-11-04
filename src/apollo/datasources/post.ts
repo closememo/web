@@ -28,7 +28,7 @@ class PostAPI extends RESTDataSource {
   }
 
   protected didEncounterError(error: Error, _request: Request) {
-    console.log("[ERROR]:\n" + JSON.stringify(error));
+    console.log('[ERROR]:\n' + JSON.stringify(error));
     super.didEncounterError(error, _request);
   }
 
@@ -82,6 +82,14 @@ class PostAPI extends RESTDataSource {
       success: true,
       id: response.id,
     };
+  }
+
+  public async mailPosts(ids: string[]) {
+    const response = await this.post('/command/client/mail-documents', {
+      documentIds: ids,
+      needToDelete: true,
+    });
+    return true;
   }
 
   private static SimplePostReducer(simplePost: any) {

@@ -297,6 +297,51 @@ export type UpdatePostMutationOptions = Apollo.BaseMutationOptions<
   Types.UpdatePostMutation,
   Types.UpdatePostMutationVariables
 >;
+export const MailPostsDocument = gql`
+  mutation MailPosts($ids: [ID!]) {
+    mailPosts(ids: $ids)
+  }
+`;
+export type MailPostsMutationFn = Apollo.MutationFunction<
+  Types.MailPostsMutation,
+  Types.MailPostsMutationVariables
+>;
+
+/**
+ * __useMailPostsMutation__
+ *
+ * To run a mutation, you first call `useMailPostsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMailPostsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mailPostsMutation, { data, loading, error }] = useMailPostsMutation({
+ *   variables: {
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useMailPostsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    Types.MailPostsMutation,
+    Types.MailPostsMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<Types.MailPostsMutation, Types.MailPostsMutationVariables>(
+    MailPostsDocument,
+    options,
+  );
+}
+export type MailPostsMutationHookResult = ReturnType<typeof useMailPostsMutation>;
+export type MailPostsMutationResult = Apollo.MutationResult<Types.MailPostsMutation>;
+export type MailPostsMutationOptions = Apollo.BaseMutationOptions<
+  Types.MailPostsMutation,
+  Types.MailPostsMutationVariables
+>;
 export const GetLoggedInUserDocument = gql`
   query GetLoggedInUser {
     me {
