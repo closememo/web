@@ -176,7 +176,7 @@ function PostForm({ id, currentTitle, currentContent, currentTags }: PostFormPar
             onChange={handleTitleChange} onKeyPress={handleTitleKeyPress} />
         </Form.Group>
         <Form.Group controlId='content' className='mb-3 d-grid'>
-          <Form.Control as='textarea' value={content} onChange={handleContentChange} rows={10} />
+          <Form.Control as='textarea' value={content} onChange={handleContentChange} rows={16} />
           <div className='ms-auto'>{'(' + content.length + '/' + MAX_CONTENT_LENGTH + ')'}</div>
         </Form.Group>
         <InputGroup className='mb-2'>

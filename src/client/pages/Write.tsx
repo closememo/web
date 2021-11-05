@@ -20,7 +20,7 @@ function Write() {
         <title>새 메모 작성</title>
       </Helmet>
       <Navigation isLoggedIn={isLoggedIn} />
-      <Container as='main'>
+      <Container as='main' className='home-main'>
         <PostForm />
       </Container>
     </>

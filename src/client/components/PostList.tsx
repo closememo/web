@@ -124,7 +124,7 @@ function PostList({ posts, deletePosts, mailPosts }: PostListParams) {
               </div>
               <div className='d-flex'>
                 <small className='me-auto'>{post.preview}</small>
-                <Button size='sm' variant='outline-secondary' className='me-1'
+                <Button size='sm' variant='outline-secondary' className='mx-1'
                         onClick={() => history.push('/update/' + post.id)}>📝</Button>
                 <Button size='sm' variant='outline-secondary'
                         onClick={() => handleShow(post.id)}>❌</Button>
