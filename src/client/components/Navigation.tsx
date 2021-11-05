@@ -1,16 +1,30 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Button, Container, Form, FormControl, Nav, Navbar } from 'react-bootstrap';
 import HelpOffcanvas from 'client/components/HelpOffcanvas';
 import LoginModal from 'client/components/LoginModal';
 import SignupModal from 'client/components/SignupModal';
 import SettingOffcanvas from 'client/components/SettingOffcanvas';
+import { useHistory } from 'react-router-dom';
 
 function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
+
+  const history = useHistory();
+
+  const [query, setQuery] = useState('');
 
   const [categoryOffcanvasShow, setCategoryOffcanvasShow] = useState(false);
   const [settingOffcanvasShow, setSettingOffcanvasShow] = useState(false);
   const [loginModalShow, setLoginModalShow] = useState(false);
   const [signUpModalShow, setSignUpModalShow] = useState(false);
+
+  const handleQueryChange = (event: ChangeEvent) => {
+    setQuery((event.target as HTMLInputElement).value);
+  }
+
+  const submitForm = (event: FormEvent) => {
+    event.preventDefault();
+    history.push('/search?tag=' + query);
+  }
 
   const handleCategoryOffcanvasClose = () => setCategoryOffcanvasShow(false);
   const handleCategoryOffcanvasShow = () => setCategoryOffcanvasShow(true);
@@ -40,14 +54,16 @@ function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
               <Button variant='outline-success' className='w-100'
                       onClick={handleCategoryOffcanvasShow}>도움말</Button>
             </Nav>
-            <Form id='mainSearch' className='d-flex my-1'>
+            <Form id='mainSearch' className='d-flex my-1' onSubmit={submitForm}>
               <FormControl
                 type='search'
-                placeholder='Search'
+                placeholder='(태그 검색)'
                 className='mr-2'
+                value={query}
+                onChange={handleQueryChange}
                 disabled={!isLoggedIn}
               />
-              <Button variant='outline-success' disabled={!isLoggedIn}>🔍</Button>
+              <Button variant='outline-success' type='submit' disabled={!isLoggedIn}>🔍</Button>
             </Form>
             <Nav className='flex-row'>
               {isLoggedIn

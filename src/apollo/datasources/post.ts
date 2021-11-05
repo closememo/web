@@ -15,7 +15,6 @@ interface UpdatePost {
   tags: [string]
 }
 
-
 class PostAPI extends RESTDataSource {
   constructor() {
     super();
@@ -47,6 +46,13 @@ class PostAPI extends RESTDataSource {
 
   public async getPostById({ id }: { id: string }) {
     return await this.get(`/query/client/documents/${id}`);
+  }
+
+  public async searchPostsByTag({ tag }: { tag: string }) {
+    const response = await this.get('/query/client/documents-by-tag?tag=' + tag);
+    return Array.isArray(response)
+      ? response.map(post => PostAPI.SimplePostReducer(post))
+      : [];
   }
 
   public async createPost(newPost: NewPost) {

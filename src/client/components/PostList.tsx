@@ -9,12 +9,13 @@ interface ModalInfo {
 }
 
 interface PostListParams {
+  heading: string,
   posts: Array<any>,
   deletePosts: Function,
   mailPosts: Function
 }
 
-function PostList({ posts, deletePosts, mailPosts }: PostListParams) {
+function PostList({ heading, posts, deletePosts, mailPosts }: PostListParams) {
 
   const history = useHistory();
 
@@ -90,7 +91,7 @@ function PostList({ posts, deletePosts, mailPosts }: PostListParams) {
   return (
     <>
       <div className='my-4'>
-        <h2>/</h2>
+        <h2>{heading}</h2>
       </div>
       <div className='d-flex py-2'>
         <Button variant='success' className='me-auto'
@@ -112,15 +113,12 @@ function PostList({ posts, deletePosts, mailPosts }: PostListParams) {
               <div className='d-flex w-100'>
                 <Form.Check aria-label='option 1' className='me-1' checked={checkedIds.has(post.id)}
                             onChange={(event: ChangeEvent) => handleCheckboxChange(event, post.id)} />
-                {getTitleTag(post.id, post.title)}
+                {getTitleElement(post.id, post.title)}
                 <small className='ms-auto'>{convertDateString(post.createdAt)}</small>
               </div>
               <div className='mb-1'>
-                {post.tags && post.tags.map((tag: any, index: number) => (
-                  <a key={post.id + '_' + index + '_link'} href='#'>
-                    <span key={post.id + '_' + index} className='badge bg-secondary me-1'>{tag}</span>
-                  </a>
-                ))}
+                {post.tags && post.tags.map((tag: any, index: number) =>
+                  getTagElement(post.id, tag, index))}
               </div>
               <div className='d-flex'>
                 <small className='me-auto'>{post.preview}</small>
@@ -169,7 +167,7 @@ function PostList({ posts, deletePosts, mailPosts }: PostListParams) {
   );
 }
 
-function getTitleTag(id: string, title: string): JSX.Element {
+function getTitleElement(id: string, title: string): JSX.Element {
   if (!title) {
     return (
       <h5 className='mb-1'>
@@ -183,6 +181,14 @@ function getTitleTag(id: string, title: string): JSX.Element {
       </h5>
     );
   }
+}
+
+function getTagElement(id: string, tag: string, index: number): JSX.Element {
+  return (
+    <Link key={id + '_' + index + '_link'} to={'/search?tag=' + tag}>
+      <span key={id + '_' + index} className='badge bg-secondary me-1'>{tag}</span>
+    </Link>
+  );
 }
 
 export default PostList;

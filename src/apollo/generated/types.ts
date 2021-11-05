@@ -65,10 +65,15 @@ export type Query = {
   me: User;
   post: Post;
   posts: Array<Maybe<SimplePost>>;
+  searchPostsByTag: Array<Maybe<SimplePost>>;
 };
 
 export type QueryPostArgs = {
   id: Scalars['ID'];
+};
+
+export type QuerySearchPostsByTagArgs = {
+  tag?: Maybe<Scalars['String']>;
 };
 
 export type SimplePost = {
@@ -116,6 +121,26 @@ export type GetPostQuery = {
     content: string;
     tags?: Array<string> | null | undefined;
   };
+};
+
+export type SearchPostListByTagQueryVariables = Exact<{
+  tag?: Maybe<Scalars['String']>;
+}>;
+
+export type SearchPostListByTagQuery = {
+  __typename?: 'Query';
+  searchPostsByTag: Array<
+    | {
+        __typename?: 'SimplePost';
+        id: string;
+        title?: string | null | undefined;
+        preview?: string | null | undefined;
+        tags?: Array<string> | null | undefined;
+        createdAt?: string | null | undefined;
+      }
+    | null
+    | undefined
+  >;
 };
 
 export type CreateNewPostMutationVariables = Exact<{

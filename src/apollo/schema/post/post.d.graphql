@@ -17,6 +17,16 @@ query GetPost($id: ID!) {
     }
 }
 
+query SearchPostListByTag($tag: String) {
+    searchPostsByTag(tag: $tag) {
+        id
+        title
+        preview
+        tags
+        createdAt
+    }
+}
+
 mutation CreateNewPost($title: String, $content: String, $tags: [String]) {
     createNewPost(title: $title, content: $content, tags: $tags) {
         success

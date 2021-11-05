@@ -26,6 +26,12 @@ const routes: RouteConfig[] = [
     exact: true,
     component: require('client/pages/Update').default,
   },
+  {
+    name: 'Search',
+    path: PagePaths.Search,
+    exact: true,
+    component: require('client/pages/Search').default,
+  },
 ];
 
 export default routes;

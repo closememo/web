@@ -1,6 +1,7 @@
 type Query {
     posts: [SimplePost]!
     post(id: ID!): Post!
+    searchPostsByTag(tag: String): [SimplePost]!
 }
 
 type Mutation {

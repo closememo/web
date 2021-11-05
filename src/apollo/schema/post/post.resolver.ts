@@ -25,6 +25,9 @@ export default {
     post: async (_: any, { id }: { id: string }, { dataSources }: { dataSources: DataSources }) => {
       return await dataSources.postAPI.getPostById({ id });
     },
+    searchPostsByTag: async (_: any, { tag }: { tag: string }, { dataSources }: { dataSources: DataSources }) => {
+      return await dataSources.postAPI.searchPostsByTag({ tag });
+    },
   },
   Mutation: {
     createNewPost: async (_: any, newPost: NewPost, { dataSources }: { dataSources: DataSources }) => {

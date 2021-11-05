@@ -106,6 +106,66 @@ export type GetPostQueryResult = Apollo.QueryResult<
   Types.GetPostQuery,
   Types.GetPostQueryVariables
 >;
+export const SearchPostListByTagDocument = gql`
+  query SearchPostListByTag($tag: String) {
+    searchPostsByTag(tag: $tag) {
+      id
+      title
+      preview
+      tags
+      createdAt
+    }
+  }
+`;
+
+/**
+ * __useSearchPostListByTagQuery__
+ *
+ * To run a query within a React component, call `useSearchPostListByTagQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchPostListByTagQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchPostListByTagQuery({
+ *   variables: {
+ *      tag: // value for 'tag'
+ *   },
+ * });
+ */
+export function useSearchPostListByTagQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    Types.SearchPostListByTagQuery,
+    Types.SearchPostListByTagQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<Types.SearchPostListByTagQuery, Types.SearchPostListByTagQueryVariables>(
+    SearchPostListByTagDocument,
+    options,
+  );
+}
+export function useSearchPostListByTagLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    Types.SearchPostListByTagQuery,
+    Types.SearchPostListByTagQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    Types.SearchPostListByTagQuery,
+    Types.SearchPostListByTagQueryVariables
+  >(SearchPostListByTagDocument, options);
+}
+export type SearchPostListByTagQueryHookResult = ReturnType<typeof useSearchPostListByTagQuery>;
+export type SearchPostListByTagLazyQueryHookResult = ReturnType<
+  typeof useSearchPostListByTagLazyQuery
+>;
+export type SearchPostListByTagQueryResult = Apollo.QueryResult<
+  Types.SearchPostListByTagQuery,
+  Types.SearchPostListByTagQueryVariables
+>;
 export const CreateNewPostDocument = gql`
   mutation CreateNewPost($title: String, $content: String, $tags: [String]) {
     createNewPost(title: $title, content: $content, tags: $tags) {
