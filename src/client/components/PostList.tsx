@@ -117,7 +117,7 @@ function PostList({ posts, deletePosts, mailPosts }: PostListParams) {
               </div>
               <div className='mb-1'>
                 {post.tags && post.tags.map((tag: any, index: number) => (
-                  <a href='#'>
+                  <a key={post.id + '_' + index + '_link'} href='#'>
                     <span key={post.id + '_' + index} className='badge bg-secondary me-1'>{tag}</span>
                   </a>
                 ))}
