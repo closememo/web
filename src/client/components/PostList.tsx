@@ -1,5 +1,4 @@
 import React, { ChangeEvent, MouseEvent, useState } from 'react';
-import { useDeletePostsMutation, useGetPostListQuery, useMailPostsMutation } from 'apollo/generated/hooks';
 import { Button, Form, ListGroup, Modal, OverlayTrigger, Spinner, Tooltip } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
@@ -9,7 +8,13 @@ interface ModalInfo {
   ids: string[]
 }
 
-function PostList() {
+interface PostListParams {
+  posts: Array<any>,
+  deletePosts: Function,
+  mailPosts: Function
+}
+
+function PostList({ posts, deletePosts, mailPosts }: PostListParams) {
 
   const history = useHistory();
 
@@ -18,17 +23,6 @@ function PostList() {
   const [modalShow, setModalShow] = useState(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>({ ids: [] });
   const [waitingModalShow, setWaitingModalShow] = useState(false);
-
-  const { data, error, loading } = useGetPostListQuery();
-  const [deletePosts] = useDeletePostsMutation();
-  const [mailPosts] = useMailPostsMutation();
-
-  if (loading) return <p>Loading...</p>;
-  if (error || !data) return <p>Error</p>;
-
-  const handleItemClick = (event: MouseEvent, id: string) => {
-    event.stopPropagation();
-  };
 
   const removePostAndSendMail = (event: MouseEvent, ids: string[]) => {
     if (typeof (ids) === 'undefined' || ids.length === 0) return;
@@ -66,10 +60,10 @@ function PostList() {
   };
 
   const handleAllCheckButtonClick = () => {
-    if (data.posts.length === checkedIds.size) {
+    if (posts.length === checkedIds.size) {
       setCheckedIds(new Set());
     } else {
-      const allPostIds = data.posts.map((post: any) => post.id);
+      const allPostIds = posts.map((post: any) => post.id);
       setCheckedIds(new Set(allPostIds));
     }
   };
@@ -102,7 +96,7 @@ function PostList() {
         <Button variant='success' className='me-auto'
                 onClick={() => history.push(PagePaths.Write)}>새메모</Button>
         <Button variant='info' className='mx-1' onClick={handleAllCheckButtonClick}>
-          {(data.posts.length === checkedIds.size) ? '전체취소' : '전체선택'}
+          {(posts.length === checkedIds.size) ? '전체취소' : '전체선택'}
         </Button>
         <Button variant='danger' className='me-1'
                 onClick={handleAllCheckedDeleteClick} disabled={checkedIds.size === 0}>
@@ -112,9 +106,9 @@ function PostList() {
       </div>
       <div className='py-2'>
         <ListGroup>
-          {data.posts && data.posts.map((post: any) => (
+          {posts && posts.map((post: any) => (
             <ListGroup.Item key={post.id} variant='light' className='list-group-item-action'
-                            onClick={(event: MouseEvent) => handleItemClick(event, post.id)}>
+                            onClick={(event: MouseEvent) => event.stopPropagation()}>
               <div className='d-flex w-100'>
                 <Form.Check aria-label='option 1' className='me-1' checked={checkedIds.has(post.id)}
                             onChange={(event: ChangeEvent) => handleCheckboxChange(event, post.id)} />
@@ -123,7 +117,9 @@ function PostList() {
               </div>
               <div className='mb-1'>
                 {post.tags && post.tags.map((tag: any, index: number) => (
-                  <span key={post.id + '_' + index} className='badge bg-secondary me-1'>{tag}</span>
+                  <a href='#'>
+                    <span key={post.id + '_' + index} className='badge bg-secondary me-1'>{tag}</span>
+                  </a>
                 ))}
               </div>
               <div className='d-flex'>
@@ -161,7 +157,7 @@ function PostList() {
       <Modal size='sm' show={waitingModalShow} onHide={waitingModalHandleClose} backdrop='static'
              keyboard={false} centered>
         <Modal.Header>
-          <Modal.Title as="h5">응답을 기다리는 중입니다.</Modal.Title>
+          <Modal.Title as='h5'>응답을 기다리는 중입니다.</Modal.Title>
         </Modal.Header>
         <Modal.Body className='d-flex justify-content-center'>
           <Spinner animation='border' role='status'>

@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap';
 import 'client/css/pages/Home.css';
 import Navigation from 'client/components/Navigation';
 import LocalPage from 'client/components/local/LocalPage';
-import PostList from 'client/components/PostList';
+import MainPage from 'client/components/MainPage';
 import { useGetLoggedInUserQuery } from 'apollo/generated/hooks';
 
 function HomePage() {
@@ -24,7 +24,7 @@ function HomePage() {
       <Navigation isLoggedIn={isLoggedIn} />
       <Container as='main' className='home-main'>
         {isLoggedIn
-          ? <PostList />
+          ? <MainPage />
           : <LocalPage />}
       </Container>
     </>
