@@ -94,4 +94,30 @@ naverCallback.get('/logout', async (req: Request, res: Response) => {
   return res.redirect('/');
 });
 
+naverCallback.get('/withdraw', async (req: Request, res: Response) => {
+  const {
+    refreshToken = '',
+    syncToken = '',
+  }: { refreshToken: string, syncToken: string } = req.cookies;
+
+  const refreshTokenId = getRefreshTokenId(refreshToken);
+  const syncTokenId = getSyncTokenId(syncToken);
+
+  try {
+    await instance.post('/command/client/withdraw', {
+      tokenId: refreshTokenId,
+    }, {
+      headers: { 'X-ACCESS-TOKEN': refreshTokenId, 'X-SYNC-TOKEN': syncTokenId },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+  res.clearCookie('refreshToken');
+  res.clearCookie('accessToken');
+  res.clearCookie('syncToken');
+
+  return res.redirect('/');
+});
+
 export default naverCallback;
