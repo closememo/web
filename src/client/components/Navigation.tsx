@@ -4,7 +4,7 @@ import HelpOffcanvas from 'client/components/HelpOffcanvas';
 import LoginModal from 'client/components/LoginModal';
 import SignupModal from 'client/components/SignupModal';
 import SettingOffcanvas from 'client/components/SettingOffcanvas';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
 
@@ -19,12 +19,12 @@ function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   const handleQueryChange = (event: ChangeEvent) => {
     setQuery((event.target as HTMLInputElement).value);
-  }
+  };
 
   const submitForm = (event: FormEvent) => {
     event.preventDefault();
     history.push('/search?tag=' + query);
-  }
+  };
 
   const handleCategoryOffcanvasClose = () => setCategoryOffcanvasShow(false);
   const handleCategoryOffcanvasShow = () => setCategoryOffcanvasShow(true);
@@ -42,9 +42,11 @@ function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
     <>
       <Navbar bg='light' expand='lg'>
         <Container fluid>
-          <Navbar.Text className='text-dark fs-4'>
-            CLOSEMEMO
-          </Navbar.Text>
+          <Link to={'/'} className='navi-home text-reset'>
+            <Navbar.Text className='text-dark fs-4'>
+              CLOSEMEMO
+            </Navbar.Text>
+          </Link>
           <div className='d-flex mx-3'>
             <div className='vr' />
           </div>
@@ -68,7 +70,7 @@ function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
             <Nav className='flex-row'>
               {isLoggedIn
                 ? (<Button variant='outline-success' className='w-100 navi-btn'
-                          onClick={handleSettingOffcanvasShow}>설정</Button>)
+                           onClick={handleSettingOffcanvasShow}>설정</Button>)
                 : (
                   <>
                     <Button variant='outline-success' className='w-100 navi-btn'

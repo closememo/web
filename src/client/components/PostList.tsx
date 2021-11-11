@@ -171,13 +171,13 @@ function getTitleElement(id: string, title: string): JSX.Element {
   if (!title) {
     return (
       <h5 className='mb-1'>
-        <Link to={'/update/' + id} className='home-underline text-reset'>(제목없음)</Link>
+        <Link to={'/update/' + id} className='post-list-title text-reset'>(제목없음)</Link>
       </h5>
     );
   } else {
     return (
       <h5 className='mb-1 text-dark'>
-        <Link to={'/update/' + id} className='home-underline text-reset'>{title}</Link>
+        <Link to={'/update/' + id} className='post-list-title text-reset'>{title}</Link>
       </h5>
     );
   }

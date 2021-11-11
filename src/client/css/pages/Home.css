@@ -6,11 +6,15 @@ main.home-main {
     margin-bottom: 100px;
 }
 
-a.home-underline {
+a.navi-home {
     text-decoration: none;
 }
 
-a.home-underline:hover {
+a.post-list-title {
+    text-decoration: none;
+}
+
+a.post-list-title:hover {
     text-decoration: underline;
 }
 
