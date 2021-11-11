@@ -7,7 +7,10 @@ import LocalPage from 'client/components/local/LocalPage';
 import MainPage from 'client/components/MainPage';
 import { useGetLoggedInUserQuery } from 'apollo/generated/hooks';
 
-function HomePage() {
+function HomePage({ location }: { location: Location }) {
+
+  const search = location.search;
+  const state = new URLSearchParams(search).get('state');
 
   const { data, error, loading } = useGetLoggedInUserQuery();
 
@@ -21,7 +24,7 @@ function HomePage() {
       <Helmet>
         <title>홈</title>
       </Helmet>
-      <Navigation isLoggedIn={isLoggedIn} />
+      <Navigation state={state} isLoggedIn={isLoggedIn} />
       <Container as='main' className='home-main'>
         {isLoggedIn
           ? <MainPage />

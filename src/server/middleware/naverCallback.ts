@@ -10,6 +10,15 @@ import {
   getSyncTokenId,
   LoginResponse,
 } from 'server/utils/jwtUtils';
+import States from 'client/constants/States';
+import ErrorTypes from 'client/constants/ErrorTypes';
+
+interface ErrorResponse {
+  error: {
+    type: string,
+    message: string | null;
+  }
+}
 
 const naverCallback = Router();
 
@@ -21,7 +30,14 @@ naverCallback.get('/register-callback', async (req: Request, res: Response) => {
   const code = req.query.code as string;
   const state = req.query.state as string;
 
-  await naverLogin(code, state, res, true);
+  try {
+    const response = await instance.post('/command/client/register-naver-account', { code, state });
+    const loginResponse: LoginResponse = response.data as LoginResponse;
+
+    setTokenCookies(res, loginResponse);
+  } catch (error) {
+    console.log(error);
+  }
 
   return res.redirect('/');
 });
@@ -30,31 +46,31 @@ naverCallback.get('/login-callback', async (req: Request, res: Response) => {
   const code = req.query.code as string;
   const state = req.query.state as string;
 
-  await naverLogin(code, state, res, false);
+  try {
+    const response = await instance.post('/command/client/login-naver-account', { code, state });
+    const loginResponse: LoginResponse = response.data as LoginResponse;
+
+    setTokenCookies(res, loginResponse);
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      const data = error.response.data as ErrorResponse;
+      switch (data.error.type) {
+        case ErrorTypes.ACCOUNT_NOT_FOUND:
+          return res.redirect('/?state=' + States.NEED_REGISTER);
+      }
+    } else {
+      console.log(error);
+    }
+  }
 
   return res.redirect('/');
 });
 
-async function naverLogin(code: string, state: string, res: Response, isRegister: boolean) {
-  const path = isRegister
-    ? '/command/client/register-naver-account'
-    : '/command/client/login-naver-account';
+function setTokenCookies(res: Response, loginResponse: LoginResponse) {
+  const refreshToken = generateRefreshToken(loginResponse.token.tokenId, loginResponse.token.exp);
+  const accessToken = generateAccessToken(loginResponse.token.tokenId);
+  const syncToken = generateSyncToken(loginResponse.accountId.id);
 
-  try {
-    const response = await instance.post(path, { code, state });
-    const loginResponse: LoginResponse = response.data as LoginResponse;
-
-    const refreshToken = generateRefreshToken(loginResponse.token.tokenId, loginResponse.token.exp);
-    const accessToken = generateAccessToken(loginResponse.token.tokenId);
-    const syncToken = generateSyncToken(loginResponse.accountId.id);
-
-    setCookies(res, refreshToken, accessToken, syncToken);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-function setCookies(res: Response, refreshToken: string, accessToken: string, syncToken: string) {
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
   });

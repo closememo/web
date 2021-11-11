@@ -1,21 +1,35 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react';
-import { Button, Container, Form, FormControl, Nav, Navbar } from 'react-bootstrap';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { Button, Container, Form, FormControl, Modal, Nav, Navbar } from 'react-bootstrap';
 import HelpOffcanvas from 'client/components/HelpOffcanvas';
 import LoginModal from 'client/components/LoginModal';
 import SignupModal from 'client/components/SignupModal';
 import SettingOffcanvas from 'client/components/SettingOffcanvas';
 import { Link, useHistory } from 'react-router-dom';
+import States from 'client/constants/States';
 
-function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
+function Navigation({ state, isLoggedIn }: { state?: string | null, isLoggedIn: boolean }) {
 
   const history = useHistory();
 
   const [query, setQuery] = useState('');
 
+  const [infoModalShow, setInfoModalShow] = useState(false);
+  const [infoModalContent, setInfoModalContent] = useState('');
+
   const [categoryOffcanvasShow, setCategoryOffcanvasShow] = useState(false);
   const [settingOffcanvasShow, setSettingOffcanvasShow] = useState(false);
   const [loginModalShow, setLoginModalShow] = useState(false);
   const [signUpModalShow, setSignUpModalShow] = useState(false);
+
+  useEffect(() => {
+    if (!isLoggedIn && state) {
+      setInfoModalShow(true);
+      switch (state) {
+        case States.NEED_REGISTER:
+          setInfoModalContent('계정이 존재하지 않습니다. 먼저 가입해 주세요.');
+      }
+    }
+  }, []);
 
   const handleQueryChange = (event: ChangeEvent) => {
     setQuery((event.target as HTMLInputElement).value);
@@ -37,6 +51,8 @@ function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   const handleSignUpModalClose = () => setSignUpModalShow(false);
   const handleSignUpModalShow = () => setSignUpModalShow(true);
+
+  const handleInfoModalClose = () => setInfoModalShow(false);
 
   return (
     <>
@@ -87,6 +103,14 @@ function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
       <SettingOffcanvas show={settingOffcanvasShow} handleClose={handleSettingOffcanvasClose} />
       <LoginModal modalShow={loginModalShow} modalClose={handleLoginModalClose} />
       <SignupModal modalShow={signUpModalShow} modalClose={handleSignUpModalClose} />
+      <Modal show={infoModalShow} onHide={handleInfoModalClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>에러</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{infoModalContent}</p>
+        </Modal.Body>
+      </Modal>
     </>
   );
 }
