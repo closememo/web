@@ -22,11 +22,16 @@ function Navigation({ state, isLoggedIn }: { state?: string | null, isLoggedIn: 
   const [signUpModalShow, setSignUpModalShow] = useState(false);
 
   useEffect(() => {
-    if (!isLoggedIn && state) {
-      setInfoModalShow(true);
-      switch (state) {
-        case States.NEED_REGISTER:
-          setInfoModalContent('계정이 존재하지 않습니다. 먼저 가입해 주세요.');
+    if (state) {
+      if (!isLoggedIn) {
+        setInfoModalShow(true);
+        switch (state) {
+          case States.NEED_REGISTER:
+            setInfoModalContent('계정이 존재하지 않습니다. 먼저 가입해 주세요.');
+            break;
+        }
+      } else {
+        history.replace('/');
       }
     }
   }, []);
@@ -52,7 +57,10 @@ function Navigation({ state, isLoggedIn }: { state?: string | null, isLoggedIn: 
   const handleSignUpModalClose = () => setSignUpModalShow(false);
   const handleSignUpModalShow = () => setSignUpModalShow(true);
 
-  const handleInfoModalClose = () => setInfoModalShow(false);
+  const handleInfoModalClose = () => {
+    setInfoModalShow(false);
+    history.replace('/');
+  };
 
   return (
     <>
@@ -105,7 +113,7 @@ function Navigation({ state, isLoggedIn }: { state?: string | null, isLoggedIn: 
       <SignupModal modalShow={signUpModalShow} modalClose={handleSignUpModalClose} />
       <Modal show={infoModalShow} onHide={handleInfoModalClose}>
         <Modal.Header closeButton>
-          <Modal.Title>에러</Modal.Title>
+          <Modal.Title>알림</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>{infoModalContent}</p>
