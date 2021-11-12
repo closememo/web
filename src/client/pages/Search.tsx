@@ -18,6 +18,7 @@ function Search({ location }: { location: Location }) {
   const loggedInUserQueryResult = useGetLoggedInUserQuery();
   const searchPostsResult = useSearchPostListByTagQuery({
     variables: { tag },
+    fetchPolicy: 'network-only',
   });
   const [deletePosts] = useDeletePostsMutation();
   const [mailPosts] = useMailPostsMutation();
@@ -36,7 +37,7 @@ function Search({ location }: { location: Location }) {
       </Helmet>
       <Navigation isLoggedIn={isLoggedIn} />
       <Container as='main' className='home-main'>
-        <PostList heading='태그검색' posts={searchedPosts} deletePosts={deletePosts} mailPosts={mailPosts} />
+        <PostList heading={'[태그검색] 검색어: ' + tag} posts={searchedPosts} deletePosts={deletePosts} mailPosts={mailPosts} />
       </Container>
     </>
   );
