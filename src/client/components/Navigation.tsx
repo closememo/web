@@ -68,7 +68,7 @@ function Navigation({ state, isLoggedIn }: { state?: string | null, isLoggedIn: 
         <Container fluid>
           <Link to={'/'} className='navi-home text-reset'>
             <Navbar.Text className='text-dark fs-4'>
-              CLOSEMEMO
+              CLOSEMEMO <sup>beta</sup>
             </Navbar.Text>
           </Link>
           <div className='d-flex mx-3'>

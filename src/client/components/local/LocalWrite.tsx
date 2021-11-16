@@ -142,7 +142,7 @@ function LocalWrite({ localforage, currentId, setCurrentId, refresh }: LocalWrit
   return (
     <>
       <div className='my-4'>
-        <h2>{(isNew) ? '[데모] 메모 작성' : '[데모] 메모 수정'}</h2>
+        <h2>{(isNew) ? '[로그아웃] 메모 작성' : '[로그아웃] 메모 수정'}</h2>
       </div>
       <Form onSubmit={submitForm}>
         <Form.Group controlId='title' className='mb-3'>

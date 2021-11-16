@@ -141,7 +141,7 @@ function PostList({ heading, posts, deletePosts, mailPosts }: PostListParams) {
             취소
           </Button>
           <OverlayTrigger placement='bottom'
-                          overlay={<Tooltip>메모를 메일로 전송한 후<br /> 삭제합니다.</Tooltip>}>
+                          overlay={<Tooltip>메모를 메일로 전송한 후<br /> 삭제합니다.<br />약간의 시간이 소요됩니다.</Tooltip>}>
             <Button variant='warning'
                     onClick={(event: MouseEvent) => removePostAndSendMail(event, modalInfo.ids)}>
               전송+삭제

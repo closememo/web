@@ -11,7 +11,7 @@ function MainPage() {
   if (error || !data) return <p>Error</p>;
 
   return (
-    <PostList heading='[베타테스트] 목록' posts={data.posts} deletePosts={deletePosts} mailPosts={mailPosts} />
+    <PostList heading='목록' posts={data.posts} deletePosts={deletePosts} mailPosts={mailPosts} />
   );
 }
 
