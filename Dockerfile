@@ -1,4 +1,4 @@
-FROM node:16.13.0-buster-slim
+FROM openreg.closememo.com/closememo/web-base:0.1
 
 USER node
 COPY --chown=node:node . /home/node/deploy
