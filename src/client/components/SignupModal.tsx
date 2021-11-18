@@ -1,15 +1,14 @@
 import { Image, Modal } from 'react-bootstrap';
 import React from 'react';
 import NaverIcon from 'public/img/navericon.png';
-import { host } from 'shared/constants/env';
+import { host, naverClientId } from 'shared/constants/env';
+import { generateRandom } from 'client/utils/random';
 
 function SingUpModal({ modalShow, modalClose }: { modalShow: boolean, modalClose: Function }) {
 
-  const clientId = 'OrLmkctsCrhLTJW9OR5J';
-  const state = "RAMDOM_STATE";
+  const state = generateRandom()
   const redirectUri = encodeURI(host + "/naver/register-callback");
-
-  const url = 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' + clientId + '&redirect_uri=' + redirectUri + '&state=' + state;
+  const url = 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' + naverClientId + '&redirect_uri=' + redirectUri + '&state=' + state;
 
   return (
     <Modal show={modalShow} onHide={modalClose} backdrop='static' keyboard={false} centered>

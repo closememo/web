@@ -1,7 +1,18 @@
-const { DefaultApiServer, DefaultSecretPrefix, DefaultTokenKey, Host, NodeEnv } = require('../config/env.json');
+const {
+  DefaultApiServer,
+  DefaultNaverClientId,
+  DefaultSecretPrefix,
+  DefaultTokenKey,
+  Host,
+  NodeEnv,
+} = require('../config/env.json');
 
 function setEnv({ isDev }) {
-  const [, scriptPath, tokenKeyArg, secretPrefixArg] = process.argv;
+  const [, scriptPath, apiServerArg, tokenKeyArg, secretPrefixArg] = process.argv;
+
+  const naverClientId =
+    process.env.NAVER_CLIENT_ID ||
+    DefaultNaverClientId;
 
   const tokenKey =
     tokenKeyArg ||
@@ -14,6 +25,7 @@ function setEnv({ isDev }) {
     DefaultSecretPrefix;
 
   const apiServer =
+    apiServerArg ||
     process.env.API_SERVER ||
     DefaultApiServer;
 
@@ -23,6 +35,7 @@ function setEnv({ isDev }) {
 
   process.env.NODE_ENV = isDev ? NodeEnv['development'] : NodeEnv['production'];
   process.env.HOST = isDev ? Host['dev'] : Host['real'];
+  process.env.NAVER_CLIENT_ID = naverClientId;
   process.env.API_SERVER = apiServer;
   process.env.TOKEN_KEY = tokenKey;
   process.env.SECRET_PREFIX = secretPrefix;
@@ -30,6 +43,7 @@ function setEnv({ isDev }) {
   console.log('[ 적용된 환경 변수 ]');
   console.log(`- process.env.NODE_ENV: ${process.env.NODE_ENV}`);
   console.log(`- process.env.HOST: ${process.env.HOST}`);
+  console.log(`- process.env.NAVER_CLIENT_ID: ${process.env.NAVER_CLIENT_ID}`);
   console.log(`- process.env.API_SERVER: ${process.env.API_SERVER}`);
   console.log(`- process.env.TOKEN_KEY: ${process.env.TOKEN_KEY}`);
   console.log(`- process.env.SECRET_PREFIX: ${process.env.SECRET_PREFIX}`);

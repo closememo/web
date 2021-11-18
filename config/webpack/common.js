@@ -27,6 +27,7 @@ module.exports = {
     new DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
       'process.env.HOST': JSON.stringify(process.env.HOST),
+      'process.env.NAVER_CLIENT_ID': JSON.stringify(process.env.NAVER_CLIENT_ID),
     }),
   ],
 };
