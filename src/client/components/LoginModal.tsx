@@ -1,12 +1,13 @@
 import { Image, Modal } from 'react-bootstrap';
 import NaverIcon from 'public/img/navericon.png';
 import React from 'react';
+import { host } from 'shared/constants/env';
 
 function LoginModal({ modalShow, modalClose }: { modalShow: boolean, modalClose: Function }) {
 
   const clientId = 'OrLmkctsCrhLTJW9OR5J';
   const state = "RAMDOM_STATE";
-  const redirectUri = encodeURI("http://localhost:3000/naver/login-callback");
+  const redirectUri = encodeURI(host + "/naver/login-callback");
   const url = 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' + clientId + '&redirect_uri=' + redirectUri + '&state=' + state;
 
   return (
