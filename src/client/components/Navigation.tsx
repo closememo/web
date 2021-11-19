@@ -29,6 +29,8 @@ function Navigation({ state, isLoggedIn }: { state?: string | null, isLoggedIn: 
           case States.NEED_REGISTER:
             setInfoModalContent('계정이 존재하지 않습니다. 먼저 가입해 주세요.');
             break;
+          case States.JUST_REGISTERED:
+            setInfoModalContent('로그인 해 주세요.');
         }
       } else {
         history.replace('/');

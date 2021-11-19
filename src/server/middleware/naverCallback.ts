@@ -39,7 +39,7 @@ naverCallback.get('/register-callback', async (req: Request, res: Response) => {
     console.log(error);
   }
 
-  return res.redirect('/');
+  return res.redirect('/?state=' + States.JUST_REGISTERED);
 });
 
 naverCallback.get('/login-callback', async (req: Request, res: Response) => {
