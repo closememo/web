@@ -9,12 +9,6 @@ const routes: RouteConfig[] = [
     component: require('client/pages/Home').default,
   },
   {
-    name: 'Admin',
-    path: PagePaths.Admin,
-    exact: true,
-    component: require('client/pages/Admin').default,
-  },
-  {
     name: 'Write',
     path: PagePaths.Write,
     exact: true,
@@ -32,6 +26,10 @@ const routes: RouteConfig[] = [
     exact: true,
     component: require('client/pages/Search').default,
   },
+  {
+    path: '*',
+    component: require('client/pages/NotFound').default,
+  }
 ];
 
 export default routes;
