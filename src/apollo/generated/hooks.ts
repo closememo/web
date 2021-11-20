@@ -216,6 +216,54 @@ export type CreateNewPostMutationOptions = Apollo.BaseMutationOptions<
   Types.CreateNewPostMutation,
   Types.CreateNewPostMutationVariables
 >;
+export const CreateLocalPostsDocument = gql`
+  mutation createLocalPosts($newLocalPosts: [NewLocalPost]) {
+    createLocalPosts(newLocalPosts: $newLocalPosts) {
+      success
+      ids
+    }
+  }
+`;
+export type CreateLocalPostsMutationFn = Apollo.MutationFunction<
+  Types.CreateLocalPostsMutation,
+  Types.CreateLocalPostsMutationVariables
+>;
+
+/**
+ * __useCreateLocalPostsMutation__
+ *
+ * To run a mutation, you first call `useCreateLocalPostsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLocalPostsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLocalPostsMutation, { data, loading, error }] = useCreateLocalPostsMutation({
+ *   variables: {
+ *      newLocalPosts: // value for 'newLocalPosts'
+ *   },
+ * });
+ */
+export function useCreateLocalPostsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    Types.CreateLocalPostsMutation,
+    Types.CreateLocalPostsMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    Types.CreateLocalPostsMutation,
+    Types.CreateLocalPostsMutationVariables
+  >(CreateLocalPostsDocument, options);
+}
+export type CreateLocalPostsMutationHookResult = ReturnType<typeof useCreateLocalPostsMutation>;
+export type CreateLocalPostsMutationResult = Apollo.MutationResult<Types.CreateLocalPostsMutation>;
+export type CreateLocalPostsMutationOptions = Apollo.BaseMutationOptions<
+  Types.CreateLocalPostsMutation,
+  Types.CreateLocalPostsMutationVariables
+>;
 export const DeletePostDocument = gql`
   mutation DeletePost($id: ID!) {
     deletePost(id: $id)

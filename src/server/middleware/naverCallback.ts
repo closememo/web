@@ -45,6 +45,7 @@ naverCallback.get('/register-callback', async (req: Request, res: Response) => {
 naverCallback.get('/login-callback', async (req: Request, res: Response) => {
   const code = req.query.code as string;
   const state = req.query.state as string;
+  const push: boolean = (req.query.push as string === 'true');
 
   try {
     const response = await instance.post('/command/client/login-naver-account', { code, state });
@@ -63,7 +64,11 @@ naverCallback.get('/login-callback', async (req: Request, res: Response) => {
     }
   }
 
-  return res.redirect('/');
+  if (push) {
+    return res.redirect('/?state=' + States.LOCAL_PUSH);
+  } else {
+    return res.redirect('/');
+  }
 });
 
 function setTokenCookies(res: Response, loginResponse: LoginResponse) {

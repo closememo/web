@@ -10,6 +10,12 @@ interface NewPost {
   tags: [string]
 }
 
+interface NewLocalPost {
+  title: string,
+  content: string,
+  localFormedDateString: string
+}
+
 interface UpdatePost {
   id: string,
   title: string,
@@ -32,6 +38,9 @@ export default {
   Mutation: {
     createNewPost: async (_: any, newPost: NewPost, { dataSources }: { dataSources: DataSources }) => {
       return await dataSources.postAPI.createPost(newPost);
+    },
+    createLocalPosts: async (_: any, { newLocalPosts }: { newLocalPosts: NewLocalPost[] }, { dataSources }: { dataSources: DataSources }) => {
+      return await dataSources.postAPI.createLocalPosts(newLocalPosts);
     },
     deletePost: async (_: any, { id }: { id: string }, { dataSources }: { dataSources: DataSources }) => {
       return await dataSources.postAPI.deletePost(id);

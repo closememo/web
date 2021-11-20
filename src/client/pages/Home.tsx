@@ -6,6 +6,7 @@ import Navigation from 'client/components/Navigation';
 import LocalPage from 'client/components/local/LocalPage';
 import MainPage from 'client/components/MainPage';
 import { useGetLoggedInUserQuery } from 'apollo/generated/hooks';
+import Information from 'client/components/Information';
 
 function HomePage({ location }: { location: Location }) {
 
@@ -24,7 +25,8 @@ function HomePage({ location }: { location: Location }) {
       <Helmet>
         <title>홈</title>
       </Helmet>
-      <Navigation state={state} isLoggedIn={isLoggedIn} />
+      <Navigation isLoggedIn={isLoggedIn} />
+      {!!state && <Information state={state} isLoggedIn={isLoggedIn} />}
       <Container as='main' className='home-main'>
         {isLoggedIn
           ? <MainPage />

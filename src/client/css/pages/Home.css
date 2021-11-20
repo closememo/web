@@ -34,3 +34,7 @@ button.social-login {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 }
+
+p.keep-word {
+    word-break: keep-all;
+}

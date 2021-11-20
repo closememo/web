@@ -34,6 +34,13 @@ mutation CreateNewPost($title: String, $content: String, $tags: [String]) {
     }
 }
 
+mutation createLocalPosts($newLocalPosts: [NewLocalPost]) {
+    createLocalPosts(newLocalPosts: $newLocalPosts) {
+        success
+        ids
+    }
+}
+
 mutation DeletePost($id: ID!) {
     deletePost(id: $id)
 }

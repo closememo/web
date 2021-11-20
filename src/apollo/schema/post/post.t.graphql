@@ -6,10 +6,17 @@ type Query {
 
 type Mutation {
     createNewPost(title: String, content: String, tags: [String]): PostCreateResponse
+    createLocalPosts(newLocalPosts: [NewLocalPost]): LocalPostCreatesResponse
     deletePost(id: ID!): Boolean
     deletePosts(ids: [ID!]): Boolean
     updatePost(id: ID!, title: String content: String, tags: [String]): PostCreateResponse
     mailPosts(ids: [ID!]): Boolean
+}
+
+input NewLocalPost {
+    title: String
+    content: String
+    localFormedDateString: String
 }
 
 type SimplePost {
@@ -31,4 +38,9 @@ type Post {
 type PostCreateResponse {
     success: Boolean!
     id: ID!
+}
+
+type LocalPostCreatesResponse {
+    success: Boolean!
+    ids: [ID!]
 }

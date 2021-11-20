@@ -8,6 +8,12 @@ interface NewPost {
   tags: [string]
 }
 
+interface newLocalPost {
+  title: string,
+  content: string,
+  localFormedDateString: string
+}
+
 interface UpdatePost {
   id: string,
   title: string,
@@ -60,6 +66,16 @@ class PostAPI extends RESTDataSource {
     return {
       success: true,
       id: response.id,
+    };
+  }
+
+  public async createLocalPosts(newLocalPosts: newLocalPost[]) {
+    const response = await this.post('/command/client/create-local-documents', {
+      localDocuments: newLocalPosts,
+    });
+    return {
+      success: true,
+      ids: response.map((obj: { id: string }) => obj.id),
     };
   }
 

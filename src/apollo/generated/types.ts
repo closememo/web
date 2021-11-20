@@ -11,13 +11,24 @@ export type Scalars = {
   Float: number;
 };
 
+export type LocalPostCreatesResponse = {
+  __typename?: 'LocalPostCreatesResponse';
+  ids?: Maybe<Array<Scalars['ID']>>;
+  success: Scalars['Boolean'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  createLocalPosts?: Maybe<LocalPostCreatesResponse>;
   createNewPost?: Maybe<PostCreateResponse>;
   deletePost?: Maybe<Scalars['Boolean']>;
   deletePosts?: Maybe<Scalars['Boolean']>;
   mailPosts?: Maybe<Scalars['Boolean']>;
   updatePost?: Maybe<PostCreateResponse>;
+};
+
+export type MutationCreateLocalPostsArgs = {
+  newLocalPosts?: Maybe<Array<Maybe<NewLocalPost>>>;
 };
 
 export type MutationCreateNewPostArgs = {
@@ -42,6 +53,12 @@ export type MutationUpdatePostArgs = {
   content?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type NewLocalPost = {
+  content?: Maybe<Scalars['String']>;
+  localFormedDateString?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
 };
 
@@ -153,6 +170,22 @@ export type CreateNewPostMutation = {
   __typename?: 'Mutation';
   createNewPost?:
     | { __typename?: 'PostCreateResponse'; success: boolean; id: string }
+    | null
+    | undefined;
+};
+
+export type CreateLocalPostsMutationVariables = Exact<{
+  newLocalPosts?: Maybe<Array<Maybe<NewLocalPost>> | Maybe<NewLocalPost>>;
+}>;
+
+export type CreateLocalPostsMutation = {
+  __typename?: 'Mutation';
+  createLocalPosts?:
+    | {
+        __typename?: 'LocalPostCreatesResponse';
+        success: boolean;
+        ids?: Array<string> | null | undefined;
+      }
     | null
     | undefined;
 };
