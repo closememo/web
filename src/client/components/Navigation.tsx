@@ -1,10 +1,12 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { Button, Container, Form, FormControl, Modal, Nav, Navbar } from 'react-bootstrap';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { Button, Container, Form, FormControl, Image, Nav, Navbar } from 'react-bootstrap';
+import MainLogo from 'public/img/logo.png';
 import HelpOffcanvas from 'client/components/HelpOffcanvas';
 import LoginModal from 'client/components/LoginModal';
 import SignupModal from 'client/components/SignupModal';
 import SettingOffcanvas from 'client/components/SettingOffcanvas';
 import { Link, useHistory } from 'react-router-dom';
+import PagePaths from 'client/constants/PagePaths';
 
 function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
 
@@ -42,10 +44,11 @@ function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
     <>
       <Navbar bg='light' expand='lg'>
         <Container fluid>
-          <Link to={'/'} className='navi-home text-reset'>
-            <Navbar.Text className='text-dark fs-4'>
-              CLOSEMEMO <sup>beta</sup>
-            </Navbar.Text>
+          <Link to={PagePaths.Home} className='navi-home'>
+            <Navbar.Brand className='me-0'>
+              <Image src={MainLogo} className='main-logo' />
+              <span className='text-dark'> <sup>beta</sup></span>
+            </Navbar.Brand>
           </Link>
           <div className='d-flex mx-3'>
             <div className='vr' />

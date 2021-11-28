@@ -27,6 +27,10 @@ button.social-login {
     height: 80px;
 }
 
+img.main-logo {
+    width: 180px;
+}
+
 .two-line-truncate {
     overflow: hidden;
     text-overflow: ellipsis;

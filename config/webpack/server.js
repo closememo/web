@@ -37,6 +37,8 @@ const merged = merge([
                 loader: 'file-loader',
                 options: {
                   emitFile: false,
+                  name: '[name].[ext]',
+                  outputPath: 'static/img',
                 },
               },
             ],
