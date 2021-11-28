@@ -88,8 +88,8 @@ function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
       </Navbar>
       <HelpOffcanvas show={categoryOffcanvasShow} handleClose={handleCategoryOffcanvasClose} />
       <SettingOffcanvas show={settingOffcanvasShow} handleClose={handleSettingOffcanvasClose} />
-      <LoginModal modalShow={loginModalShow} modalClose={handleLoginModalClose} />
-      <SignupModal modalShow={signUpModalShow} modalClose={handleSignUpModalClose} />
+      <LoginModal isShow={loginModalShow} closeModal={handleLoginModalClose} />
+      <SignupModal isShow={signUpModalShow} closeModal={handleSignUpModalClose} />
     </>
   );
 }

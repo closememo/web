@@ -3,6 +3,7 @@ import { Button, Form, ListGroup, Modal, OverlayTrigger, Spinner, Tooltip } from
 import { Link, useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
 import { convertDateString } from 'shared/utils/dateUtils';
+import WaitingModal from 'client/components/WaitingModal';
 
 interface ModalInfo {
   ids: string[]
@@ -152,17 +153,7 @@ function PostList({ heading, posts, deletePosts, mailPosts }: PostListParams) {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Modal size='sm' show={waitingModalShow} onHide={waitingModalHandleClose} backdrop='static'
-             keyboard={false} centered>
-        <Modal.Header>
-          <Modal.Title as='h5'>응답을 기다리는 중입니다.</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className='d-flex justify-content-center'>
-          <Spinner animation='border' role='status'>
-            <span className='visually-hidden'>Loading...</span>
-          </Spinner>
-        </Modal.Body>
-      </Modal>
+      <WaitingModal isShow={waitingModalShow} closeModal={waitingModalHandleClose} />
     </>
   );
 }
