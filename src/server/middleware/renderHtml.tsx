@@ -29,9 +29,10 @@ function renderHtml({ App }: { App: () => JSX.Element }): RequestHandler {
   return wrap(async (req: Request, res: Response, next: NextFunction) => {
     const client = createApolloSSRClient(req);
     const helmetContext = { helmet: {} as HelmetData };
+    const context: { statusCode?: number } = {};
 
     const ServerApp = (
-      <StaticRouter location={req.url}>
+      <StaticRouter location={req.url} context={context}>
         <HelmetProvider context={helmetContext}>
           <ApolloProvider client={client}>
             <App />
@@ -53,6 +54,10 @@ function renderHtml({ App }: { App: () => JSX.Element }): RequestHandler {
         apolloState: client.extract(),
         helmetData: helmet,
       });
+
+      if (context.statusCode) {
+        res.status(context.statusCode);
+      }
 
       res.on('error', (error: Error) => {
         console.log(`html stream Error ${error.stack}`);

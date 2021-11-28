@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import Navigation from 'client/components/Navigation';
 import { useGetLoggedInUserQuery } from 'apollo/generated/hooks';
 import { Container } from 'react-bootstrap';
+import { Route } from 'react-router-dom';
 
 function NotFound() {
 
@@ -21,7 +22,12 @@ function NotFound() {
       <Navigation isLoggedIn={isLoggedIn} />
       <Container as='main' className='home-main'>
         <div className='my-4'>
-          <h1>Page Not Found.</h1>
+          <Route
+            render={({ staticContext }) => {
+              if (staticContext) staticContext.statusCode = 404;
+              return <h1>Page Not Found.</h1>;
+            }}
+          />
         </div>
       </Container>
     </>
