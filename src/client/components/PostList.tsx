@@ -104,7 +104,6 @@ function PostList({ heading, posts, deletePosts, mailPosts }: PostListParams) {
                 onClick={handleAllCheckedDeleteClick} disabled={checkedIds.size === 0}>
           삭제
         </Button>
-        <Button variant='warning'>이동</Button>
       </div>
       <div className='py-2'>
         <ListGroup>
