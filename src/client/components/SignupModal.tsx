@@ -13,7 +13,7 @@ function SingUpModal({ isShow, closeModal }: { isShow: boolean, closeModal: Func
   const waitingModalHandleShow = () => setWaitingModalShow(true);
 
   const state = generateRandom();
-  const redirectUri = encodeURI(host + '/naver/register-callback');
+  const redirectUri = encodeURIComponent(host + '/naver/register-callback');
   const url = 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' + naverClientId + '&redirect_uri=' + redirectUri + '&state=' + state;
 
   const handleNaverLoginButtonClick = (event: MouseEvent) => {

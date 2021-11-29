@@ -35,7 +35,7 @@ function LoginModal({ isShow, closeModal }: { isShow: boolean, closeModal: Funct
   }, []);
 
   const state = generateRandom();
-  const redirectUri = encodeURI(host + '/naver/login-callback' +
+  const redirectUri = encodeURIComponent(host + '/naver/login-callback' +
     '?keep=' + keepLoginChecked + '&push=' + localMemoPushChecked);
   const url = 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' + naverClientId + '&redirect_uri=' + redirectUri + '&state=' + state;
 
