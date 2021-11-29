@@ -23,7 +23,7 @@ async function authFilter(req: Request, res: Response, next: NextFunction) {
     syncToken = '',
   }: { accessToken: string, refreshToken: string, syncToken: string } = req.cookies;
 
-  const refreshTokenId = getRefreshTokenId(refreshToken);
+  const { refreshTokenId, keep } = getRefreshTokenId(refreshToken);
   const accessTokenId = getAccessTokenId(accessToken, refreshTokenId);
   const syncTokenId = getSyncTokenId(syncToken);
 
@@ -40,7 +40,7 @@ async function authFilter(req: Request, res: Response, next: NextFunction) {
 
       const loginResponse: LoginResponse = response.data as LoginResponse;
 
-      const refreshToken = generateRefreshToken(loginResponse.token.tokenId, loginResponse.token.exp);
+      const refreshToken = generateRefreshToken(loginResponse.token.tokenId, loginResponse.token.exp, keep);
       const accessToken = generateAccessToken(loginResponse.token.tokenId);
       const syncToken = generateSyncToken(refreshTokenId);
 

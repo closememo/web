@@ -12,6 +12,7 @@ import {
 } from 'server/utils/jwtUtils';
 import States from 'client/constants/States';
 import ErrorTypes from 'client/constants/ErrorTypes';
+import { CookieOptions } from 'express-serve-static-core';
 
 interface ErrorResponse {
   error: {
@@ -31,10 +32,7 @@ naverCallback.get('/register-callback', async (req: Request, res: Response) => {
   const state = req.query.state as string;
 
   try {
-    const response = await instance.post('/command/client/register-naver-account', { code, state });
-    const loginResponse: LoginResponse = response.data as LoginResponse;
-
-    setTokenCookies(res, loginResponse);
+    await instance.post('/command/client/register-naver-account', { code, state });
   } catch (error) {
     console.log(error);
   }
@@ -45,13 +43,14 @@ naverCallback.get('/register-callback', async (req: Request, res: Response) => {
 naverCallback.get('/login-callback', async (req: Request, res: Response) => {
   const code = req.query.code as string;
   const state = req.query.state as string;
+  const keep: boolean = (req.query.keep as string === 'true');
   const push: boolean = (req.query.push as string === 'true');
 
   try {
     const response = await instance.post('/command/client/login-naver-account', { code, state });
     const loginResponse: LoginResponse = response.data as LoginResponse;
 
-    setTokenCookies(res, loginResponse);
+    setTokenCookies(res, loginResponse, keep);
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       const data = error.response.data as ErrorResponse;
@@ -71,18 +70,18 @@ naverCallback.get('/login-callback', async (req: Request, res: Response) => {
   }
 });
 
-function setTokenCookies(res: Response, loginResponse: LoginResponse) {
-  const refreshToken = generateRefreshToken(loginResponse.token.tokenId, loginResponse.token.exp);
+function setTokenCookies(res: Response, loginResponse: LoginResponse, keep: boolean) {
+  const refreshToken = generateRefreshToken(loginResponse.token.tokenId, loginResponse.token.exp, keep);
   const accessToken = generateAccessToken(loginResponse.token.tokenId);
   const syncToken = generateSyncToken(loginResponse.accountId.id);
 
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
   });
-  res.cookie('refreshToken', refreshToken, {
-    expires: getRefreshCookieExp(),
-    httpOnly: true,
-  });
+  const refreshTokenOption: CookieOptions = keep
+    ? { httpOnly: true, expires: getRefreshCookieExp() }
+    : { httpOnly: true };
+  res.cookie('refreshToken', refreshToken, refreshTokenOption);
   res.cookie('syncToken', syncToken, {
     maxAge: getSyncCookieMaxAge(),
     httpOnly: true,
@@ -95,7 +94,7 @@ naverCallback.get('/logout', async (req: Request, res: Response) => {
     syncToken = '',
   }: { refreshToken: string, syncToken: string } = req.cookies;
 
-  const refreshTokenId = getRefreshTokenId(refreshToken);
+  const { refreshTokenId } = getRefreshTokenId(refreshToken);
   const syncTokenId = getSyncTokenId(syncToken);
 
   try {
@@ -121,7 +120,7 @@ naverCallback.get('/withdraw', async (req: Request, res: Response) => {
     syncToken = '',
   }: { refreshToken: string, syncToken: string } = req.cookies;
 
-  const refreshTokenId = getRefreshTokenId(refreshToken);
+  const { refreshTokenId } = getRefreshTokenId(refreshToken);
   const syncTokenId = getSyncTokenId(syncToken);
 
   try {

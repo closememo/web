@@ -20,12 +20,13 @@ export interface LoginResponse {
   }
 }
 
-export function generateRefreshToken(tokenId: string, exp: number): string {
+export function generateRefreshToken(tokenId: string, exp: number, keep: boolean | undefined): string {
   const bytes = CryptoJS.AES.encrypt(tokenId, SECRET_PREFIX);
 
   return jwt.sign({
     id: bytes.toString(),
     exp: exp,
+    keep: !!keep,
   }, getRefreshTokenKey());
 }
 
@@ -47,19 +48,22 @@ export function generateSyncToken(refreshTokenId: string): string {
   }, getSyncTokenKey());
 }
 
-export function getRefreshTokenId(refreshToken: string): string {
+export function getRefreshTokenId(refreshToken: string): { refreshTokenId: string, keep: boolean } {
   if (!refreshToken) {
-    return '';
+    return { refreshTokenId: '', keep: false };
   }
 
   try {
     const refreshTokenDecoded = jwt.verify(refreshToken, getRefreshTokenKey()) as JwtPayload;
-    return CryptoJS.AES.decrypt(refreshTokenDecoded.id, SECRET_PREFIX).toString(CryptoJS.enc.Utf8);
+    return {
+      refreshTokenId: CryptoJS.AES.decrypt(refreshTokenDecoded.id, SECRET_PREFIX).toString(CryptoJS.enc.Utf8),
+      keep: !!refreshTokenDecoded.keep,
+    };
   } catch (error) {
     if (error instanceof JsonWebTokenError) {
       console.log(error.message);
     }
-    return '';
+    return { refreshTokenId: '', keep: false };
   }
 }
 

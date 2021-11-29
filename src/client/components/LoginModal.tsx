@@ -10,6 +10,7 @@ function LoginModal({ isShow, closeModal }: { isShow: boolean, closeModal: Funct
 
   const isBrowser: boolean = typeof (window) !== 'undefined';
 
+  const [keepLoginChecked, setKeepLoginChecked] = useState(false);
   const [localMemoPushChecked, setLocalMemoPushChecked] = useState(false);
   const [waitingModalShow, setWaitingModalShow] = useState(false);
 
@@ -18,9 +19,13 @@ function LoginModal({ isShow, closeModal }: { isShow: boolean, closeModal: Funct
 
   const init = async () => {
     if (isBrowser) {
-      const checked: boolean | null = await localforage.getItem('localMemoPushChecked');
-      if (checked !== null) {
-        setLocalMemoPushChecked(checked);
+      const keepLoginChecked: boolean | null = await localforage.getItem('keepLoginChecked');
+      const memoPushChecked: boolean | null = await localforage.getItem('localMemoPushChecked');
+      if (keepLoginChecked !== null) {
+        setKeepLoginChecked(keepLoginChecked);
+      }
+      if (memoPushChecked !== null) {
+        setLocalMemoPushChecked(memoPushChecked);
       }
     }
   };
@@ -30,8 +35,15 @@ function LoginModal({ isShow, closeModal }: { isShow: boolean, closeModal: Funct
   }, []);
 
   const state = generateRandom();
-  const redirectUri = encodeURI(host + '/naver/login-callback?push=' + localMemoPushChecked);
+  const redirectUri = encodeURI(host + '/naver/login-callback' +
+    '?keep=' + keepLoginChecked + '&push=' + localMemoPushChecked);
   const url = 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' + naverClientId + '&redirect_uri=' + redirectUri + '&state=' + state;
+
+  const handleKeepLoginCheckboxChange = async (event: ChangeEvent) => {
+    const element: HTMLInputElement = event.target as HTMLInputElement;
+    setKeepLoginChecked(element.checked);
+    await localforage.setItem('keepLoginChecked', element.checked);
+  };
 
   const handleCheckboxChange = async (event: ChangeEvent) => {
     const element: HTMLInputElement = event.target as HTMLInputElement;
@@ -63,8 +75,13 @@ function LoginModal({ isShow, closeModal }: { isShow: boolean, closeModal: Funct
             </button>
             <hr />
             <div>
+              <Form.Group controlId='keepLoginCheckbox'>
+                <Form.Check label={<p className='keep-word mb-0'>이 기기에서 로그인을 유지합니다.</p>}
+                            className='me-1' checked={keepLoginChecked}
+                            onChange={(event: ChangeEvent) => handleKeepLoginCheckboxChange(event)} />
+              </Form.Group>
               <Form.Group controlId='localMemoPushCheckbox'>
-                <Form.Check label={<p className='keep-word'>로그아웃 상태에서 작성한 메모를 업로드 합니다.</p>}
+                <Form.Check label={<p className='keep-word mb-0'>로그아웃 상태에서 작성한 메모를 업로드 합니다.</p>}
                             className='me-1' checked={localMemoPushChecked}
                             onChange={(event: ChangeEvent) => handleCheckboxChange(event)} />
               </Form.Group>
