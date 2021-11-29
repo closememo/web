@@ -1,5 +1,5 @@
 import React, { ChangeEvent, MouseEvent, useState } from 'react';
-import { Button, Form, ListGroup, Modal, OverlayTrigger, Spinner, Tooltip } from 'react-bootstrap';
+import { Button, ButtonGroup, Form, ListGroup, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
 import { convertDateString } from 'shared/utils/dateUtils';
@@ -138,16 +138,19 @@ function PostList({ heading, posts, deletePosts, mailPosts }: PostListParams) {
         </Modal.Header>
         <Modal.Body>정말로 삭제하시겠습니까?</Modal.Body>
         <Modal.Footer>
-          <Button variant='secondary' onClick={handleClose}>
-            취소
-          </Button>
-          <OverlayTrigger placement='bottom'
-                          overlay={<Tooltip>메모를 메일로 전송한 후<br /> 삭제합니다.<br />약간의 시간이 소요됩니다.</Tooltip>}>
+          <ButtonGroup className='me-auto'>
             <Button variant='warning'
                     onClick={(event: MouseEvent) => removePostAndSendMail(event, modalInfo.ids)}>
               전송+삭제
             </Button>
-          </OverlayTrigger>
+            <OverlayTrigger trigger='click' placement='bottom'
+                            overlay={<Tooltip>메모를 메일로 전송한 후<br /> 삭제합니다.<br />약간의 시간이 소요됩니다.</Tooltip>}>
+              <Button variant='outline-warning' className='text-dark'>?</Button>
+            </OverlayTrigger>
+          </ButtonGroup>
+          <Button variant='secondary' onClick={handleClose}>
+            취소
+          </Button>
           <Button variant='danger' onClick={(event: MouseEvent) => removePost(event, modalInfo.ids)}>
             삭제
           </Button>
