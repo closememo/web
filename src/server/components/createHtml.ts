@@ -10,6 +10,9 @@ type HtmlProperties = {
   helmetData: HelmetData
 }
 
+const DESCRIPTION_CONTENT = '클로즈메모(closememo)는 간단하게 어디서든 작성할 수 있는 웹메모장입니다.\n' +
+  '클로즈메모는 검색에 대한 강력한 기능을 제공하며 작성한 메모를 자동으로 분석하여 분류하고 연결합니다.';
+
 function createHtml({ content, extractor, apolloState, helmetData }: HtmlProperties) {
 
   const script = `window.addEventListener('load', function() {
@@ -44,13 +47,14 @@ function createHtml({ content, extractor, apolloState, helmetData }: HtmlPropert
     <html lang='ko'>
     <head>
       <meta charSet='UTF-8' />
-      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
       <meta name='referrer' content='always' />
+      <meta name='description' content='${DESCRIPTION_CONTENT}' />
       ${extractor.getStyleTags()}
       ${helmetData.meta?.toString()}
       ${helmetData.link?.toString()}
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+      <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css' rel='stylesheet'
+          integrity='sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF' crossorigin='anonymous'>
     </head>
     <body>
       <div id='root'>${content}</div>
