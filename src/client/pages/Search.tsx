@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  SearchPostListByTagDocument,
   useDeletePostsMutation,
   useGetLoggedInUserQuery,
   useMailPostsMutation,
@@ -30,6 +31,12 @@ function Search({ location }: { location: Location }) {
   const isLoggedIn: boolean = loggedInUserQueryResult.data.me.isLoggedIn;
   const searchedPosts = searchPostsResult.data.searchPostsByTag;
 
+  const refreshSearchPosts = () => {
+    searchPostsResult.client.refetchQueries({
+      include: [SearchPostListByTagDocument]
+    })
+  }
+
   return (
     <>
       <Helmet>
@@ -37,7 +44,8 @@ function Search({ location }: { location: Location }) {
       </Helmet>
       <Navigation isLoggedIn={isLoggedIn} />
       <Container as='main' className='home-main'>
-        <PostList heading={'[태그검색] 검색어: ' + tag} posts={searchedPosts} deletePosts={deletePosts} mailPosts={mailPosts} />
+        <PostList heading={'[태그검색] 검색어: ' + tag} posts={searchedPosts}
+                  refreshPosts={refreshSearchPosts} deletePosts={deletePosts} mailPosts={mailPosts} />
       </Container>
     </>
   );

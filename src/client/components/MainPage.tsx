@@ -1,17 +1,29 @@
 import React from 'react';
-import { useDeletePostsMutation, useGetPostListQuery, useMailPostsMutation } from 'apollo/generated/hooks';
+import {
+  GetPostListDocument,
+  useDeletePostsMutation,
+  useGetPostListQuery,
+  useMailPostsMutation,
+} from 'apollo/generated/hooks';
 import PostList from 'client/components/PostList';
 
 function MainPage() {
-  const { data, error, loading } = useGetPostListQuery();
+  const { client, data, error, loading } = useGetPostListQuery();
   const [deletePosts] = useDeletePostsMutation();
   const [mailPosts] = useMailPostsMutation();
 
   if (loading) return <p>Loading...</p>;
   if (error || !data) return <p>Error</p>;
 
+  const refreshPosts = () => {
+    client.refetchQueries({
+      include: [GetPostListDocument]
+    })
+  }
+
   return (
-    <PostList heading='목록' posts={data.posts} deletePosts={deletePosts} mailPosts={mailPosts} />
+    <PostList heading='목록' posts={data.posts}
+              refreshPosts={refreshPosts} deletePosts={deletePosts} mailPosts={mailPosts} />
   );
 }
 

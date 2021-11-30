@@ -12,11 +12,12 @@ interface ModalInfo {
 interface PostListParams {
   heading: string,
   posts: Array<any>,
+  refreshPosts: Function,
   deletePosts: Function,
   mailPosts: Function
 }
 
-function PostList({ heading, posts, deletePosts, mailPosts }: PostListParams) {
+function PostList({ heading, posts, refreshPosts, deletePosts, mailPosts }: PostListParams) {
 
   const history = useHistory();
 
@@ -95,12 +96,14 @@ function PostList({ heading, posts, deletePosts, mailPosts }: PostListParams) {
         <h2>{heading}</h2>
       </div>
       <div className='d-flex py-2'>
-        <Button variant='success' className='me-auto'
+        <Button variant='success' className='me-1'
                 onClick={() => history.push(PagePaths.Write)}>새메모</Button>
+        <Button variant='outline-primary' className='me-auto'
+                onClick={() => refreshPosts()}>↻</Button>
         <Button variant='info' className='mx-1' onClick={handleAllCheckButtonClick}>
           {(posts.length === checkedIds.size) ? '전체취소' : '전체선택'}
         </Button>
-        <Button variant='danger' className='me-1'
+        <Button variant='danger'
                 onClick={handleAllCheckedDeleteClick} disabled={checkedIds.size === 0}>
           삭제
         </Button>
