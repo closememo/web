@@ -22,7 +22,7 @@ function getPaginationItems(currentPage: number, lastPage: number) {
     return (
       <>
         {[...Array(lastPage).keys()].map((index) => (
-          <PaginationItem page={index + 1} />
+          <PaginationItem key={'page_' + index} page={index + 1} isActive={currentPage === index + 1} />
         ))}
       </>
     );
