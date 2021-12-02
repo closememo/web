@@ -5,13 +5,19 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {};
 
 export const GetPostListDocument = gql`
-  query GetPostList {
-    posts {
-      id
-      title
-      preview
-      tags
-      createdAt
+  query GetPostList($page: Int, $limit: Int) {
+    posts(page: $page, limit: $limit) {
+      data {
+        id
+        title
+        preview
+        tags
+        createdAt
+      }
+      total
+      currentPage
+      limit
+      hasNext
     }
   }
 `;
@@ -28,6 +34,8 @@ export const GetPostListDocument = gql`
  * @example
  * const { data, loading, error } = useGetPostListQuery({
  *   variables: {
+ *      page: // value for 'page'
+ *      limit: // value for 'limit'
  *   },
  * });
  */

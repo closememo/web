@@ -43,11 +43,8 @@ class PostAPI extends RESTDataSource {
     return super.didReceiveResponse(response, _request);
   }
 
-  public async getPosts() {
-    const response = await this.get('/query/client/documents');
-    return Array.isArray(response)
-      ? response.map(post => PostAPI.SimplePostReducer(post))
-      : [];
+  public async getPosts({ page, limit }: { page: number, limit: number }) {
+    return await this.get('/query/client/temp/documents?page=' + page + '&limit=' + limit);
   }
 
   public async getPostById({ id }: { id: string }) {

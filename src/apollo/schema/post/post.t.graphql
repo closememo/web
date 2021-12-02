@@ -1,5 +1,5 @@
 type Query {
-    posts: [SimplePost]!
+    posts(page: Int, limit: Int): Page
     post(id: ID!): Post!
     searchPostsByTag(tag: String): [SimplePost]!
 }
@@ -19,12 +19,20 @@ input NewLocalPost {
     localFormedDateString: String
 }
 
+type Page {
+    data: [SimplePost!]!
+    total: Int!
+    currentPage: Int!
+    limit: Int!
+    hasNext: Boolean!
+}
+
 type SimplePost {
     id: ID!
     title: String
-    preview: String
+    preview: String!
     tags: [String!]
-    createdAt: String
+    createdAt: String!
 }
 
 type Post {

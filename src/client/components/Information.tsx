@@ -6,6 +6,7 @@ import { GetPostListDocument, useCreateLocalPostsMutation } from 'apollo/generat
 import localforage from 'localforage';
 import { LocalPost } from 'client/components/local/LocalPage';
 import { NewLocalPost } from 'apollo/generated/types';
+import Pagination from 'client/constants/Pagination';
 
 
 function Information({ state, isLoggedIn }: { state: string, isLoggedIn: boolean }): JSX.Element {
@@ -21,7 +22,10 @@ function Information({ state, isLoggedIn }: { state: string, isLoggedIn: boolean
 
   const [createNewPosts] = useCreateLocalPostsMutation({
     refetchQueries: [
-      { query: GetPostListDocument },
+      {
+        query: GetPostListDocument,
+        variables: { page: 1, limit: Pagination.PAGE_NUMBER },
+      },
     ],
   });
 

@@ -4,6 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
 import { convertDateString } from 'shared/utils/dateUtils';
 import WaitingModal from 'client/components/WaitingModal';
+import PagingHandle from 'client/components/PagingHandle';
 
 interface ModalInfo {
   ids: string[]
@@ -11,13 +12,25 @@ interface ModalInfo {
 
 interface PostListParams {
   heading: string,
+  total?: number,
+  currentPage?: number,
+  pageSize?: number,
   posts: Array<any>,
   refreshPosts: Function,
   deletePosts: Function,
   mailPosts: Function
 }
 
-function PostList({ heading, posts, refreshPosts, deletePosts, mailPosts }: PostListParams) {
+function PostList({
+                    heading,
+                    total,
+                    currentPage,
+                    pageSize,
+                    posts,
+                    refreshPosts,
+                    deletePosts,
+                    mailPosts,
+                  }: PostListParams) {
 
   const history = useHistory();
 
@@ -134,6 +147,8 @@ function PostList({ heading, posts, refreshPosts, deletePosts, mailPosts }: Post
           ))}
         </ListGroup>
       </div>
+      {(total && currentPage && pageSize)
+      && <PagingHandle total={total} currentPage={currentPage} pageSize={pageSize} />}
       <Modal show={modalShow} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>삭제</Modal.Title>

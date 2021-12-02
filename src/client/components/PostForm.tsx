@@ -8,6 +8,7 @@ import {
 } from 'apollo/generated/hooks';
 import { useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
+import Pagination from 'client/constants/Pagination';
 
 interface PostFormParams {
   id?: string | null,
@@ -56,12 +57,18 @@ function PostForm({ id, currentTitle, currentContent, currentTags }: PostFormPar
 
   const [createNewPost] = useCreateNewPostMutation({
     refetchQueries: [
-      { query: GetPostListDocument },
+      {
+        query: GetPostListDocument,
+        variables: { page: 1, limit: Pagination.PAGE_NUMBER },
+      },
     ],
   });
   const [updatePost] = useUpdatePostMutation({
     refetchQueries: [
-      { query: GetPostListDocument },
+      {
+        query: GetPostListDocument,
+        variables: { page: 1, limit: Pagination.PAGE_NUMBER },
+      },
       {
         query: GetPostDocument,
         variables: { id },

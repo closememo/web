@@ -25,8 +25,8 @@ interface UpdatePost {
 
 export default {
   Query: {
-    posts: async (_: any, __: any, { dataSources }: { dataSources: DataSources }) => {
-      return await dataSources.postAPI.getPosts();
+    posts: async (_: any, { page, limit }: { page: number, limit: number }, { dataSources }: { dataSources: DataSources }) => {
+      return await dataSources.postAPI.getPosts({ page, limit });
     },
     post: async (_: any, { id }: { id: string }, { dataSources }: { dataSources: DataSources }) => {
       return await dataSources.postAPI.getPostById({ id });

@@ -62,6 +62,15 @@ export type NewLocalPost = {
   title?: Maybe<Scalars['String']>;
 };
 
+export type Page = {
+  __typename?: 'Page';
+  currentPage: Scalars['Int'];
+  data: Array<SimplePost>;
+  hasNext: Scalars['Boolean'];
+  limit: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
 export type Post = {
   __typename?: 'Post';
   content: Scalars['String'];
@@ -81,12 +90,17 @@ export type Query = {
   __typename?: 'Query';
   me: User;
   post: Post;
-  posts: Array<Maybe<SimplePost>>;
+  posts?: Maybe<Page>;
   searchPostsByTag: Array<Maybe<SimplePost>>;
 };
 
 export type QueryPostArgs = {
   id: Scalars['ID'];
+};
+
+export type QueryPostsArgs = {
+  limit?: Maybe<Scalars['Int']>;
+  page?: Maybe<Scalars['Int']>;
 };
 
 export type QuerySearchPostsByTagArgs = {
@@ -95,11 +109,11 @@ export type QuerySearchPostsByTagArgs = {
 
 export type SimplePost = {
   __typename?: 'SimplePost';
-  createdAt?: Maybe<Scalars['String']>;
+  createdAt: Scalars['String'];
   id: Scalars['ID'];
-  preview?: Maybe<Scalars['String']>;
+  preview: Scalars['String'];
   tags?: Maybe<Array<Scalars['String']>>;
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
 };
 
 export type User = {
@@ -107,22 +121,31 @@ export type User = {
   isLoggedIn: Scalars['Boolean'];
 };
 
-export type GetPostListQueryVariables = Exact<{ [key: string]: never }>;
+export type GetPostListQueryVariables = Exact<{
+  page?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
+}>;
 
 export type GetPostListQuery = {
   __typename?: 'Query';
-  posts: Array<
+  posts?:
     | {
-        __typename?: 'SimplePost';
-        id: string;
-        title?: string | null | undefined;
-        preview?: string | null | undefined;
-        tags?: Array<string> | null | undefined;
-        createdAt?: string | null | undefined;
+        __typename?: 'Page';
+        total: number;
+        currentPage: number;
+        limit: number;
+        hasNext: boolean;
+        data: Array<{
+          __typename?: 'SimplePost';
+          id: string;
+          title: string;
+          preview: string;
+          tags?: Array<string> | null | undefined;
+          createdAt: string;
+        }>;
       }
     | null
-    | undefined
-  >;
+    | undefined;
 };
 
 export type GetPostQueryVariables = Exact<{
@@ -150,10 +173,10 @@ export type SearchPostListByTagQuery = {
     | {
         __typename?: 'SimplePost';
         id: string;
-        title?: string | null | undefined;
-        preview?: string | null | undefined;
+        title: string;
+        preview: string;
         tags?: Array<string> | null | undefined;
-        createdAt?: string | null | undefined;
+        createdAt: string;
       }
     | null
     | undefined

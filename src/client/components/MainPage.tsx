@@ -6,9 +6,13 @@ import {
   useMailPostsMutation,
 } from 'apollo/generated/hooks';
 import PostList from 'client/components/PostList';
+import Pagination from 'client/constants/Pagination';
 
-function MainPage() {
-  const { client, data, error, loading } = useGetPostListQuery();
+function MainPage({ currentPage }: { currentPage: number }) {
+  const { client, data, error, loading } = useGetPostListQuery({
+    variables: { page: currentPage, limit: Pagination.PAGE_NUMBER },
+    fetchPolicy: 'network-only',
+  });
   const [deletePosts] = useDeletePostsMutation();
   const [mailPosts] = useMailPostsMutation();
 
@@ -17,13 +21,17 @@ function MainPage() {
 
   const refreshPosts = () => {
     client.refetchQueries({
-      include: [GetPostListDocument]
-    })
-  }
+      include: [GetPostListDocument],
+    });
+  };
+
+  const total = data.posts?.total;
+  const pageSize = Pagination.PAGE_NUMBER;
 
   return (
-    <PostList heading='목록' posts={data.posts}
-              refreshPosts={refreshPosts} deletePosts={deletePosts} mailPosts={mailPosts} />
+    <PostList heading='목록' total={total} currentPage={currentPage} pageSize={pageSize}
+              posts={data.posts ? data.posts.data : []} refreshPosts={refreshPosts}
+              deletePosts={deletePosts} mailPosts={mailPosts} />
   );
 }
 

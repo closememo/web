@@ -1,10 +1,16 @@
-query GetPostList {
-    posts {
-        id
-        title
-        preview
-        tags
-        createdAt
+query GetPostList($page: Int, $limit: Int) {
+    posts(page: $page, limit: $limit) {
+        data {
+            id
+            title
+            preview
+            tags
+            createdAt
+        }
+        total
+        currentPage
+        limit
+        hasNext
     }
 }
 

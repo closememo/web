@@ -11,7 +11,9 @@ import Information from 'client/components/Information';
 function HomePage({ location }: { location: Location }) {
 
   const search = location.search;
-  const state = new URLSearchParams(search).get('state');
+  const params = new URLSearchParams(search);
+  const state = params.get('state');
+  const page: number = parseInt(params.get('page') as string) || 1;
 
   const { data, error, loading } = useGetLoggedInUserQuery();
 
@@ -29,7 +31,7 @@ function HomePage({ location }: { location: Location }) {
       {!!state && <Information state={state} isLoggedIn={isLoggedIn} />}
       <Container as='main' className='home-main'>
         {isLoggedIn
-          ? <MainPage />
+          ? <MainPage currentPage={page} />
           : <LocalPage />}
       </Container>
     </>
