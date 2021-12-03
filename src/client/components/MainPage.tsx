@@ -11,7 +11,6 @@ import Pagination from 'client/constants/Pagination';
 function MainPage({ currentPage }: { currentPage: number }) {
   const { client, data, error, loading } = useGetPostListQuery({
     variables: { page: currentPage, limit: Pagination.PAGE_NUMBER },
-    fetchPolicy: 'network-only',
   });
   const [deletePosts] = useDeletePostsMutation();
   const [mailPosts] = useMailPostsMutation();

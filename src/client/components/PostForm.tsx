@@ -62,6 +62,11 @@ function PostForm({ id, currentTitle, currentContent, currentTags }: PostFormPar
         variables: { page: 1, limit: Pagination.PAGE_NUMBER },
       },
     ],
+    update: (cache) =>
+      cache.evict({
+        id: 'ROOT_QUERY',
+        fieldName: 'posts',
+      }),
   });
   const [updatePost] = useUpdatePostMutation({
     refetchQueries: [
@@ -74,6 +79,11 @@ function PostForm({ id, currentTitle, currentContent, currentTags }: PostFormPar
         variables: { id },
       },
     ],
+    update: (cache) =>
+      cache.evict({
+        id: 'ROOT_QUERY',
+        fieldName: 'posts',
+      }),
   });
 
   const handleTitleChange = (event: ChangeEvent) => {
