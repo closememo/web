@@ -212,8 +212,6 @@ function PostForm({ id, currentTitle, currentContent, currentTags, currentOption
       },
     };
 
-    console.log(JSON.stringify(post));
-
     if (isNew) {
       createNewPost({ variables: post })
         .then(() => {

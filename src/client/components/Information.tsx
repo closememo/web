@@ -48,10 +48,9 @@ function Information({ state, isLoggedIn }: { state: string, isLoggedIn: boolean
         };
       });
 
-      const result = await createNewPosts({
+      await createNewPosts({
         variables: { newLocalPosts: newLocalPosts },
       });
-      console.log(JSON.stringify(result));
     }
   };
 
