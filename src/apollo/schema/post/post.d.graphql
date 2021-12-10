@@ -5,6 +5,7 @@ query GetPostList($page: Int, $limit: Int) {
             title
             preview
             tags
+            autoTags
             createdAt
         }
         total
@@ -20,6 +21,9 @@ query GetPost($id: ID!) {
         title
         content
         tags
+        option {
+            hasAutoTag
+        }
     }
 }
 
@@ -29,12 +33,13 @@ query SearchPostListByTag($tag: String) {
         title
         preview
         tags
+        autoTags
         createdAt
     }
 }
 
-mutation CreateNewPost($title: String, $content: String, $tags: [String]) {
-    createNewPost(title: $title, content: $content, tags: $tags) {
+mutation CreateNewPost($title: String, $content: String, $tags: [String], $option: PostOptionInput) {
+    createNewPost(title: $title, content: $content, tags: $tags, option: $option) {
         success
         id
     }
@@ -55,8 +60,8 @@ mutation DeletePosts($ids: [ID!]) {
     deletePosts(ids: $ids)
 }
 
-mutation UpdatePost($id: ID!, $title: String, $content: String, $tags: [String]) {
-    updatePost(id: $id, title: $title, content: $content, tags: $tags) {
+mutation UpdatePost($id: ID!, $title: String, $content: String, $tags: [String], $option: PostOptionInput) {
+    updatePost(id: $id, title: $title, content: $content, tags: $tags, option: $option) {
         success
         id
     }

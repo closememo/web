@@ -5,7 +5,10 @@ import { ValueOrPromise } from 'apollo-server-types';
 interface NewPost {
   title: string,
   content: string,
-  tags: [string]
+  tags: [string],
+  option: {
+    hasAutoTag: boolean
+  }
 }
 
 interface newLocalPost {
@@ -18,7 +21,10 @@ interface UpdatePost {
   id: string,
   title: string,
   content: string,
-  tags: [string]
+  tags: [string],
+  option: {
+    hasAutoTag: boolean
+  }
 }
 
 class PostAPI extends RESTDataSource {
@@ -52,10 +58,7 @@ class PostAPI extends RESTDataSource {
   }
 
   public async searchPostsByTag({ tag }: { tag: string }) {
-    const response = await this.get('/query/client/documents-by-tag?tag=' + tag);
-    return Array.isArray(response)
-      ? response.map(post => PostAPI.SimplePostReducer(post))
-      : [];
+    return await this.get('/query/client/documents-by-tag?tag=' + tag);
   }
 
   public async createPost(newPost: NewPost) {
@@ -96,6 +99,9 @@ class PostAPI extends RESTDataSource {
       title: post.title,
       content: post.content,
       tags: post.tags,
+      option: {
+        hasAutoTag: post.option.hasAutoTag
+      }
     });
     return {
       success: true,
@@ -109,16 +115,6 @@ class PostAPI extends RESTDataSource {
       needToDelete: true,
     });
     return true;
-  }
-
-  private static SimplePostReducer(simplePost: any) {
-    return {
-      id: simplePost.id,
-      title: simplePost.title,
-      preview: simplePost.preview,
-      tags: simplePost.tags,
-      createdAt: simplePost.createdAt,
-    };
   }
 }
 

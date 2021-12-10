@@ -7,7 +7,10 @@ interface DataSources {
 interface NewPost {
   title: string,
   content: string,
-  tags: [string]
+  tags: [string],
+  option: {
+    hasAutoTag: boolean
+  }
 }
 
 interface NewLocalPost {
@@ -20,7 +23,10 @@ interface UpdatePost {
   id: string,
   title: string,
   content: string,
-  tags: [string]
+  tags: [string],
+  option: {
+    hasAutoTag: boolean
+  }
 }
 
 export default {

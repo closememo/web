@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, KeyboardEvent, useRef, useState } from 'react';
-import { Button, Form, InputGroup, Modal, Overlay, Tooltip } from 'react-bootstrap';
+import { Button, Form, FormCheck, InputGroup, Modal, Overlay, OverlayTrigger, Popover, Tooltip } from 'react-bootstrap';
 import {
   GetPostDocument,
   GetPostListDocument,
@@ -9,12 +9,14 @@ import {
 import { useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
 import Pagination from 'client/constants/Pagination';
+import QuestionSVG from 'client/assets/QuestionSVG';
 
 interface PostFormParams {
   id?: string | null,
   currentTitle?: string | null,
   currentContent?: string | null,
   currentTags?: string[] | null
+  currentOption?: any
 }
 
 interface Tag {
@@ -26,6 +28,10 @@ interface ErrorModalInfo {
   content: string
 }
 
+interface DocumentOption {
+  hasAutoTag: boolean
+}
+
 const NUMBER_OF_TAG_LIMIT = 100;
 const MAX_TITLE_LENGTH = 100;
 const MAX_CONTENT_LENGTH = 5000;
@@ -35,17 +41,23 @@ const WARNING_INVALID_TAG_CHARS = '태그는 한글, 영어, 밑줄(_) 만 가�
 const WARNING_DUPLICATED_TAG = '이미 등록된 태그입니다.';
 const WARNING_NUMBER_OF_TAG_LIMITED = '등록할 수 있는 태그 개수를 초과하였습니다.';
 
-function PostForm({ id, currentTitle, currentContent, currentTags }: PostFormParams) {
+const DEFAULT_DOCUMENT_OPTION: DocumentOption = {
+  hasAutoTag: false,
+};
+
+function PostForm({ id, currentTitle, currentContent, currentTags, currentOption }: PostFormParams) {
 
   currentTitle = currentTitle || '';
   currentContent = currentContent || '';
   currentTags = currentTags || [];
+  currentOption = currentOption as DocumentOption || DEFAULT_DOCUMENT_OPTION;
 
   const history = useHistory();
 
   const [title, setTitle] = useState(currentTitle);
   const [content, setContent] = useState(currentContent);
   const [tags, setTags] = useState<Tag[]>(currentTags.map((tag, index): Tag => ({ id: index, name: tag })));
+  const [hasAutoTag, setHasAutoTag] = useState(currentOption.hasAutoTag);
 
   const [newTagId, setNewTagId] = useState(currentTags.length);
   const [newTagName, setNewTagName] = useState('');
@@ -195,7 +207,12 @@ function PostForm({ id, currentTitle, currentContent, currentTags }: PostFormPar
       title,
       content,
       tags: tags.map(tag => tag.name),
+      option: {
+        hasAutoTag: hasAutoTag,
+      },
     };
+
+    console.log(JSON.stringify(post));
 
     if (isNew) {
       createNewPost({ variables: post })
@@ -254,8 +271,23 @@ function PostForm({ id, currentTitle, currentContent, currentTags }: PostFormPar
               <button className='ms-1 p-0 border-0' onClick={() => removeTag(tag.id)}><span>X</span></button>
             </span>
           ))}
-          <hr />
         </div>
+        <hr />
+        <div>
+          <FormCheck id='custom-switch'>
+            <FormCheck.Input type='checkbox'
+                             checked={hasAutoTag}
+                             onChange={() => setHasAutoTag(!hasAutoTag)} />
+            <FormCheck.Label className='mx-1'>자동 태그 추가</FormCheck.Label>
+            <OverlayTrigger placement='bottom'
+                            overlay={<Popover><Popover.Body>본문을 분석하여 자동으로 태그를 추가합니다.</Popover.Body></Popover>}>
+              <div className='d-inline-block'>
+                <QuestionSVG />
+              </div>
+            </OverlayTrigger>
+          </FormCheck>
+        </div>
+        <hr />
         <div className='d-flex flex-row-reverse'>
           <Button variant='primary' type='submit'>
             {(isNew) ? '적성' : '수정'}

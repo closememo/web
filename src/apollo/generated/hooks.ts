@@ -12,6 +12,7 @@ export const GetPostListDocument = gql`
         title
         preview
         tags
+        autoTags
         createdAt
       }
       total
@@ -73,6 +74,9 @@ export const GetPostDocument = gql`
       title
       content
       tags
+      option {
+        hasAutoTag
+      }
     }
   }
 `;
@@ -121,6 +125,7 @@ export const SearchPostListByTagDocument = gql`
       title
       preview
       tags
+      autoTags
       createdAt
     }
   }
@@ -175,8 +180,13 @@ export type SearchPostListByTagQueryResult = Apollo.QueryResult<
   Types.SearchPostListByTagQueryVariables
 >;
 export const CreateNewPostDocument = gql`
-  mutation CreateNewPost($title: String, $content: String, $tags: [String]) {
-    createNewPost(title: $title, content: $content, tags: $tags) {
+  mutation CreateNewPost(
+    $title: String
+    $content: String
+    $tags: [String]
+    $option: PostOptionInput
+  ) {
+    createNewPost(title: $title, content: $content, tags: $tags, option: $option) {
       success
       id
     }
@@ -203,6 +213,7 @@ export type CreateNewPostMutationFn = Apollo.MutationFunction<
  *      title: // value for 'title'
  *      content: // value for 'content'
  *      tags: // value for 'tags'
+ *      option: // value for 'option'
  *   },
  * });
  */
@@ -363,8 +374,14 @@ export type DeletePostsMutationOptions = Apollo.BaseMutationOptions<
   Types.DeletePostsMutationVariables
 >;
 export const UpdatePostDocument = gql`
-  mutation UpdatePost($id: ID!, $title: String, $content: String, $tags: [String]) {
-    updatePost(id: $id, title: $title, content: $content, tags: $tags) {
+  mutation UpdatePost(
+    $id: ID!
+    $title: String
+    $content: String
+    $tags: [String]
+    $option: PostOptionInput
+  ) {
+    updatePost(id: $id, title: $title, content: $content, tags: $tags, option: $option) {
       success
       id
     }
@@ -392,6 +409,7 @@ export type UpdatePostMutationFn = Apollo.MutationFunction<
  *      title: // value for 'title'
  *      content: // value for 'content'
  *      tags: // value for 'tags'
+ *      option: // value for 'option'
  *   },
  * });
  */

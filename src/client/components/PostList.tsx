@@ -135,6 +135,8 @@ function PostList({
               <div className='mb-1'>
                 {post.tags && post.tags.map((tag: any, index: number) =>
                   getTagElement(post.id, tag, index))}
+                {post.autoTags && post.autoTags.map((tag: any, index: number) =>
+                  getAutoTagElement(post.id, tag, index))}
               </div>
               <div className='d-flex'>
                 <small className='me-auto'>{post.preview}</small>
@@ -198,6 +200,14 @@ function getTagElement(id: string, tag: string, index: number): JSX.Element {
   return (
     <Link key={id + '_' + index + '_link'} to={'/search?tag=' + tag}>
       <span key={id + '_' + index} className='badge bg-secondary me-1'>{tag}</span>
+    </Link>
+  );
+}
+
+function getAutoTagElement(id: string, tag: string, index: number): JSX.Element {
+  return (
+    <Link key={id + '_' + index + '_link'} to={'/search?tag=' + tag}>
+      <span key={id + '_auto_' + index} className='badge bg-warning text-dark me-1'>{tag}</span>
     </Link>
   );
 }

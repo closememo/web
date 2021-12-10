@@ -20,7 +20,7 @@ function Update() {
   if (postQueryResult.error || !postQueryResult.data) return <p>Error</p>;
 
   const isLoggedIn: boolean = loggedInUserQueryResult.data.me.isLoggedIn;
-  const { title, content, tags } = postQueryResult.data.post;
+  const { title, content, tags, option } = postQueryResult.data.post;
 
   return (
     <>
@@ -29,7 +29,8 @@ function Update() {
       </Helmet>
       <Navigation isLoggedIn={isLoggedIn} />
       <Container as='main' className='home-main'>
-        <PostForm id={id} currentTitle={title} currentContent={content} currentTags={tags} />
+        <PostForm id={id} currentTitle={title} currentContent={content} currentTags={tags}
+                  currentOption={option} />
       </Container>
     </>
   );

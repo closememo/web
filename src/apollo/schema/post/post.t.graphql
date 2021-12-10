@@ -5,11 +5,11 @@ type Query {
 }
 
 type Mutation {
-    createNewPost(title: String, content: String, tags: [String]): PostCreateResponse
+    createNewPost(title: String, content: String, tags: [String], option: PostOptionInput): PostCreateResponse
     createLocalPosts(newLocalPosts: [NewLocalPost]): LocalPostCreatesResponse
     deletePost(id: ID!): Boolean
     deletePosts(ids: [ID!]): Boolean
-    updatePost(id: ID!, title: String content: String, tags: [String]): PostCreateResponse
+    updatePost(id: ID!, title: String content: String, tags: [String], option: PostOptionInput): PostCreateResponse
     mailPosts(ids: [ID!]): Boolean
 }
 
@@ -17,6 +17,10 @@ input NewLocalPost {
     title: String
     content: String
     localFormedDateString: String
+}
+
+input PostOptionInput {
+    hasAutoTag: Boolean
 }
 
 type Page {
@@ -32,6 +36,7 @@ type SimplePost {
     title: String
     preview: String!
     tags: [String!]
+    autoTags: [String]
     createdAt: String!
 }
 
@@ -41,6 +46,11 @@ type Post {
     content: String!
     tags: [String!]
     createdAt: String
+    option: PostOption
+}
+
+type PostOption {
+    hasAutoTag: Boolean
 }
 
 type PostCreateResponse {

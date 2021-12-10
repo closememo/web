@@ -33,6 +33,7 @@ export type MutationCreateLocalPostsArgs = {
 
 export type MutationCreateNewPostArgs = {
   content?: Maybe<Scalars['String']>;
+  option?: Maybe<PostOptionInput>;
   tags?: Maybe<Array<Maybe<Scalars['String']>>>;
   title?: Maybe<Scalars['String']>;
 };
@@ -52,6 +53,7 @@ export type MutationMailPostsArgs = {
 export type MutationUpdatePostArgs = {
   content?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  option?: Maybe<PostOptionInput>;
   tags?: Maybe<Array<Maybe<Scalars['String']>>>;
   title?: Maybe<Scalars['String']>;
 };
@@ -76,6 +78,7 @@ export type Post = {
   content: Scalars['String'];
   createdAt?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  option?: Maybe<PostOption>;
   tags?: Maybe<Array<Scalars['String']>>;
   title?: Maybe<Scalars['String']>;
 };
@@ -84,6 +87,15 @@ export type PostCreateResponse = {
   __typename?: 'PostCreateResponse';
   id: Scalars['ID'];
   success: Scalars['Boolean'];
+};
+
+export type PostOption = {
+  __typename?: 'PostOption';
+  hasAutoTag?: Maybe<Scalars['Boolean']>;
+};
+
+export type PostOptionInput = {
+  hasAutoTag?: Maybe<Scalars['Boolean']>;
 };
 
 export type Query = {
@@ -109,11 +121,12 @@ export type QuerySearchPostsByTagArgs = {
 
 export type SimplePost = {
   __typename?: 'SimplePost';
+  autoTags?: Maybe<Array<Maybe<Scalars['String']>>>;
   createdAt: Scalars['String'];
   id: Scalars['ID'];
   preview: Scalars['String'];
   tags?: Maybe<Array<Scalars['String']>>;
-  title: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
 };
 
 export type User = {
@@ -138,9 +151,10 @@ export type GetPostListQuery = {
         data: Array<{
           __typename?: 'SimplePost';
           id: string;
-          title: string;
+          title?: string | null | undefined;
           preview: string;
           tags?: Array<string> | null | undefined;
+          autoTags?: Array<string | null | undefined> | null | undefined;
           createdAt: string;
         }>;
       }
@@ -160,6 +174,10 @@ export type GetPostQuery = {
     title?: string | null | undefined;
     content: string;
     tags?: Array<string> | null | undefined;
+    option?:
+      | { __typename?: 'PostOption'; hasAutoTag?: boolean | null | undefined }
+      | null
+      | undefined;
   };
 };
 
@@ -173,9 +191,10 @@ export type SearchPostListByTagQuery = {
     | {
         __typename?: 'SimplePost';
         id: string;
-        title: string;
+        title?: string | null | undefined;
         preview: string;
         tags?: Array<string> | null | undefined;
+        autoTags?: Array<string | null | undefined> | null | undefined;
         createdAt: string;
       }
     | null
@@ -187,6 +206,7 @@ export type CreateNewPostMutationVariables = Exact<{
   title?: Maybe<Scalars['String']>;
   content?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
+  option?: Maybe<PostOptionInput>;
 }>;
 
 export type CreateNewPostMutation = {
@@ -236,6 +256,7 @@ export type UpdatePostMutationVariables = Exact<{
   title?: Maybe<Scalars['String']>;
   content?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
+  option?: Maybe<PostOptionInput>;
 }>;
 
 export type UpdatePostMutation = {
