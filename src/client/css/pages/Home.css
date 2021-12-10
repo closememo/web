@@ -42,3 +42,7 @@ img.main-logo {
 p.keep-word {
     word-break: keep-all;
 }
+
+.break-word {
+    word-break: break-all;
+}

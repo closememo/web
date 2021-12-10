@@ -139,7 +139,7 @@ function PostList({
                   getAutoTagElement(post.id, tag, index))}
               </div>
               <div className='d-flex'>
-                <small className='me-auto'>{post.preview}</small>
+                <small className='me-auto break-word'>{post.preview}</small>
                 <Button size='sm' variant='outline-secondary' className='mx-1'
                         onClick={() => history.push('/update/' + post.id)}>📝</Button>
                 <Button size='sm' variant='outline-secondary'
@@ -189,7 +189,7 @@ function getTitleElement(id: string, title: string): JSX.Element {
     );
   } else {
     return (
-      <h5 className='mb-1 text-dark'>
+      <h5 className='mb-1 text-dark break-word'>
         <Link to={'/update/' + id} className='post-list-title text-reset'>{title}</Link>
       </h5>
     );
