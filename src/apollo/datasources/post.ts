@@ -50,7 +50,7 @@ class PostAPI extends RESTDataSource {
   }
 
   public async getPosts({ page, limit }: { page: number, limit: number }) {
-    return await this.get('/query/client/temp/documents?page=' + page + '&limit=' + limit);
+    return await this.get('/query/client/documents?page=' + page + '&limit=' + limit);
   }
 
   public async getPostById({ id }: { id: string }) {
