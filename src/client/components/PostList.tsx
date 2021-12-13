@@ -150,7 +150,8 @@ function PostList({
         </ListGroup>
       </div>
       {(total && currentPage && pageSize)
-      && <PagingHandle total={total} currentPage={currentPage} pageSize={pageSize} />}
+        ? <PagingHandle total={total} currentPage={currentPage} pageSize={pageSize} />
+        : <></>}
       <Modal show={modalShow} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>삭제</Modal.Title>
