@@ -1,17 +1,32 @@
 import 'isomorphic-fetch';
 import { Request } from 'express';
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
+import { currentCategoryVar } from 'apollo/caches';
 
 function createApolloClient() {
   const apolloState = window.__APOLLO_STATE__;
 
   delete window.__APOLLO_STATE__;
 
+  const cache = new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          currentCategory: {
+            read() {
+              return currentCategoryVar();
+            },
+          },
+        },
+      },
+    },
+  });
+
   return new ApolloClient({
     link: createHttpLink({
       uri: '/graphql',
     }),
-    cache: apolloState ? new InMemoryCache().restore(apolloState) : new InMemoryCache(),
+    cache: apolloState ? cache.restore(apolloState) : cache,
   });
 }
 

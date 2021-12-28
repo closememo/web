@@ -1,0 +1,20 @@
+type Query {
+    categories: [Category!]!
+}
+
+extend type Query {
+    currentCategory: String
+}
+
+type Mutation {
+    createCategory(name: String!, parentId: String): Boolean
+    updateCategory(categoryId: ID!, name: String!): Boolean
+    deleteCategory(categoryId: ID!): Boolean
+}
+
+type Category {
+    id: ID!
+    name: String!
+    isRoot: Boolean
+    parentId: String
+}

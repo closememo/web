@@ -1,11 +1,11 @@
 type Query {
-    posts(page: Int, limit: Int): Page
+    posts(categoryId: String, page: Int, limit: Int): Page
     post(id: ID!): Post!
     searchPostsByTag(tag: String): [SimplePost]!
 }
 
 type Mutation {
-    createNewPost(title: String, content: String, tags: [String], option: PostOptionInput): PostCreateResponse
+    createNewPost(categoryId: String, title: String, content: String, tags: [String], option: PostOptionInput): PostCreateResponse
     createLocalPosts(newLocalPosts: [NewLocalPost]): LocalPostCreatesResponse
     deletePost(id: ID!): Boolean
     deletePosts(ids: [ID!]): Boolean

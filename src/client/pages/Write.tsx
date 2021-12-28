@@ -3,16 +3,18 @@ import { Helmet } from 'react-helmet-async';
 import Navigation from 'client/components/Navigation';
 import { Container } from 'react-bootstrap';
 import PostForm from 'client/components/PostForm';
-import { useGetLoggedInUserQuery } from 'apollo/generated/hooks';
+import { useGetCurrentCategoryQuery, useGetLoggedInUserQuery } from 'apollo/generated/hooks';
 
 function Write() {
 
   const { data, error, loading } = useGetLoggedInUserQuery();
+  const currentCategoryQueryResult = useGetCurrentCategoryQuery();
 
   if (loading) return <p>Loading...</p>;
   if (error || !data) return <p>Error</p>;
 
   const isLoggedIn: boolean = data.me.isLoggedIn;
+  const categoryId: string | null | undefined = currentCategoryQueryResult.data?.currentCategory;
 
   return (
     <>
@@ -21,7 +23,7 @@ function Write() {
       </Helmet>
       <Navigation isLoggedIn={isLoggedIn} />
       <Container as='main' className='home-main'>
-        <PostForm />
+        <PostForm categoryId={categoryId} />
       </Container>
     </>
   );

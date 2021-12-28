@@ -4,13 +4,14 @@ import Navigation from 'client/components/Navigation';
 import { Container } from 'react-bootstrap';
 import PostForm from 'client/components/PostForm';
 import { useParams } from 'react-router-dom';
-import { useGetLoggedInUserQuery, useGetPostQuery } from 'apollo/generated/hooks';
+import { useGetCurrentCategoryQuery, useGetLoggedInUserQuery, useGetPostQuery } from 'apollo/generated/hooks';
 
 function Update() {
 
   const { id }: { id: string } = useParams();
 
   const loggedInUserQueryResult = useGetLoggedInUserQuery();
+  const currentCategoryQueryResult = useGetCurrentCategoryQuery();
   const postQueryResult = useGetPostQuery({
     variables: { id },
   });
@@ -20,6 +21,7 @@ function Update() {
   if (postQueryResult.error || !postQueryResult.data) return <p>Error</p>;
 
   const isLoggedIn: boolean = loggedInUserQueryResult.data.me.isLoggedIn;
+  const categoryId: string | null | undefined = currentCategoryQueryResult.data?.currentCategory;
   const { title, content, tags, option } = postQueryResult.data.post;
 
   return (
@@ -29,8 +31,8 @@ function Update() {
       </Helmet>
       <Navigation isLoggedIn={isLoggedIn} />
       <Container as='main' className='home-main'>
-        <PostForm id={id} currentTitle={title} currentContent={content} currentTags={tags}
-                  currentOption={option} />
+        <PostForm categoryId={categoryId} id={id} currentTitle={title} currentContent={content}
+                  currentTags={tags} currentOption={option} />
       </Container>
     </>
   );

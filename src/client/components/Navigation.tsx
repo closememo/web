@@ -7,6 +7,7 @@ import SignupModal from 'client/components/SignupModal';
 import SettingOffcanvas from 'client/components/SettingOffcanvas';
 import { Link, useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
+import CategoryOffcanvas from 'client/components/CategoryOffcanvas';
 
 function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
 
@@ -14,7 +15,7 @@ function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   const [query, setQuery] = useState('');
 
-  const [categoryOffcanvasShow, setCategoryOffcanvasShow] = useState(false);
+  const [leftOffcanvasShow, setLeftOffcanvasShow] = useState(false);
   const [settingOffcanvasShow, setSettingOffcanvasShow] = useState(false);
   const [loginModalShow, setLoginModalShow] = useState(false);
   const [signUpModalShow, setSignUpModalShow] = useState(false);
@@ -28,8 +29,8 @@ function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
     history.push('/search?tag=' + query);
   };
 
-  const handleCategoryOffcanvasClose = () => setCategoryOffcanvasShow(false);
-  const handleCategoryOffcanvasShow = () => setCategoryOffcanvasShow(true);
+  const handleLeftOffcanvasClose = () => setLeftOffcanvasShow(false);
+  const handleLeftOffcanvasShow = () => setLeftOffcanvasShow(true);
 
   const handleSettingOffcanvasClose = () => setSettingOffcanvasShow(false);
   const handleSettingOffcanvasShow = () => setSettingOffcanvasShow(true);
@@ -57,7 +58,7 @@ function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
           <Navbar.Collapse className='justify-content-between'>
             <Nav>
               <Button variant='outline-success' className='w-100'
-                      onClick={handleCategoryOffcanvasShow}>도움말</Button>
+                      onClick={handleLeftOffcanvasShow}>{isLoggedIn ? '카테고리' : '도움말'}</Button>
             </Nav>
             <Form id='mainSearch' className='d-flex my-1' onSubmit={submitForm}>
               <FormControl
@@ -86,7 +87,9 @@ function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <HelpOffcanvas show={categoryOffcanvasShow} handleClose={handleCategoryOffcanvasClose} />
+      {isLoggedIn
+        ? <CategoryOffcanvas show={leftOffcanvasShow} handleClose={handleLeftOffcanvasClose} />
+        : <HelpOffcanvas show={leftOffcanvasShow} handleClose={handleLeftOffcanvasClose} />}
       <SettingOffcanvas show={settingOffcanvasShow} handleClose={handleSettingOffcanvasClose} />
       <LoginModal isShow={loginModalShow} closeModal={handleLoginModalClose} />
       <SignupModal isShow={signUpModalShow} closeModal={handleSignUpModalClose} />

@@ -4,13 +4,16 @@ import PostAPI from './datasources/post';
 import schema from './schema';
 import { Response, Request } from 'express';
 import UserAPI from 'apollo/datasources/user';
+import CategoryAPI from 'apollo/datasources/category';
 
 const dataSources: {
   userAPI: DataSource,
-  postAPI: DataSource
+  postAPI: DataSource,
+  categoryAPI: DataSource
 } = {
   userAPI: new UserAPI(),
   postAPI: new PostAPI(),
+  categoryAPI: new CategoryAPI(),
 };
 
 const context = async ({ req, res }: { req: Request, res: Response }) => {

@@ -1,5 +1,5 @@
-query GetPostList($page: Int, $limit: Int) {
-    posts(page: $page, limit: $limit) {
+query GetPostList($categoryId: String, $page: Int, $limit: Int) {
+    posts(categoryId: $categoryId, page: $page, limit: $limit) {
         data {
             id
             title
@@ -38,8 +38,8 @@ query SearchPostListByTag($tag: String) {
     }
 }
 
-mutation CreateNewPost($title: String, $content: String, $tags: [String], $option: PostOptionInput) {
-    createNewPost(title: $title, content: $content, tags: $tags, option: $option) {
+mutation CreateNewPost($categoryId: String, $title: String, $content: String, $tags: [String], $option: PostOptionInput) {
+    createNewPost(categoryId: $categoryId, title: $title, content: $content, tags: $tags, option: $option) {
         success
         id
     }

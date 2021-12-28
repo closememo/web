@@ -12,6 +12,7 @@ import Pagination from 'client/constants/Pagination';
 import QuestionSVG from 'client/assets/QuestionSVG';
 
 interface PostFormParams {
+  categoryId?: string | null,
   id?: string | null,
   currentTitle?: string | null,
   currentContent?: string | null,
@@ -45,7 +46,7 @@ const DEFAULT_DOCUMENT_OPTION: DocumentOption = {
   hasAutoTag: false,
 };
 
-function PostForm({ id, currentTitle, currentContent, currentTags, currentOption }: PostFormParams) {
+function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, currentOption }: PostFormParams) {
 
   currentTitle = currentTitle || '';
   currentContent = currentContent || '';
@@ -204,6 +205,7 @@ function PostForm({ id, currentTitle, currentContent, currentTags, currentOption
     }
 
     const post = {
+      categoryId,
       title,
       content,
       tags: tags.map(tag => tag.name),

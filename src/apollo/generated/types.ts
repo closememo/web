@@ -11,6 +11,14 @@ export type Scalars = {
   Float: number;
 };
 
+export type Category = {
+  __typename?: 'Category';
+  id: Scalars['ID'];
+  isRoot?: Maybe<Scalars['Boolean']>;
+  name: Scalars['String'];
+  parentId?: Maybe<Scalars['String']>;
+};
+
 export type LocalPostCreatesResponse = {
   __typename?: 'LocalPostCreatesResponse';
   ids?: Maybe<Array<Scalars['ID']>>;
@@ -19,12 +27,20 @@ export type LocalPostCreatesResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createCategory?: Maybe<Scalars['Boolean']>;
   createLocalPosts?: Maybe<LocalPostCreatesResponse>;
   createNewPost?: Maybe<PostCreateResponse>;
+  deleteCategory?: Maybe<Scalars['Boolean']>;
   deletePost?: Maybe<Scalars['Boolean']>;
   deletePosts?: Maybe<Scalars['Boolean']>;
   mailPosts?: Maybe<Scalars['Boolean']>;
+  updateCategory?: Maybe<Scalars['Boolean']>;
   updatePost?: Maybe<PostCreateResponse>;
+};
+
+export type MutationCreateCategoryArgs = {
+  name: Scalars['String'];
+  parentId?: Maybe<Scalars['String']>;
 };
 
 export type MutationCreateLocalPostsArgs = {
@@ -32,10 +48,15 @@ export type MutationCreateLocalPostsArgs = {
 };
 
 export type MutationCreateNewPostArgs = {
+  categoryId?: Maybe<Scalars['String']>;
   content?: Maybe<Scalars['String']>;
   option?: Maybe<PostOptionInput>;
   tags?: Maybe<Array<Maybe<Scalars['String']>>>;
   title?: Maybe<Scalars['String']>;
+};
+
+export type MutationDeleteCategoryArgs = {
+  categoryId: Scalars['ID'];
 };
 
 export type MutationDeletePostArgs = {
@@ -48,6 +69,11 @@ export type MutationDeletePostsArgs = {
 
 export type MutationMailPostsArgs = {
   ids?: Maybe<Array<Scalars['ID']>>;
+};
+
+export type MutationUpdateCategoryArgs = {
+  categoryId: Scalars['ID'];
+  name: Scalars['String'];
 };
 
 export type MutationUpdatePostArgs = {
@@ -100,6 +126,8 @@ export type PostOptionInput = {
 
 export type Query = {
   __typename?: 'Query';
+  categories: Array<Category>;
+  currentCategory?: Maybe<Scalars['String']>;
   me: User;
   post: Post;
   posts?: Maybe<Page>;
@@ -111,6 +139,7 @@ export type QueryPostArgs = {
 };
 
 export type QueryPostsArgs = {
+  categoryId?: Maybe<Scalars['String']>;
   limit?: Maybe<Scalars['Int']>;
   page?: Maybe<Scalars['Int']>;
 };
@@ -134,7 +163,57 @@ export type User = {
   isLoggedIn: Scalars['Boolean'];
 };
 
+export type GetCategoriesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetCategoriesQuery = {
+  __typename?: 'Query';
+  categories: Array<{
+    __typename?: 'Category';
+    id: string;
+    name: string;
+    isRoot?: boolean | null | undefined;
+    parentId?: string | null | undefined;
+  }>;
+};
+
+export type GetCurrentCategoryQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetCurrentCategoryQuery = {
+  __typename?: 'Query';
+  currentCategory?: string | null | undefined;
+};
+
+export type CreateCategoryMutationVariables = Exact<{
+  name: Scalars['String'];
+  parentId?: Maybe<Scalars['String']>;
+}>;
+
+export type CreateCategoryMutation = {
+  __typename?: 'Mutation';
+  createCategory?: boolean | null | undefined;
+};
+
+export type UpdateCategoryMutationVariables = Exact<{
+  categoryId: Scalars['ID'];
+  name: Scalars['String'];
+}>;
+
+export type UpdateCategoryMutation = {
+  __typename?: 'Mutation';
+  updateCategory?: boolean | null | undefined;
+};
+
+export type DeleteCategoryMutationVariables = Exact<{
+  categoryId: Scalars['ID'];
+}>;
+
+export type DeleteCategoryMutation = {
+  __typename?: 'Mutation';
+  deleteCategory?: boolean | null | undefined;
+};
+
 export type GetPostListQueryVariables = Exact<{
+  categoryId?: Maybe<Scalars['String']>;
   page?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
 }>;
@@ -203,6 +282,7 @@ export type SearchPostListByTagQuery = {
 };
 
 export type CreateNewPostMutationVariables = Exact<{
+  categoryId?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   content?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;

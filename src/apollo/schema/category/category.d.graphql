@@ -1,0 +1,24 @@
+query GetCategories {
+    categories {
+        id
+        name
+        isRoot
+        parentId
+    }
+}
+
+query getCurrentCategory {
+    currentCategory @client
+}
+
+mutation CreateCategory($name: String!, $parentId: String) {
+    createCategory(name: $name, parentId: $parentId)
+}
+
+mutation UpdateCategory($categoryId: ID!, $name: String!) {
+    updateCategory(categoryId: $categoryId, name: $name)
+}
+
+mutation DeleteCategory($categoryId: ID!) {
+    deleteCategory(categoryId: $categoryId)
+}

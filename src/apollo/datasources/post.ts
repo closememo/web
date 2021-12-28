@@ -3,6 +3,7 @@ import { RequestOptions } from 'apollo-datasource-rest/dist/RESTDataSource';
 import { ValueOrPromise } from 'apollo-server-types';
 
 interface NewPost {
+  categoryId: string | null | undefined,
   title: string,
   content: string,
   tags: [string],
@@ -27,6 +28,12 @@ interface UpdatePost {
   }
 }
 
+interface PostsRequest {
+  categoryId: string | null | undefined,
+  page: number,
+  limit: number
+}
+
 class PostAPI extends RESTDataSource {
   constructor() {
     super();
@@ -49,8 +56,12 @@ class PostAPI extends RESTDataSource {
     return super.didReceiveResponse(response, _request);
   }
 
-  public async getPosts({ page, limit }: { page: number, limit: number }) {
-    return await this.get('/query/client/documents?page=' + page + '&limit=' + limit);
+  public async getPosts({ categoryId, page, limit }: PostsRequest) {
+    let path = '/query/client/documents?page=' + page + '&limit=' + limit
+    if (!!categoryId) {
+      path += '&categoryId=' + categoryId;
+    }
+    return await this.get(path);
   }
 
   public async getPostById({ id }: { id: string }) {
