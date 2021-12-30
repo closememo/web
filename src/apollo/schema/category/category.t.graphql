@@ -16,5 +16,8 @@ type Category {
     id: ID!
     name: String!
     isRoot: Boolean
-    parentId: String
+    childrenIds: [String!]
+    count: Int
+    depth: Int
+    netCount: Int
 }

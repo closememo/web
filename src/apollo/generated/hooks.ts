@@ -10,7 +10,10 @@ export const GetCategoriesDocument = gql`
       id
       name
       isRoot
-      parentId
+      childrenIds
+      count
+      depth
+      netCount
     }
   }
 `;

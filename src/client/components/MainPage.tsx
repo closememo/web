@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  GetCategoriesDocument,
   GetPostListDocument,
   useDeletePostsMutation,
   useGetCategoriesQuery,
@@ -14,12 +15,16 @@ const DEFAULT_CATEGORY_NAME = '메인';
 
 function MainPage({ categoryId, currentPage }: { categoryId?: string | null, currentPage: number }) {
   const postListQueryResult = useGetPostListQuery({
-    variables: { page: currentPage, limit: Pagination.PAGE_NUMBER, ...(!!categoryId && {categoryId: categoryId}) }
+    variables: { page: currentPage, limit: Pagination.PAGE_NUMBER, ...(!!categoryId && { categoryId: categoryId }) },
   });
   const categoriesQueryResult = useGetCategoriesQuery();
 
-  const [deletePosts] = useDeletePostsMutation();
-  const [mailPosts] = useMailPostsMutation();
+  const [deletePosts] = useDeletePostsMutation({
+    refetchQueries: [{ query: GetCategoriesDocument }]
+  });
+  const [mailPosts] = useMailPostsMutation({
+    refetchQueries: [{ query: GetCategoriesDocument }]
+  });
 
   if (postListQueryResult.loading || categoriesQueryResult.loading) return <p>Loading...</p>;
   if (postListQueryResult.error || !postListQueryResult.data) return <p>Error</p>;
@@ -56,10 +61,9 @@ function getCategoryFullName(categories: Array<Category> | undefined, categoryId
   let cursor: Category | undefined = category;
 
   while (true) {
-    if (!cursor || !cursor.parentId) {
-      return name;
-    }
-    cursor = categories.find(category => category.id === cursor?.parentId);
+    cursor = categories.find(category => {
+      return (!!category.childrenIds) && (!!cursor) && category.childrenIds.includes(cursor.id);
+    });
     if (!cursor) {
       return name;
     }

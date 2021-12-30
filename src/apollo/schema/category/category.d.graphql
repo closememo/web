@@ -3,7 +3,10 @@ query GetCategories {
         id
         name
         isRoot
-        parentId
+        childrenIds
+        count
+        depth
+        netCount
     }
 }
 

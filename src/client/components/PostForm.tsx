@@ -1,6 +1,7 @@
 import React, { ChangeEvent, FormEvent, KeyboardEvent, useRef, useState } from 'react';
 import { Button, Form, FormCheck, InputGroup, Modal, Overlay, OverlayTrigger, Popover, Tooltip } from 'react-bootstrap';
 import {
+  GetCategoriesDocument,
   GetPostDocument,
   GetPostListDocument,
   useCreateNewPostMutation,
@@ -74,6 +75,7 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
         query: GetPostListDocument,
         variables: { page: 1, limit: Pagination.PAGE_NUMBER },
       },
+      GetCategoriesDocument,
     ],
     update: (cache) =>
       cache.evict({

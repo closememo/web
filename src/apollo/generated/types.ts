@@ -13,10 +13,13 @@ export type Scalars = {
 
 export type Category = {
   __typename?: 'Category';
+  childrenIds?: Maybe<Array<Scalars['String']>>;
+  count?: Maybe<Scalars['Int']>;
+  depth?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
   isRoot?: Maybe<Scalars['Boolean']>;
   name: Scalars['String'];
-  parentId?: Maybe<Scalars['String']>;
+  netCount?: Maybe<Scalars['Int']>;
 };
 
 export type LocalPostCreatesResponse = {
@@ -172,7 +175,10 @@ export type GetCategoriesQuery = {
     id: string;
     name: string;
     isRoot?: boolean | null | undefined;
-    parentId?: string | null | undefined;
+    childrenIds?: Array<string> | null | undefined;
+    count?: number | null | undefined;
+    depth?: number | null | undefined;
+    netCount?: number | null | undefined;
   }>;
 };
 

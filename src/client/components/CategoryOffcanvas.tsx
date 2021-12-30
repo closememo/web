@@ -24,7 +24,11 @@ interface Element {
   index: string,
   hasChildren?: boolean,
   children: string[],
-  data: string,
+  data: {
+    title: string
+    count?: number | null
+    netCount?: number | null
+  },
 }
 
 interface CategoryInfo {
@@ -39,7 +43,9 @@ const DUMMY_ROOT_FORMAT = {
   index: DUMMY_ROOT_NAME,
   hasChildren: true,
   children: [],
-  data: '',
+  data: {
+    title: '',
+  },
 };
 
 function CategoryOffcanvas({ show, handleClose }: { show: boolean, handleClose: Function }) {
@@ -71,14 +77,14 @@ function CategoryOffcanvas({ show, handleClose }: { show: boolean, handleClose: 
   if (error || !data) return makeErrorElement(show, handleClose, <p>Error</p>);
 
   const categories: Category[] = data.categories;
-  const { rootId, rootName, items } = makeItems(categories);
+  const { root, items } = makeItems(categories);
 
-  if (!rootId) {
+  if (!root) {
     return makeErrorElement(show, handleClose, <></>);
   }
 
   const dummyRoot: Element = Object.assign({},
-    DUMMY_ROOT_FORMAT, { children: [items[rootId].index] });
+    DUMMY_ROOT_FORMAT, { children: [items[root.index].index] });
   const mergedItems: { [key: string]: Element } = Object.assign({},
     { [DUMMY_ROOT_NAME]: dummyRoot }, items);
 
@@ -102,7 +108,7 @@ function CategoryOffcanvas({ show, handleClose }: { show: boolean, handleClose: 
 
   const modalDeleteCategory = () => {
     if (!currentCategory) return;
-    if (currentCategory.index === rootId) {
+    if (currentCategory.index === root.index) {
       setDeleteModalShow(false);
       return;
     }
@@ -160,12 +166,9 @@ function CategoryOffcanvas({ show, handleClose }: { show: boolean, handleClose: 
   }, []);
 
   const init = async () => {
-    setCurrentCategory({
-      index: rootId,
-      name: rootName,
-    });
-    setSelectedTreeItems([rootId]);
-    setExpandedTreeItems([rootId]);
+    setCurrentCategory(root);
+    setSelectedTreeItems([root.index]);
+    setExpandedTreeItems([root.index]);
   };
 
   return (
@@ -187,13 +190,16 @@ function CategoryOffcanvas({ show, handleClose }: { show: boolean, handleClose: 
           </div>
           <ControlledTreeEnvironment
             items={mergedItems}
-            getItemTitle={item => item.data}
+            getItemTitle={item => item.data.title}
+            renderItemTitle={({ title, item }) => {
+              return <span className='text-dark'>{`${title} `}<sup className='text-secondary'>{`(${item.data.count}/${item.data.netCount})`}</sup></span>
+            }}
             defaultInteractionMode={InteractionMode.DoubleClickItemToExpand}
             showLiveDescription={false}
             onFocusItem={(item: TreeItem) => {
               setCurrentCategory({
                 index: item.index as string,
-                name: item.data,
+                name: item.data.title,
               });
               setFocusedTreeItem(item.index);
             }}
@@ -222,8 +228,7 @@ function CategoryOffcanvas({ show, handleClose }: { show: boolean, handleClose: 
           <Modal.Title>카테고리 생성</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>{`"${currentCategory?.name}" 아래 새 카테고리를 만듭니다.`}</p>
-          <p>새 카테고리 이름을 입력하세요.</p>
+          <p>{`'${currentCategory?.name}' 아래 새 카테고리를 만듭니다.`}</p>
           <p>카테고리명은 한글, 영어, 밑줄(_) 만 가능합니다.</p>
           <Form.Control type='text' value={newCategoryName} placeholder='새 카테고리 이름'
                         onChange={handleNewCategoryName} />
@@ -237,8 +242,7 @@ function CategoryOffcanvas({ show, handleClose }: { show: boolean, handleClose: 
           <Modal.Title>카테고리 수정</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>{`"${currentCategory?.name}" 의 이름을 변경합니다.`}</p>
-          <p>새 이름을 입력하세요.</p>
+          <p>{`'${currentCategory?.name}' 의 이름을 변경합니다.`}</p>
           <p>카테고리명은 한글, 영어, 밑줄(_) 만 가능합니다.</p>
           <Form.Control type='text' value={newCategoryName} placeholder='새 카테고리 이름'
                         onChange={handleNewCategoryName} />
@@ -252,11 +256,11 @@ function CategoryOffcanvas({ show, handleClose }: { show: boolean, handleClose: 
           <Modal.Title>카테고리 삭제</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {(currentCategory?.index === rootId)
+          {(currentCategory?.index === root.index)
             ? <p>기본 카테고리는 삭제할 수 없습니다.</p>
             : (
               <>
-                <p>{`"${currentCategory?.name}" 카테고리를 삭제합니다.`}</p>
+                <p>{`'${currentCategory?.name}' 카테고리를 삭제합니다.`}</p>
                 <p>카테고리에 포함된 모든 글이 함께 삭제됩니다.</p>
               </>)}
         </Modal.Body>
@@ -283,73 +287,37 @@ function makeErrorElement(show: boolean, handleClose: Function, bodyContent: JSX
   );
 }
 
-function makeItems(categories: Category[]) {
+function makeItems(categories: Category[]): { root: CategoryInfo | null, items: { [key: string]: Element } } {
   let items: { [key: string]: Element } = {};
 
   const rootCategory = categories.find(category => category.isRoot);
 
   if (!rootCategory) {
-    return { rootId: null, rootName: '', items: items };
+    return { root: null, items: items };
   }
+
+  const elements = categories.map(category => convert(category));
+  items = elements.reduce((prev, curr) => {
+    return Object.assign({}, prev, { [curr.index]: curr });
+  }, {});
 
   const rootElement = convert(rootCategory);
-  items[rootElement.index] = rootElement;
 
-  const map = makeParentIdCategoryMap(categories);
-  putItems(items, rootElement, map);
-
-  return { rootId: rootElement.index, rootName: rootElement.data, items: items };
-}
-
-function makeParentIdCategoryMap(categories: Category[]): Map<string, Category[]> {
-  let map: Map<string, Category[]> = new Map<string, Category[]>();
-  for (let i = 0; i < categories.length; i++) {
-    const category = categories[i];
-    const parentId = category.parentId;
-    if (!parentId) continue;
-    if (map.has(parentId)) {
-      map.get(parentId)?.push(category);
-    } else {
-      map.set(parentId, [category]);
-    }
-  }
-  return map;
-}
-
-function putItems(items: { [key: string]: Element }, target: Element, map: Map<string, Category[]>) {
-  const categories: Category[] | undefined = map.get(target.index);
-  if (!categories || categories.length == 0) {
-    return;
-  }
-
-  const children: Element[] = categories.map(category => convert(category));
-
-  children.sort(function(e1, e2) {
-    const data1 = e1.data;
-    const data2 = e2.data;
-    if (data1 < data2) return -1;
-    if (data1 > data2) return 1;
-    return 0;
-  });
-
-  target.hasChildren = true;
-  target.children = children.map(element => element.index);
-
-  for (let i = 0; i < children.length; i++) {
-    items[children[i].index] = children[i];
-  }
-
-  for (let j = 0; j < children.length; j++) {
-    putItems(items, children[j], map);
-  }
+  return { root: { name: rootElement.data.title, index: rootElement.index }, items: items };
 }
 
 function convert(category: Category): Element {
+  const hasChildren = !!category.childrenIds && (category.childrenIds.length > 0);
+  const children: string[] = (!!category.childrenIds) ? category.childrenIds : [];
   return {
     index: category.id,
-    hasChildren: false,
-    children: [],
-    data: category.name,
+    hasChildren: hasChildren,
+    children: children,
+    data: {
+      title: category.name,
+      count: category.count,
+      netCount: category.netCount,
+    },
   };
 }
 
