@@ -21,7 +21,7 @@ function Write() {
       <Helmet>
         <title>새 메모 작성</title>
       </Helmet>
-      <Navigation isLoggedIn={isLoggedIn} />
+      <Navigation categoryId={categoryId} isLoggedIn={isLoggedIn} />
       <Container as='main' className='home-main'>
         <PostForm categoryId={categoryId} />
       </Container>

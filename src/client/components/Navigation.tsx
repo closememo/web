@@ -8,14 +8,25 @@ import SettingOffcanvas from 'client/components/SettingOffcanvas';
 import { Link, useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
 import CategoryOffcanvas from 'client/components/CategoryOffcanvas';
+import { useGetCategoriesQuery } from 'apollo/generated/hooks';
+import { Category } from 'apollo/generated/types';
 
-function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
+function Navigation({ categoryId, isLoggedIn }: { categoryId?: string | null, isLoggedIn: boolean }) {
 
   const history = useHistory();
+
+  let getCategoriesQueryResult;
+  let categories: Category[] | undefined;
+  if (isLoggedIn) {
+    getCategoriesQueryResult = useGetCategoriesQuery();
+    categories = getCategoriesQueryResult.data?.categories;
+  }
 
   const [query, setQuery] = useState('');
 
   const [leftOffcanvasShow, setLeftOffcanvasShow] = useState(false);
+  const [needToBeExpanded, setNeedToBeExpanded] = useState<string[]>([])
+  const [needToBeSelected, setNeedToBeSelected] = useState<string[]>([]);
   const [settingOffcanvasShow, setSettingOffcanvasShow] = useState(false);
   const [loginModalShow, setLoginModalShow] = useState(false);
   const [signUpModalShow, setSignUpModalShow] = useState(false);
@@ -30,7 +41,11 @@ function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
   };
 
   const handleLeftOffcanvasClose = () => setLeftOffcanvasShow(false);
-  const handleLeftOffcanvasShow = () => setLeftOffcanvasShow(true);
+  const handleLeftOffcanvasShow = () => {
+    setNeedToBeSelected((!!categoryId) ? [categoryId] : []);
+    setNeedToBeExpanded(getIdsNeedToBeExpanded(categoryId, categories));
+    setLeftOffcanvasShow(true);
+  }
 
   const handleSettingOffcanvasClose = () => setSettingOffcanvasShow(false);
   const handleSettingOffcanvasShow = () => setSettingOffcanvasShow(true);
@@ -88,13 +103,30 @@ function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
         </Container>
       </Navbar>
       {isLoggedIn
-        ? <CategoryOffcanvas show={leftOffcanvasShow} handleClose={handleLeftOffcanvasClose} />
+        ? <CategoryOffcanvas show={leftOffcanvasShow} handleClose={handleLeftOffcanvasClose} categories={categories}
+                             needToBeSelected={needToBeSelected} needToBeExpanded={needToBeExpanded} />
         : <HelpOffcanvas show={leftOffcanvasShow} handleClose={handleLeftOffcanvasClose} />}
       <SettingOffcanvas show={settingOffcanvasShow} handleClose={handleSettingOffcanvasClose} />
       <LoginModal isShow={loginModalShow} closeModal={handleLoginModalClose} />
       <SignupModal isShow={signUpModalShow} closeModal={handleSignUpModalClose} />
     </>
   );
+}
+
+function getIdsNeedToBeExpanded(categoryId: string | null | undefined, categories: Category[] | undefined) {
+  if (!categoryId || !categories) return [];
+  let needToExpand: string[] = [categoryId];
+  let cursorId: string = categoryId;
+  while (true) {
+    const parent: Category | undefined = categories.find(category => {
+      if (!category.childrenIds) return false;
+      return category.childrenIds.includes(cursorId);
+    })
+    if (!parent) break;
+    needToExpand.push(parent.id);
+    cursorId = parent.id;
+  }
+  return needToExpand;
 }
 
 export default Navigation;

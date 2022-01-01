@@ -29,7 +29,7 @@ function HomePage({ location }: { location: Location }) {
       <Helmet>
         <title>홈</title>
       </Helmet>
-      <Navigation isLoggedIn={isLoggedIn} />
+      <Navigation categoryId={categoryId} isLoggedIn={isLoggedIn} />
       {!!state && <Information state={state} isLoggedIn={isLoggedIn} />}
       <Container as='main' className='home-main'>
         {isLoggedIn

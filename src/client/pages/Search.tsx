@@ -2,6 +2,7 @@ import React from 'react';
 import {
   SearchPostListByTagDocument,
   useDeletePostsMutation,
+  useGetCurrentCategoryQuery,
   useGetLoggedInUserQuery,
   useMailPostsMutation,
   useSearchPostListByTagQuery,
@@ -17,6 +18,7 @@ function Search({ location }: { location: Location }) {
   const tag = new URLSearchParams(search).get('tag');
 
   const loggedInUserQueryResult = useGetLoggedInUserQuery();
+  const currentCategoryQueryResult = useGetCurrentCategoryQuery();
   const searchPostsResult = useSearchPostListByTagQuery({
     variables: { tag },
     fetchPolicy: 'network-only',
@@ -29,6 +31,7 @@ function Search({ location }: { location: Location }) {
   if (searchPostsResult.error || !searchPostsResult.data) return <p>Error</p>;
 
   const isLoggedIn: boolean = loggedInUserQueryResult.data.me.isLoggedIn;
+  const categoryId: string | null | undefined = currentCategoryQueryResult.data?.currentCategory;
   const searchedPosts = searchPostsResult.data.searchPostsByTag;
 
   const refreshSearchPosts = () => {
@@ -42,7 +45,7 @@ function Search({ location }: { location: Location }) {
       <Helmet>
         <title>검색</title>
       </Helmet>
-      <Navigation isLoggedIn={isLoggedIn} />
+      <Navigation categoryId={categoryId} isLoggedIn={isLoggedIn} />
       <Container as='main' className='home-main'>
         <PostList heading={'[태그검색] 검색어: ' + tag} posts={searchedPosts}
                   refreshPosts={refreshSearchPosts} deletePosts={deletePosts} mailPosts={mailPosts} />

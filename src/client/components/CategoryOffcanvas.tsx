@@ -12,13 +12,20 @@ import {
   GetCategoriesDocument,
   useCreateCategoryMutation,
   useDeleteCategoryMutation,
-  useGetCategoriesQuery,
   useUpdateCategoryMutation,
 } from 'apollo/generated/hooks';
 import { Category } from 'apollo/generated/types';
 import { currentCategoryVar } from 'apollo/caches';
 import { useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
+
+interface CategoryOffcanvasParam {
+  show: boolean,
+  handleClose: Function,
+  categories?: Category[],
+  needToBeSelected: string[],
+  needToBeExpanded: string[]
+}
 
 interface Element {
   index: string,
@@ -48,7 +55,7 @@ const DUMMY_ROOT_FORMAT = {
   },
 };
 
-function CategoryOffcanvas({ show, handleClose }: { show: boolean, handleClose: Function }) {
+function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, needToBeExpanded }: CategoryOffcanvasParam) {
 
   const history = useHistory();
 
@@ -62,7 +69,6 @@ function CategoryOffcanvas({ show, handleClose }: { show: boolean, handleClose: 
   const [expandedTreeItems, setExpandedTreeItems] = useState<TreeItemIndex[]>([]);
   const [selectedTreeItems, setSelectedTreeItems] = useState<TreeItemIndex[]>([]);
 
-  const { data, error, loading } = useGetCategoriesQuery();
   const [createCategory] = useCreateCategoryMutation({
     refetchQueries: [{ query: GetCategoriesDocument }],
   });
@@ -73,10 +79,8 @@ function CategoryOffcanvas({ show, handleClose }: { show: boolean, handleClose: 
     refetchQueries: [{ query: GetCategoriesDocument }],
   });
 
-  if (loading) return makeErrorElement(show, handleClose, <p>Loading...</p>);
-  if (error || !data) return makeErrorElement(show, handleClose, <p>Error</p>);
+  if (!categories) return makeErrorElement(show, handleClose, <p>Error</p>);
 
-  const categories: Category[] = data.categories;
   const { root, items } = makeItems(categories);
 
   if (!root) {
@@ -170,6 +174,14 @@ function CategoryOffcanvas({ show, handleClose }: { show: boolean, handleClose: 
     setSelectedTreeItems([root.index]);
     setExpandedTreeItems([root.index]);
   };
+
+  useEffect(() => {
+    setSelectedTreeItems(needToBeSelected);
+  }, [needToBeSelected])
+
+  useEffect(() => {
+    setExpandedTreeItems(needToBeExpanded);
+  }, [needToBeExpanded])
 
   return (
     <>

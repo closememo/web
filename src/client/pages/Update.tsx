@@ -29,7 +29,7 @@ function Update() {
       <Helmet>
         <title>메모 수정</title>
       </Helmet>
-      <Navigation isLoggedIn={isLoggedIn} />
+      <Navigation categoryId={categoryId} isLoggedIn={isLoggedIn} />
       <Container as='main' className='home-main'>
         <PostForm categoryId={categoryId} id={id} currentTitle={title} currentContent={content}
                   currentTags={tags} currentOption={option} />
