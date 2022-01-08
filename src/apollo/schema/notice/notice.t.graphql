@@ -1,0 +1,26 @@
+type Query {
+    noticeListElements: NoticeListElementPage
+    notice(noticeId: ID!): Notice
+}
+
+type NoticeListElementPage {
+    data: [NoticeListElement!]!
+    total: Int!
+    currentPage: Int!
+    limit: Int!
+    hasNext: Boolean!
+}
+
+type NoticeListElement {
+    id: ID!
+    title: String!
+    preview: String!
+    createdAt: String!
+}
+
+type Notice {
+    id: ID!
+    title: String!
+    content: String!
+    createdAt: String!
+}

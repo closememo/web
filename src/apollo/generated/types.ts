@@ -93,6 +93,31 @@ export type NewLocalPost = {
   title?: Maybe<Scalars['String']>;
 };
 
+export type Notice = {
+  __typename?: 'Notice';
+  content: Scalars['String'];
+  createdAt: Scalars['String'];
+  id: Scalars['ID'];
+  title: Scalars['String'];
+};
+
+export type NoticeListElement = {
+  __typename?: 'NoticeListElement';
+  createdAt: Scalars['String'];
+  id: Scalars['ID'];
+  preview: Scalars['String'];
+  title: Scalars['String'];
+};
+
+export type NoticeListElementPage = {
+  __typename?: 'NoticeListElementPage';
+  currentPage: Scalars['Int'];
+  data: Array<NoticeListElement>;
+  hasNext: Scalars['Boolean'];
+  limit: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
 export type Page = {
   __typename?: 'Page';
   currentPage: Scalars['Int'];
@@ -132,9 +157,15 @@ export type Query = {
   categories: Array<Category>;
   currentCategory?: Maybe<Scalars['String']>;
   me: User;
+  notice?: Maybe<Notice>;
+  noticeListElements?: Maybe<NoticeListElementPage>;
   post: Post;
   posts?: Maybe<Page>;
   searchPostsByTag: Array<Maybe<SimplePost>>;
+};
+
+export type QueryNoticeArgs = {
+  noticeId: Scalars['ID'];
 };
 
 export type QueryPostArgs = {
@@ -216,6 +247,41 @@ export type DeleteCategoryMutationVariables = Exact<{
 export type DeleteCategoryMutation = {
   __typename?: 'Mutation';
   deleteCategory?: boolean | null | undefined;
+};
+
+export type GetNoticeListElementsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetNoticeListElementsQuery = {
+  __typename?: 'Query';
+  noticeListElements?:
+    | {
+        __typename?: 'NoticeListElementPage';
+        total: number;
+        currentPage: number;
+        limit: number;
+        hasNext: boolean;
+        data: Array<{
+          __typename?: 'NoticeListElement';
+          id: string;
+          title: string;
+          preview: string;
+          createdAt: string;
+        }>;
+      }
+    | null
+    | undefined;
+};
+
+export type GetNoticeQueryVariables = Exact<{
+  noticeId: Scalars['ID'];
+}>;
+
+export type GetNoticeQuery = {
+  __typename?: 'Query';
+  notice?:
+    | { __typename?: 'Notice'; id: string; title: string; content: string; createdAt: string }
+    | null
+    | undefined;
 };
 
 export type GetPostListQueryVariables = Exact<{

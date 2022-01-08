@@ -2,7 +2,7 @@ import React, { ChangeEvent, MouseEvent, useState } from 'react';
 import { Button, ButtonGroup, Form, ListGroup, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
-import { convertDateString } from 'shared/utils/dateUtils';
+import { convertDateTimeString } from 'shared/utils/dateUtils';
 import WaitingModal from 'client/components/WaitingModal';
 import PagingHandle from 'client/components/PagingHandle';
 
@@ -130,7 +130,7 @@ function PostList({
                 <Form.Check aria-label='option 1' className='me-1' checked={checkedIds.has(post.id)}
                             onChange={(event: ChangeEvent) => handleCheckboxChange(event, post.id)} />
                 {getTitleElement(post.id, post.title)}
-                <small className='ms-auto'>{convertDateString(post.createdAt)}</small>
+                <small className='ms-auto'>{convertDateTimeString(post.createdAt)}</small>
               </div>
               <div className='mb-1'>
                 {post.tags && post.tags.map((tag: any, index: number) =>

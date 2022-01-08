@@ -253,6 +253,121 @@ export type DeleteCategoryMutationOptions = Apollo.BaseMutationOptions<
   Types.DeleteCategoryMutation,
   Types.DeleteCategoryMutationVariables
 >;
+export const GetNoticeListElementsDocument = gql`
+  query GetNoticeListElements {
+    noticeListElements {
+      data {
+        id
+        title
+        preview
+        createdAt
+      }
+      total
+      currentPage
+      limit
+      hasNext
+    }
+  }
+`;
+
+/**
+ * __useGetNoticeListElementsQuery__
+ *
+ * To run a query within a React component, call `useGetNoticeListElementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNoticeListElementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNoticeListElementsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetNoticeListElementsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    Types.GetNoticeListElementsQuery,
+    Types.GetNoticeListElementsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    Types.GetNoticeListElementsQuery,
+    Types.GetNoticeListElementsQueryVariables
+  >(GetNoticeListElementsDocument, options);
+}
+export function useGetNoticeListElementsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    Types.GetNoticeListElementsQuery,
+    Types.GetNoticeListElementsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    Types.GetNoticeListElementsQuery,
+    Types.GetNoticeListElementsQueryVariables
+  >(GetNoticeListElementsDocument, options);
+}
+export type GetNoticeListElementsQueryHookResult = ReturnType<typeof useGetNoticeListElementsQuery>;
+export type GetNoticeListElementsLazyQueryHookResult = ReturnType<
+  typeof useGetNoticeListElementsLazyQuery
+>;
+export type GetNoticeListElementsQueryResult = Apollo.QueryResult<
+  Types.GetNoticeListElementsQuery,
+  Types.GetNoticeListElementsQueryVariables
+>;
+export const GetNoticeDocument = gql`
+  query GetNotice($noticeId: ID!) {
+    notice(noticeId: $noticeId) {
+      id
+      title
+      content
+      createdAt
+    }
+  }
+`;
+
+/**
+ * __useGetNoticeQuery__
+ *
+ * To run a query within a React component, call `useGetNoticeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNoticeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNoticeQuery({
+ *   variables: {
+ *      noticeId: // value for 'noticeId'
+ *   },
+ * });
+ */
+export function useGetNoticeQuery(
+  baseOptions: Apollo.QueryHookOptions<Types.GetNoticeQuery, Types.GetNoticeQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<Types.GetNoticeQuery, Types.GetNoticeQueryVariables>(
+    GetNoticeDocument,
+    options,
+  );
+}
+export function useGetNoticeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<Types.GetNoticeQuery, Types.GetNoticeQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<Types.GetNoticeQuery, Types.GetNoticeQueryVariables>(
+    GetNoticeDocument,
+    options,
+  );
+}
+export type GetNoticeQueryHookResult = ReturnType<typeof useGetNoticeQuery>;
+export type GetNoticeLazyQueryHookResult = ReturnType<typeof useGetNoticeLazyQuery>;
+export type GetNoticeQueryResult = Apollo.QueryResult<
+  Types.GetNoticeQuery,
+  Types.GetNoticeQueryVariables
+>;
 export const GetPostListDocument = gql`
   query GetPostList($categoryId: String, $page: Int, $limit: Int) {
     posts(categoryId: $categoryId, page: $page, limit: $limit) {

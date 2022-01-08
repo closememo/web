@@ -27,9 +27,15 @@ const routes: RouteConfig[] = [
     component: require('client/pages/Search').default,
   },
   {
+    name: 'Notice',
+    path: PagePaths.Notice,
+    exact: true,
+    component: require('client/pages/Notice').default,
+  },
+  {
     path: '*',
     component: require('client/pages/NotFound').default,
-  }
+  },
 ];
 
 export default routes;

@@ -1,0 +1,23 @@
+query GetNoticeListElements {
+    noticeListElements {
+        data {
+            id
+            title
+            preview
+            createdAt
+        }
+        total
+        currentPage
+        limit
+        hasNext
+    }
+}
+
+query GetNotice($noticeId: ID!) {
+    notice(noticeId: $noticeId) {
+        id
+        title
+        content
+        createdAt
+    }
+}

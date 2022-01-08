@@ -17,11 +17,20 @@ export function getNowDateString(): string {
 /**
  * example: '2021-10-30T12:44:53.539076+09:00' -> '2021-10-30 12:44:53'
  */
-export function convertDateString(dateString: string) {
-  const date = convertToCustomDate(new Date(dateString));
+export function convertDateTimeString(dateTimeString: string) {
+  const date = convertToCustomDate(new Date(dateTimeString));
 
   return date.year + '-' + date.month + '-' + date.date +
     ' ' + date.hours + ':' + date.minutes + ':' + date.seconds;
+}
+
+/**
+ * example: '2021-10-30T12:44:53.539076+09:00' -> '2021-10-30'
+ */
+export function convertDateString(dateString: string) {
+  const date = convertToCustomDate(new Date(dateString));
+
+  return date.year + '-' + date.month + '-' + date.date;
 }
 
 function convertToCustomDate(date: Date): CustomDateForm {

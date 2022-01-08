@@ -1,8 +1,12 @@
 import { Button, Modal, Offcanvas } from 'react-bootstrap';
 import React, { MouseEvent, useState } from 'react';
 import { useApolloClient } from '@apollo/client';
+import { useHistory } from 'react-router-dom';
+import PagePaths from 'client/constants/PagePaths';
 
-function SettingOffcanvas({ show, handleClose }: { show: boolean, handleClose: Function }) {
+function SettingOffcanvas({ newNotice, show, handleClose }: { newNotice?: boolean, show: boolean, handleClose: Function }) {
+
+  const history = useHistory();
 
   const client = useApolloClient();
 
@@ -29,8 +33,15 @@ function SettingOffcanvas({ show, handleClose }: { show: boolean, handleClose: F
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>설정</Offcanvas.Title>
         </Offcanvas.Header>
-        <Offcanvas.Body>
+        <Offcanvas.Body className='d-flex flex-column'>
           <div className='d-grid gap-2'>
+            <Button variant='outline-primary' className='w-100 navi-btn'
+                    onClick={() => history.push(PagePaths.Notice)}>
+              공지사항
+              {newNotice ? newNoticeBadge() : <></>}
+            </Button>
+          </div>
+          <div className='d-grid gap-2 mt-auto'>
             <Button variant='outline-success' className='w-100 navi-btn'
                     onClick={handleLogoutButtonClick}>로그아웃</Button>
             <Button variant='outline-danger' className='w-100 navi-btn'
@@ -56,6 +67,14 @@ function SettingOffcanvas({ show, handleClose }: { show: boolean, handleClose: F
         </Modal.Footer>
       </Modal>
     </>
+  );
+}
+
+function newNoticeBadge() {
+  return (
+    <span className='position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle'>
+      <span className='visually-hidden' />
+    </span>
   );
 }
 
