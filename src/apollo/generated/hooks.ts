@@ -849,6 +849,254 @@ export type MailPostsMutationOptions = Apollo.BaseMutationOptions<
   Types.MailPostsMutation,
   Types.MailPostsMutationVariables
 >;
+export const GetSuggestionListElementsDocument = gql`
+  query GetSuggestionListElements {
+    suggestions {
+      id
+      preview
+      createdAt
+      status
+    }
+  }
+`;
+
+/**
+ * __useGetSuggestionListElementsQuery__
+ *
+ * To run a query within a React component, call `useGetSuggestionListElementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSuggestionListElementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSuggestionListElementsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetSuggestionListElementsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    Types.GetSuggestionListElementsQuery,
+    Types.GetSuggestionListElementsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    Types.GetSuggestionListElementsQuery,
+    Types.GetSuggestionListElementsQueryVariables
+  >(GetSuggestionListElementsDocument, options);
+}
+export function useGetSuggestionListElementsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    Types.GetSuggestionListElementsQuery,
+    Types.GetSuggestionListElementsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    Types.GetSuggestionListElementsQuery,
+    Types.GetSuggestionListElementsQueryVariables
+  >(GetSuggestionListElementsDocument, options);
+}
+export type GetSuggestionListElementsQueryHookResult = ReturnType<
+  typeof useGetSuggestionListElementsQuery
+>;
+export type GetSuggestionListElementsLazyQueryHookResult = ReturnType<
+  typeof useGetSuggestionListElementsLazyQuery
+>;
+export type GetSuggestionListElementsQueryResult = Apollo.QueryResult<
+  Types.GetSuggestionListElementsQuery,
+  Types.GetSuggestionListElementsQueryVariables
+>;
+export const GetSuggestionDocument = gql`
+  query GetSuggestion($suggestionId: ID!) {
+    suggestion(suggestionId: $suggestionId) {
+      id
+      content
+    }
+  }
+`;
+
+/**
+ * __useGetSuggestionQuery__
+ *
+ * To run a query within a React component, call `useGetSuggestionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSuggestionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSuggestionQuery({
+ *   variables: {
+ *      suggestionId: // value for 'suggestionId'
+ *   },
+ * });
+ */
+export function useGetSuggestionQuery(
+  baseOptions: Apollo.QueryHookOptions<Types.GetSuggestionQuery, Types.GetSuggestionQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<Types.GetSuggestionQuery, Types.GetSuggestionQueryVariables>(
+    GetSuggestionDocument,
+    options,
+  );
+}
+export function useGetSuggestionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    Types.GetSuggestionQuery,
+    Types.GetSuggestionQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<Types.GetSuggestionQuery, Types.GetSuggestionQueryVariables>(
+    GetSuggestionDocument,
+    options,
+  );
+}
+export type GetSuggestionQueryHookResult = ReturnType<typeof useGetSuggestionQuery>;
+export type GetSuggestionLazyQueryHookResult = ReturnType<typeof useGetSuggestionLazyQuery>;
+export type GetSuggestionQueryResult = Apollo.QueryResult<
+  Types.GetSuggestionQuery,
+  Types.GetSuggestionQueryVariables
+>;
+export const CreateSuggestionDocument = gql`
+  mutation CreateSuggestion($content: String!) {
+    createSuggestion(content: $content)
+  }
+`;
+export type CreateSuggestionMutationFn = Apollo.MutationFunction<
+  Types.CreateSuggestionMutation,
+  Types.CreateSuggestionMutationVariables
+>;
+
+/**
+ * __useCreateSuggestionMutation__
+ *
+ * To run a mutation, you first call `useCreateSuggestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSuggestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSuggestionMutation, { data, loading, error }] = useCreateSuggestionMutation({
+ *   variables: {
+ *      content: // value for 'content'
+ *   },
+ * });
+ */
+export function useCreateSuggestionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    Types.CreateSuggestionMutation,
+    Types.CreateSuggestionMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    Types.CreateSuggestionMutation,
+    Types.CreateSuggestionMutationVariables
+  >(CreateSuggestionDocument, options);
+}
+export type CreateSuggestionMutationHookResult = ReturnType<typeof useCreateSuggestionMutation>;
+export type CreateSuggestionMutationResult = Apollo.MutationResult<Types.CreateSuggestionMutation>;
+export type CreateSuggestionMutationOptions = Apollo.BaseMutationOptions<
+  Types.CreateSuggestionMutation,
+  Types.CreateSuggestionMutationVariables
+>;
+export const UpdateSuggestionDocument = gql`
+  mutation UpdateSuggestion($suggestionId: ID!, $content: String!) {
+    updateSuggestion(suggestionId: $suggestionId, content: $content)
+  }
+`;
+export type UpdateSuggestionMutationFn = Apollo.MutationFunction<
+  Types.UpdateSuggestionMutation,
+  Types.UpdateSuggestionMutationVariables
+>;
+
+/**
+ * __useUpdateSuggestionMutation__
+ *
+ * To run a mutation, you first call `useUpdateSuggestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSuggestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSuggestionMutation, { data, loading, error }] = useUpdateSuggestionMutation({
+ *   variables: {
+ *      suggestionId: // value for 'suggestionId'
+ *      content: // value for 'content'
+ *   },
+ * });
+ */
+export function useUpdateSuggestionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    Types.UpdateSuggestionMutation,
+    Types.UpdateSuggestionMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    Types.UpdateSuggestionMutation,
+    Types.UpdateSuggestionMutationVariables
+  >(UpdateSuggestionDocument, options);
+}
+export type UpdateSuggestionMutationHookResult = ReturnType<typeof useUpdateSuggestionMutation>;
+export type UpdateSuggestionMutationResult = Apollo.MutationResult<Types.UpdateSuggestionMutation>;
+export type UpdateSuggestionMutationOptions = Apollo.BaseMutationOptions<
+  Types.UpdateSuggestionMutation,
+  Types.UpdateSuggestionMutationVariables
+>;
+export const DeleteSuggestionDocument = gql`
+  mutation DeleteSuggestion($suggestionId: ID!) {
+    deleteSuggestion(suggestionId: $suggestionId)
+  }
+`;
+export type DeleteSuggestionMutationFn = Apollo.MutationFunction<
+  Types.DeleteSuggestionMutation,
+  Types.DeleteSuggestionMutationVariables
+>;
+
+/**
+ * __useDeleteSuggestionMutation__
+ *
+ * To run a mutation, you first call `useDeleteSuggestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteSuggestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteSuggestionMutation, { data, loading, error }] = useDeleteSuggestionMutation({
+ *   variables: {
+ *      suggestionId: // value for 'suggestionId'
+ *   },
+ * });
+ */
+export function useDeleteSuggestionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    Types.DeleteSuggestionMutation,
+    Types.DeleteSuggestionMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    Types.DeleteSuggestionMutation,
+    Types.DeleteSuggestionMutationVariables
+  >(DeleteSuggestionDocument, options);
+}
+export type DeleteSuggestionMutationHookResult = ReturnType<typeof useDeleteSuggestionMutation>;
+export type DeleteSuggestionMutationResult = Apollo.MutationResult<Types.DeleteSuggestionMutation>;
+export type DeleteSuggestionMutationOptions = Apollo.BaseMutationOptions<
+  Types.DeleteSuggestionMutation,
+  Types.DeleteSuggestionMutationVariables
+>;
 export const GetLoggedInUserDocument = gql`
   query GetLoggedInUser {
     me {

@@ -1,0 +1,22 @@
+type Query {
+    suggestions: [SuggestionListElement!]!
+    suggestion(suggestionId: ID!): Suggestion
+}
+
+type Mutation {
+    createSuggestion(content: String!): Boolean
+    updateSuggestion(suggestionId: ID!, content: String!): Boolean
+    deleteSuggestion(suggestionId: ID!): Boolean
+}
+
+type SuggestionListElement {
+    id: ID!
+    preview: String!
+    createdAt: String!
+    status: String!
+}
+
+type Suggestion {
+    id: ID!
+    content: String!
+}

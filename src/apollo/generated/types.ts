@@ -33,12 +33,15 @@ export type Mutation = {
   createCategory?: Maybe<Scalars['Boolean']>;
   createLocalPosts?: Maybe<LocalPostCreatesResponse>;
   createNewPost?: Maybe<PostCreateResponse>;
+  createSuggestion?: Maybe<Scalars['Boolean']>;
   deleteCategory?: Maybe<Scalars['Boolean']>;
   deletePost?: Maybe<Scalars['Boolean']>;
   deletePosts?: Maybe<Scalars['Boolean']>;
+  deleteSuggestion?: Maybe<Scalars['Boolean']>;
   mailPosts?: Maybe<Scalars['Boolean']>;
   updateCategory?: Maybe<Scalars['Boolean']>;
   updatePost?: Maybe<PostCreateResponse>;
+  updateSuggestion?: Maybe<Scalars['Boolean']>;
 };
 
 export type MutationCreateCategoryArgs = {
@@ -58,6 +61,10 @@ export type MutationCreateNewPostArgs = {
   title?: Maybe<Scalars['String']>;
 };
 
+export type MutationCreateSuggestionArgs = {
+  content: Scalars['String'];
+};
+
 export type MutationDeleteCategoryArgs = {
   categoryId: Scalars['ID'];
 };
@@ -68,6 +75,10 @@ export type MutationDeletePostArgs = {
 
 export type MutationDeletePostsArgs = {
   ids?: Maybe<Array<Scalars['ID']>>;
+};
+
+export type MutationDeleteSuggestionArgs = {
+  suggestionId: Scalars['ID'];
 };
 
 export type MutationMailPostsArgs = {
@@ -85,6 +96,11 @@ export type MutationUpdatePostArgs = {
   option?: Maybe<PostOptionInput>;
   tags?: Maybe<Array<Maybe<Scalars['String']>>>;
   title?: Maybe<Scalars['String']>;
+};
+
+export type MutationUpdateSuggestionArgs = {
+  content: Scalars['String'];
+  suggestionId: Scalars['ID'];
 };
 
 export type NewLocalPost = {
@@ -162,6 +178,8 @@ export type Query = {
   post: Post;
   posts?: Maybe<Page>;
   searchPostsByTag: Array<Maybe<SimplePost>>;
+  suggestion?: Maybe<Suggestion>;
+  suggestions: Array<SuggestionListElement>;
 };
 
 export type QueryNoticeArgs = {
@@ -182,6 +200,10 @@ export type QuerySearchPostsByTagArgs = {
   tag?: Maybe<Scalars['String']>;
 };
 
+export type QuerySuggestionArgs = {
+  suggestionId: Scalars['ID'];
+};
+
 export type SimplePost = {
   __typename?: 'SimplePost';
   autoTags?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -190,6 +212,20 @@ export type SimplePost = {
   preview: Scalars['String'];
   tags?: Maybe<Array<Scalars['String']>>;
   title?: Maybe<Scalars['String']>;
+};
+
+export type Suggestion = {
+  __typename?: 'Suggestion';
+  content: Scalars['String'];
+  id: Scalars['ID'];
+};
+
+export type SuggestionListElement = {
+  __typename?: 'SuggestionListElement';
+  createdAt: Scalars['String'];
+  id: Scalars['ID'];
+  preview: Scalars['String'];
+  status: Scalars['String'];
 };
 
 export type User = {
@@ -424,6 +460,56 @@ export type MailPostsMutationVariables = Exact<{
 }>;
 
 export type MailPostsMutation = { __typename?: 'Mutation'; mailPosts?: boolean | null | undefined };
+
+export type GetSuggestionListElementsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetSuggestionListElementsQuery = {
+  __typename?: 'Query';
+  suggestions: Array<{
+    __typename?: 'SuggestionListElement';
+    id: string;
+    preview: string;
+    createdAt: string;
+    status: string;
+  }>;
+};
+
+export type GetSuggestionQueryVariables = Exact<{
+  suggestionId: Scalars['ID'];
+}>;
+
+export type GetSuggestionQuery = {
+  __typename?: 'Query';
+  suggestion?: { __typename?: 'Suggestion'; id: string; content: string } | null | undefined;
+};
+
+export type CreateSuggestionMutationVariables = Exact<{
+  content: Scalars['String'];
+}>;
+
+export type CreateSuggestionMutation = {
+  __typename?: 'Mutation';
+  createSuggestion?: boolean | null | undefined;
+};
+
+export type UpdateSuggestionMutationVariables = Exact<{
+  suggestionId: Scalars['ID'];
+  content: Scalars['String'];
+}>;
+
+export type UpdateSuggestionMutation = {
+  __typename?: 'Mutation';
+  updateSuggestion?: boolean | null | undefined;
+};
+
+export type DeleteSuggestionMutationVariables = Exact<{
+  suggestionId: Scalars['ID'];
+}>;
+
+export type DeleteSuggestionMutation = {
+  __typename?: 'Mutation';
+  deleteSuggestion?: boolean | null | undefined;
+};
 
 export type GetLoggedInUserQueryVariables = Exact<{ [key: string]: never }>;
 

@@ -4,6 +4,7 @@ const PagePaths = {
   Update: '/update/:id',
   Search: '/search',
   Notice: '/notice',
+  Suggestion: '/suggestion',
 };
 
 export default PagePaths;

@@ -42,6 +42,8 @@ function SettingOffcanvas({ newNotice, show, handleClose }: { newNotice?: boolea
             </Button>
           </div>
           <div className='d-grid gap-2 mt-auto'>
+            <Button variant='outline-primary' className='w-100 navi-btn'
+                    onClick={() => history.push(PagePaths.Suggestion)}>오류신고/건의</Button>
             <Button variant='outline-success' className='w-100 navi-btn'
                     onClick={handleLogoutButtonClick}>로그아웃</Button>
             <Button variant='outline-danger' className='w-100 navi-btn'

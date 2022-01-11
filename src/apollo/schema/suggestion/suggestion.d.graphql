@@ -1,0 +1,27 @@
+query GetSuggestionListElements {
+    suggestions {
+        id
+        preview
+        createdAt
+        status
+    }
+}
+
+query GetSuggestion($suggestionId: ID!) {
+    suggestion(suggestionId: $suggestionId) {
+        id
+        content
+    }
+}
+
+mutation CreateSuggestion($content: String!) {
+    createSuggestion(content: $content)
+}
+
+mutation UpdateSuggestion($suggestionId: ID!, $content: String!) {
+    updateSuggestion(suggestionId: $suggestionId, content: $content)
+}
+
+mutation DeleteSuggestion($suggestionId: ID!) {
+    deleteSuggestion(suggestionId: $suggestionId)
+}

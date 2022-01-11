@@ -33,6 +33,12 @@ const routes: RouteConfig[] = [
     component: require('client/pages/Notice').default,
   },
   {
+    name: 'Suggestion',
+    path: PagePaths.Suggestion,
+    exact: true,
+    component: require('client/pages/Suggestion').default,
+  },
+  {
     path: '*',
     component: require('client/pages/NotFound').default,
   },
