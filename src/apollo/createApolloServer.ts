@@ -31,6 +31,7 @@ const context = async ({ req, res }: { req: Request, res: Response }) => {
 
 const createApolloServer = (): ApolloServer => {
   return new ApolloServer({
+    debug: false,
     schema,
     context,
     dataSources: () => dataSources,
