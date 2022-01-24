@@ -24,8 +24,7 @@ const dataSources: {
 
 const context = async ({ req, res }: { req: Request, res: Response }) => {
   return {
-    accessToken: res.locals.token,
-    syncToken: res.locals.sync,
+    accessToken: res.locals.token
   };
 };
 

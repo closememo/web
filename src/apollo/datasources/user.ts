@@ -15,7 +15,7 @@ class UserAPI extends AbstractApi {
       if (error instanceof ApolloError) {
         console.log('[ERROR] ApolloError: login check failed.\n' +
           'URL= ' + this.baseURL + '/query/client/accounts/me\n' +
-          'accessToken=' + this.context.accessToken + ', syncToken=' + this.context.syncToken);
+          'accessToken=' + this.context.accessToken);
       }
       return { isLoggedIn: false };
     }

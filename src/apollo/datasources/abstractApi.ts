@@ -19,7 +19,6 @@ abstract class AbstractApi extends RESTDataSource {
 
   protected willSendRequest(request: RequestOptions): ValueOrPromise<void> {
     request.headers.set('X-ACCESS-TOKEN', this.context.accessToken);
-    request.headers.set('X-SYNC-TOKEN', this.context.syncToken);
   }
 
   protected didEncounterError(error: Error, _request: Request) {

@@ -3,11 +3,8 @@ import axios from 'axios';
 import {
   generateAccessToken,
   generateRefreshToken,
-  generateSyncToken,
   getRefreshCookieExp,
   getRefreshTokenId,
-  getSyncCookieMaxAge,
-  getSyncTokenId,
   LoginResponse,
 } from 'server/utils/jwtUtils';
 import States from 'client/constants/States';
@@ -73,7 +70,6 @@ naverCallback.get('/login-callback', async (req: Request, res: Response) => {
 function setTokenCookies(res: Response, loginResponse: LoginResponse, keep: boolean) {
   const refreshToken = generateRefreshToken(loginResponse.token.tokenId, loginResponse.token.exp, keep);
   const accessToken = generateAccessToken(loginResponse.token.tokenId);
-  const syncToken = generateSyncToken(loginResponse.accountId.id);
 
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
@@ -82,26 +78,18 @@ function setTokenCookies(res: Response, loginResponse: LoginResponse, keep: bool
     ? { httpOnly: true, expires: getRefreshCookieExp() }
     : { httpOnly: true };
   res.cookie('refreshToken', refreshToken, refreshTokenOption);
-  res.cookie('syncToken', syncToken, {
-    maxAge: getSyncCookieMaxAge(),
-    httpOnly: true,
-  });
 }
 
 naverCallback.get('/logout', async (req: Request, res: Response) => {
-  const {
-    refreshToken = '',
-    syncToken = '',
-  }: { refreshToken: string, syncToken: string } = req.cookies;
+  const { refreshToken = '' }: { refreshToken: string } = req.cookies;
 
   const { refreshTokenId } = getRefreshTokenId(refreshToken);
-  const syncTokenId = getSyncTokenId(syncToken);
 
   try {
     await instance.post('/command/client/logout', {
       tokenId: refreshTokenId,
     }, {
-      headers: { 'X-ACCESS-TOKEN': refreshTokenId, 'X-SYNC-TOKEN': syncTokenId },
+      headers: { 'X-ACCESS-TOKEN': refreshTokenId },
     });
   } catch (error) {
     console.log(error);
@@ -109,25 +97,20 @@ naverCallback.get('/logout', async (req: Request, res: Response) => {
 
   res.clearCookie('refreshToken');
   res.clearCookie('accessToken');
-  res.clearCookie('syncToken');
 
   return res.redirect('/');
 });
 
 naverCallback.get('/withdraw', async (req: Request, res: Response) => {
-  const {
-    refreshToken = '',
-    syncToken = '',
-  }: { refreshToken: string, syncToken: string } = req.cookies;
+  const { refreshToken = '' }: { refreshToken: string } = req.cookies;
 
   const { refreshTokenId } = getRefreshTokenId(refreshToken);
-  const syncTokenId = getSyncTokenId(syncToken);
 
   try {
     await instance.post('/command/client/withdraw', {
       tokenId: refreshTokenId,
     }, {
-      headers: { 'X-ACCESS-TOKEN': refreshTokenId, 'X-SYNC-TOKEN': syncTokenId },
+      headers: { 'X-ACCESS-TOKEN': refreshTokenId },
     });
   } catch (error) {
     console.log(error);
@@ -135,7 +118,6 @@ naverCallback.get('/withdraw', async (req: Request, res: Response) => {
 
   res.clearCookie('refreshToken');
   res.clearCookie('accessToken');
-  res.clearCookie('syncToken');
 
   return res.redirect('/');
 });
