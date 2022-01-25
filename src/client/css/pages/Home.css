@@ -46,3 +46,12 @@ p.keep-word {
 .break-word {
     word-break: break-all;
 }
+
+.fade-in {
+    transition: opacity 0.7s ease;
+}
+
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.7s ease;
+}

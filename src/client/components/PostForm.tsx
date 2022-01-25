@@ -56,8 +56,10 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
 
   const history = useHistory();
 
+  const [lock, setLock] = useState(false);
   const [title, setTitle] = useState(currentTitle);
   const [content, setContent] = useState(currentContent);
+  const [contentInfoFade, setContentInfoFade] = useState('fade-out');
   const [tags, setTags] = useState<Tag[]>(currentTags.map((tag, index): Tag => ({ id: index, name: tag })));
   const [hasAutoTag, setHasAutoTag] = useState(currentOption.hasAutoTag);
 
@@ -113,6 +115,13 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
 
   const handleContentChange = (event: ChangeEvent) => {
     setContent((event.target as HTMLInputElement).value);
+  };
+
+  const handleContentAreaKeydown = (event: KeyboardEvent) => {
+    if (event.ctrlKey && event.code === 'KeyS') {
+      event.preventDefault();
+      onlySavePost();
+    }
   };
 
   const handleNewTagChange = (event: ChangeEvent) => {
@@ -185,24 +194,61 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
     setTags(nextTags);
   };
 
+  const handleSaveButtonClick = () => {
+    onlySavePost();
+  };
+
+  const onlySavePost = () => {
+    if (!id || lock) {
+      return;
+    } else {
+      setLock(true);
+    }
+
+    if (!validatePost()) {
+      return;
+    }
+
+    const post = {
+      categoryId,
+      title,
+      content,
+      tags: tags.map(tag => tag.name),
+      option: {
+        hasAutoTag: hasAutoTag,
+      },
+    };
+
+    updatePost({ variables: { id, ...post } })
+      .then(() => {
+        showContentInfoAndFadeOut();
+        releaseLock();
+      });
+  };
+
+  const showContentInfoAndFadeOut = () => {
+    setContentInfoFade('fade-in');
+    setTimeout(() => {
+      setContentInfoFade('fade-out');
+    }, 2000);
+  };
+
+  const releaseLock = () => {
+    setTimeout(() => {
+      setLock(false);
+    }, 1000);
+  };
+
   const submitForm = (event: FormEvent) => {
     event.preventDefault();
 
-    if (title.length > MAX_TITLE_LENGTH) {
-      setErrorModalInfo({ content: `제목은 ${MAX_TITLE_LENGTH} 자 를 넘을 수 없습니다.` });
-      setErrorModalShow(true);
+    if (lock) {
       return;
+    } else {
+      setLock(true);
     }
 
-    if (content.length === 0) {
-      setErrorModalInfo({ content: '본문을 작성해 주세요.' });
-      setErrorModalShow(true);
-      return;
-    }
-
-    if (content.length > MAX_CONTENT_LENGTH) {
-      setErrorModalInfo({ content: `본문은 ${MAX_CONTENT_LENGTH} 자 를 넘을 수 없습니다.` });
-      setErrorModalShow(true);
+    if (!validatePost()) {
       return;
     }
 
@@ -229,6 +275,25 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
     }
   };
 
+  const validatePost = (): boolean => {
+    if (title.length > MAX_TITLE_LENGTH) {
+      setErrorModalInfo({ content: `제목은 ${MAX_TITLE_LENGTH} 자 를 넘을 수 없습니다.` });
+      setErrorModalShow(true);
+      return false;
+    }
+    if (content.length === 0) {
+      setErrorModalInfo({ content: '본문을 작성해 주세요.' });
+      setErrorModalShow(true);
+      return false;
+    }
+    if (content.length > MAX_CONTENT_LENGTH) {
+      setErrorModalInfo({ content: `본문은 ${MAX_CONTENT_LENGTH} 자 를 넘을 수 없습니다.` });
+      setErrorModalShow(true);
+      return false;
+    }
+    return true;
+  };
+
   const handleErrorModalClose = () => {
     setErrorModalShow(false);
     setErrorModalInfo({ content: '' });
@@ -250,8 +315,12 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
             onChange={handleTitleChange} onKeyPress={handleTitleKeyPress} />
         </Form.Group>
         <Form.Group controlId='content' className='mb-3 d-grid'>
-          <Form.Control as='textarea' value={content} onChange={handleContentChange} rows={16} />
-          <div className='ms-auto'>{'(' + content.length + '/' + MAX_CONTENT_LENGTH + ')'}</div>
+          <Form.Control as='textarea' value={content} onChange={handleContentChange}
+                        onKeyDown={handleContentAreaKeydown} rows={16} />
+          <div className='d-flex'>
+            <div><span className={contentInfoFade}>저장되었습니다.</span></div>
+            <div className='ms-auto'>{'(' + content.length + '/' + MAX_CONTENT_LENGTH + ')'}</div>
+          </div>
         </Form.Group>
         <InputGroup className='mb-2'>
           <Form.Control ref={tagTarget} type='text' value={newTagName} placeholder='태그 추가'
@@ -290,10 +359,15 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
           </FormCheck>
         </div>
         <hr />
-        <div className='d-flex flex-row-reverse'>
-          <Button variant='primary' type='submit'>
-            {(isNew) ? '적성' : '수정'}
-          </Button>
+        <div className='d-flex'>
+          {(isNew)
+            ? <Button className='ms-auto' variant='primary' type='submit'>작성</Button>
+            : (
+              <>
+                <Button className='ms-auto' variant='info' onClick={handleSaveButtonClick}>저장</Button>
+                <Button className='ms-1' variant='primary' type='submit'>저장후닫기</Button>
+              </>
+            )}
         </div>
       </Form>
       <Modal show={errorModalShow} onHide={handleErrorModalClose}>
