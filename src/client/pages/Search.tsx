@@ -34,11 +34,16 @@ function Search({ location }: { location: Location }) {
   const categoryId: string | null | undefined = currentCategoryQueryResult.data?.currentCategory;
   const searchedPosts = searchPostsResult.data.searchPostsByTag;
 
-  const refreshSearchPosts = () => {
-    searchPostsResult.client.refetchQueries({
-      include: [SearchPostListByTagDocument]
-    })
-  }
+  const refreshSearchPosts = async () => {
+    await searchPostsResult.client.refetchQueries({
+      include: [SearchPostListByTagDocument],
+    });
+    await searchPostsResult.client.cache.evict({
+      id: 'ROOT_QUERY',
+      fieldName: 'post',
+    });
+    await searchPostsResult.client.cache.gc();
+  };
 
   return (
     <>

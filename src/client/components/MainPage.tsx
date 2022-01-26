@@ -20,20 +20,25 @@ function MainPage({ categoryId, currentPage }: { categoryId?: string | null, cur
   const categoriesQueryResult = useGetCategoriesQuery();
 
   const [deletePosts] = useDeletePostsMutation({
-    refetchQueries: [{ query: GetCategoriesDocument }]
+    refetchQueries: [{ query: GetCategoriesDocument }],
   });
   const [mailPosts] = useMailPostsMutation({
-    refetchQueries: [{ query: GetCategoriesDocument }]
+    refetchQueries: [{ query: GetCategoriesDocument }],
   });
 
   if (postListQueryResult.loading || categoriesQueryResult.loading) return <p>Loading...</p>;
   if (postListQueryResult.error || !postListQueryResult.data) return <p>Error</p>;
   if (categoriesQueryResult.error || !categoriesQueryResult.data) return <p>Error</p>;
 
-  const refreshPosts = () => {
-    postListQueryResult.client.refetchQueries({
+  const refreshPosts = async () => {
+    await postListQueryResult.client.refetchQueries({
       include: [GetPostListDocument],
     });
+    await postListQueryResult.client.cache.evict({
+      id: 'ROOT_QUERY',
+      fieldName: 'post',
+    });
+    await postListQueryResult.client.cache.gc();
   };
 
   let fullName: string = getCategoryFullName(categoriesQueryResult.data.categories, categoryId);
