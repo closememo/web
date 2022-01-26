@@ -36,7 +36,7 @@ interface DocumentOption {
 
 const NUMBER_OF_TAG_LIMIT = 100;
 const MAX_TITLE_LENGTH = 100;
-const MAX_CONTENT_LENGTH = 5000;
+const MAX_CONTENT_LENGTH = 10000;
 const MAX_TAG_LENGTH = 25;
 const VALID_TAG_CHARS = /[_\dA-Za-zㄱ-ㆎ가-힣ힰ-ퟆퟋ-ퟻＡ-Ｚａ-ｚｦ-ﾾￂ-ￇￊ-ￏￒ-ￗￚ-ￜ]+/g;
 const WARNING_INVALID_TAG_CHARS = '태그는 한글, 영어, 밑줄(_) 만 가능합니다.';
