@@ -22,8 +22,10 @@ const naverCallback = Router();
 
 const instance = axios.create({
   baseURL: process.env.API_SERVER,
+  timeout: 5000,
 });
 
+// TODO: 사용되지 않음 제거할 것.
 naverCallback.get('/register-callback', async (req: Request, res: Response) => {
   const code = req.query.code as string;
   const state = req.query.state as string;

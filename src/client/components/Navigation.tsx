@@ -3,7 +3,6 @@ import { Button, Container, Form, FormControl, Image, Nav, Navbar } from 'react-
 import MainLogo from 'public/img/logo.png';
 import HelpOffcanvas from 'client/components/HelpOffcanvas';
 import LoginModal from 'client/components/LoginModal';
-import SignupModal from 'client/components/SignupModal';
 import SettingOffcanvas from 'client/components/SettingOffcanvas';
 import { Link, useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
@@ -25,11 +24,10 @@ function Navigation({ categoryId, isLoggedIn }: { categoryId?: string | null, is
   const [query, setQuery] = useState('');
 
   const [leftOffcanvasShow, setLeftOffcanvasShow] = useState(false);
-  const [needToBeExpanded, setNeedToBeExpanded] = useState<string[]>([])
+  const [needToBeExpanded, setNeedToBeExpanded] = useState<string[]>([]);
   const [needToBeSelected, setNeedToBeSelected] = useState<string[]>([]);
   const [settingOffcanvasShow, setSettingOffcanvasShow] = useState(false);
   const [loginModalShow, setLoginModalShow] = useState(false);
-  const [signUpModalShow, setSignUpModalShow] = useState(false);
 
   const handleQueryChange = (event: ChangeEvent) => {
     setQuery((event.target as HTMLInputElement).value);
@@ -45,16 +43,13 @@ function Navigation({ categoryId, isLoggedIn }: { categoryId?: string | null, is
     setNeedToBeSelected((!!categoryId) ? [categoryId] : []);
     setNeedToBeExpanded(getIdsNeedToBeExpanded(categoryId, categories));
     setLeftOffcanvasShow(true);
-  }
+  };
 
   const handleSettingOffcanvasClose = () => setSettingOffcanvasShow(false);
   const handleSettingOffcanvasShow = () => setSettingOffcanvasShow(true);
 
   const handleLoginModalClose = () => setLoginModalShow(false);
   const handleLoginModalShow = () => setLoginModalShow(true);
-
-  const handleSignUpModalClose = () => setSignUpModalShow(false);
-  const handleSignUpModalShow = () => setSignUpModalShow(true);
 
   return (
     <>
@@ -88,16 +83,10 @@ function Navigation({ categoryId, isLoggedIn }: { categoryId?: string | null, is
             </Form>
             <Nav className='flex-row'>
               {isLoggedIn
-                ? (<Button variant='outline-success' className='w-100 navi-btn'
-                           onClick={handleSettingOffcanvasShow}>설정</Button>)
-                : (
-                  <>
-                    <Button variant='outline-success' className='w-100 navi-btn'
-                            onClick={handleLoginModalShow}>로그인</Button>
-                    <Button variant='outline-success' className='w-100 ms-1 navi-btn'
-                            onClick={handleSignUpModalShow}>가입</Button>
-                  </>
-                )}
+                ? <Button variant='outline-success' className='w-100 navi-btn'
+                          onClick={handleSettingOffcanvasShow}>설정</Button>
+                : <Button variant='outline-success' className='w-100 navi-btn'
+                          onClick={handleLoginModalShow}>로그인</Button>}
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -108,7 +97,6 @@ function Navigation({ categoryId, isLoggedIn }: { categoryId?: string | null, is
         : <HelpOffcanvas show={leftOffcanvasShow} handleClose={handleLeftOffcanvasClose} />}
       <SettingOffcanvas show={settingOffcanvasShow} handleClose={handleSettingOffcanvasClose} />
       <LoginModal isShow={loginModalShow} closeModal={handleLoginModalClose} />
-      <SignupModal isShow={signUpModalShow} closeModal={handleSignUpModalClose} />
     </>
   );
 }
@@ -121,7 +109,7 @@ function getIdsNeedToBeExpanded(categoryId: string | null | undefined, categorie
     const parent: Category | undefined = categories.find(category => {
       if (!category.childrenIds) return false;
       return category.childrenIds.includes(cursorId);
-    })
+    });
     if (!parent) break;
     needToExpand.push(parent.id);
     cursorId = parent.id;
