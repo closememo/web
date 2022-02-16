@@ -3,8 +3,8 @@ import NaverIcon from 'public/img/navericon.png';
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { host, naverClientId } from 'shared/constants/env';
 import { generateRandom } from 'client/utils/random';
-import * as localforage from 'localforage';
 import WaitingModal from 'client/components/WaitingModal';
+import PersonalLocalCache from 'client/cache/PersonalLocalCache';
 
 function LoginModal({ isShow, closeModal }: { isShow: boolean, closeModal: Function }) {
 
@@ -19,8 +19,8 @@ function LoginModal({ isShow, closeModal }: { isShow: boolean, closeModal: Funct
 
   const init = async () => {
     if (isBrowser) {
-      const keepLoginChecked: boolean | null = await localforage.getItem('keepLoginChecked');
-      const memoPushChecked: boolean | null = await localforage.getItem('localMemoPushChecked');
+      const keepLoginChecked: boolean | null = await PersonalLocalCache.getKeepLoginChecked();
+      const memoPushChecked: boolean | null = await PersonalLocalCache.getLocalMemoPushChecked();
       if (keepLoginChecked !== null) {
         setKeepLoginChecked(keepLoginChecked);
       }
@@ -42,13 +42,13 @@ function LoginModal({ isShow, closeModal }: { isShow: boolean, closeModal: Funct
   const handleKeepLoginCheckboxChange = async (event: ChangeEvent) => {
     const element: HTMLInputElement = event.target as HTMLInputElement;
     setKeepLoginChecked(element.checked);
-    await localforage.setItem('keepLoginChecked', element.checked);
+    await PersonalLocalCache.setKeepLoginChecked(element.checked);
   };
 
   const handleCheckboxChange = async (event: ChangeEvent) => {
     const element: HTMLInputElement = event.target as HTMLInputElement;
     setLocalMemoPushChecked(element.checked);
-    await localforage.setItem('localMemoPushChecked', element.checked);
+    await PersonalLocalCache.setLocalMemoPoshChecked(element.checked);
   };
 
   const handleNaverLoginButtonClick = (event: MouseEvent) => {

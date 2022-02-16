@@ -3,10 +3,10 @@ import { Modal } from 'react-bootstrap';
 import States from 'client/constants/States';
 import { useHistory } from 'react-router-dom';
 import { GetPostListDocument, useCreateLocalPostsMutation } from 'apollo/generated/hooks';
-import localforage from 'localforage';
 import { LocalPost } from 'client/components/local/LocalPage';
 import { NewLocalPost } from 'apollo/generated/types';
 import Pagination from 'client/constants/Pagination';
+import PersonalLocalCache from 'client/cache/PersonalLocalCache';
 
 
 function Information({ state, isLoggedIn }: { state: string, isLoggedIn: boolean }): JSX.Element {
@@ -31,22 +31,23 @@ function Information({ state, isLoggedIn }: { state: string, isLoggedIn: boolean
 
   const pushLocalPost = async () => {
     if (isBrowser) {
-      let postIds: string[] | null = await localforage.getItem('postIds');
+      let postIds: string[] | null = await PersonalLocalCache.getLocalPostIds();
       if (postIds === null || postIds.length === 0) return;
 
       const currentPosts: LocalPost[] = await Promise.all(
         postIds.map(async (postId: string) => {
-          return await localforage.getItem(postId) as LocalPost;
+          return await PersonalLocalCache.getLocalPost(postId) as LocalPost;
         }),
       );
 
-      const newLocalPosts: NewLocalPost[] | undefined = currentPosts.map(post => {
-        return {
-          title: post.title,
-          content: post.content,
-          localFormedDateString: post.id,
-        };
-      });
+      const newLocalPosts: NewLocalPost[] = currentPosts.filter(post => !!post)
+        .map(post => {
+          return {
+            title: post.title,
+            content: post.content,
+            localFormedDateString: post.id,
+          };
+        });
 
       await createNewPosts({
         variables: { newLocalPosts: newLocalPosts },
@@ -75,14 +76,14 @@ function Information({ state, isLoggedIn }: { state: string, isLoggedIn: boolean
             setWaitingModalShow(false);
             history.replace('/');
 
-            localforage.getItem('postIds').then((postIds) => {
+            PersonalLocalCache.getLocalPostIds().then((postIds) => {
               if (postIds !== null) {
                 (postIds as string[]).map((postId: string) => {
-                  localforage.removeItem(postId).then();
+                  PersonalLocalCache.removeLocalPost(postId).then();
                 });
               }
             });
-            localforage.removeItem('postIds').then();
+            PersonalLocalCache.removeLocalPostIds().then();
           });
           break;
         default:

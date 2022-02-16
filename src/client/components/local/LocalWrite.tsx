@@ -2,9 +2,9 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import React, { ChangeEvent, FormEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { LocalPost } from 'client/components/local/LocalPage';
 import { getNowDateString } from 'shared/utils/dateUtils';
+import PersonalLocalCache from 'client/cache/PersonalLocalCache';
 
 interface LocalWriteParam {
-  localforage: LocalForage,
   currentId: string | null,
   setCurrentId: Function,
   refresh: Function,
@@ -18,7 +18,7 @@ const NUMBER_OF_POSTS_LIMIT = 100;
 const TITLE_MAX_LENGTH = 100;
 const CONTENT_MAX_LENGTH = 3000;
 
-function LocalWrite({ localforage, currentId, setCurrentId, refresh }: LocalWriteParam) {
+function LocalWrite({ currentId, setCurrentId, refresh }: LocalWriteParam) {
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -40,9 +40,11 @@ function LocalWrite({ localforage, currentId, setCurrentId, refresh }: LocalWrit
       return;
     }
 
-    const post = await localforage.getItem(postId) as LocalPost;
-    setTitle(post.title);
-    setContent(post.content);
+    const post = await PersonalLocalCache.getLocalPost(postId);
+    if (!!post) {
+      setTitle(post.title);
+      setContent(post.content);
+    }
   };
 
   const handleTitleChange = (event: ChangeEvent) => {
@@ -66,7 +68,7 @@ function LocalWrite({ localforage, currentId, setCurrentId, refresh }: LocalWrit
   const submitForm = async (event: FormEvent) => {
     event.preventDefault();
 
-    let postIds: string[] | null = await localforage.getItem('postIds');
+    let postIds: string[] | null = await PersonalLocalCache.getLocalPostIds();
     if (postIds === null) postIds = [];
 
     if (postIds.length >= NUMBER_OF_POSTS_LIMIT) {
@@ -101,10 +103,10 @@ function LocalWrite({ localforage, currentId, setCurrentId, refresh }: LocalWrit
 
     if (isNew) {
       postIds.push(post.id);
-      await localforage.setItem('postIds', postIds);
+      await PersonalLocalCache.setLocalPostIds(postIds);
     }
 
-    await localforage.setItem(post.id, post);
+    await PersonalLocalCache.setLocalPost(post.id, post);
 
     clearContent();
   };
@@ -114,12 +116,12 @@ function LocalWrite({ localforage, currentId, setCurrentId, refresh }: LocalWrit
       return;
     }
 
-    let postIds: string[] | null = await localforage.getItem('postIds');
+    let postIds: string[] | null = await PersonalLocalCache.getLocalPostIds();
     if (postIds === null) postIds = [];
 
     const nextPostIds = postIds.filter(postId => currentId !== postId);
-    await localforage.setItem('postIds', nextPostIds);
-    await localforage.removeItem(currentId);
+    await PersonalLocalCache.setLocalPostIds(nextPostIds);
+    await PersonalLocalCache.removeLocalPost(currentId);
 
     setDeleteModalShow(false);
     clearContent();

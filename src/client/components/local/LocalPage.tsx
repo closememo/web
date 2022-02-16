@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import LocalWrite from 'client/components/local/LocalWrite';
 import LocalList from 'client/components/local/LocalList';
-import * as localforage from 'localforage';
+import PersonalLocalCache from 'client/cache/PersonalLocalCache';
 
 export interface LocalPost {
   id: string,
@@ -18,16 +18,16 @@ function LocalPage() {
 
   const refresh = async () => {
     if (isBrowser) {
-      let postIds: string[] | null = await localforage.getItem('postIds');
+      let postIds: string[] | null = await PersonalLocalCache.getLocalPostIds();
       if (postIds === null) postIds = [];
       postIds.reverse();
 
       const currentPosts: LocalPost[] = await Promise.all(
         postIds.map(async (postId: string) => {
-          return await localforage.getItem(postId) as LocalPost;
+          return await PersonalLocalCache.getLocalPost(postId) as LocalPost;
         }),
       );
-      setPosts(currentPosts);
+      setPosts(currentPosts.filter(localPost => !!localPost));
     }
   };
 
@@ -37,8 +37,7 @@ function LocalPage() {
 
   return (
     <>
-      <LocalWrite localforage={localforage} currentId={currentId}
-                  setCurrentId={setCurrentId} refresh={refresh} />
+      <LocalWrite currentId={currentId} setCurrentId={setCurrentId} refresh={refresh} />
       <hr />
       <LocalList posts={posts} setCurrentId={setCurrentId} />
     </>
