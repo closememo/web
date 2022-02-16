@@ -18,6 +18,7 @@ const DEFAULT_CATEGORY_NAME = '메인';
 function MainPage({ categoryId, currentPage }: { categoryId?: string | null, currentPage: number }) {
 
   const [orderOptionOpen, setOrderOptionOpen] = useState<boolean>(false);
+  const [postCount, setPostCount] = useState(Pagination.PAGE_NUMBER);
   const [currentOrderType, setCurrentOrderType] = useState<string>('CREATED_NEWEST');
 
   useEffect(() => {
@@ -33,12 +34,16 @@ function MainPage({ categoryId, currentPage }: { categoryId?: string | null, cur
     if (!!orderType) {
       setCurrentOrderType(orderType);
     }
+    const postCount = await PersonalLocalCache.getPostCount();
+    if (!!postCount) {
+      setPostCount(postCount);
+    }
   };
 
   const postListQueryResult = useGetPostListQuery({
     variables: {
       page: currentPage,
-      limit: Pagination.PAGE_NUMBER,
+      limit: postCount,
       ...(!!categoryId && { categoryId: categoryId }),
       orderType: currentOrderType,
     },
@@ -70,16 +75,16 @@ function MainPage({ categoryId, currentPage }: { categoryId?: string | null, cur
   let fullName: string = getCategoryFullName(categoriesQueryResult.data.categories, categoryId);
 
   const total = postListQueryResult.data.posts?.total;
-  const pageSize = Pagination.PAGE_NUMBER;
   const posts = postListQueryResult.data.posts ? postListQueryResult.data.posts.data : [];
 
   return (
     <>
       <PostListHeader heading={fullName} currentPage={currentPage} categoryId={categoryId}
                       orderOptionOpen={orderOptionOpen} setOrderOptionOpen={setOrderOptionOpen}
+                      postCount={postCount} setPostCount={setPostCount}
                       currentOrderType={currentOrderType} setCurrentOrderType={setCurrentOrderType}
                       refetchPosts={postListQueryResult.refetch} />
-      <PostList total={total} currentPage={currentPage} pageSize={pageSize} posts={posts}
+      <PostList total={total} currentPage={currentPage} pageSize={postCount} posts={posts}
                 refreshPosts={refreshPosts} deletePosts={deletePosts} mailPosts={mailPosts} />
     </>
   );

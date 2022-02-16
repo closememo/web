@@ -12,10 +12,12 @@ import Navigation from 'client/components/Navigation';
 import { Container } from 'react-bootstrap';
 import PostList from 'client/components/PostList';
 import PostListHeader from 'client/components/PostListHeader';
+import Pagination from 'client/constants/Pagination';
 
 function Search({ location }: { location: Location }) {
 
   const [orderOptionOpen, setOrderOptionOpen] = useState<boolean>(false);
+  const [postCount, setPostCount] = useState(Pagination.PAGE_NUMBER);
   const [currentOrderType, setCurrentOrderType] = useState<string>('CREATED_NEWEST');
 
   const search = location.search;
@@ -58,6 +60,7 @@ function Search({ location }: { location: Location }) {
       <Container as='main' className='home-main'>
         <PostListHeader heading={'[태그검색] 검색어: ' + tag}
                         orderOptionOpen={orderOptionOpen} setOrderOptionOpen={setOrderOptionOpen}
+                        postCount={postCount} setPostCount={setPostCount}
                         currentOrderType={currentOrderType} setCurrentOrderType={setCurrentOrderType}/>
         <PostList posts={searchedPosts} refreshPosts={refreshSearchPosts}
                   deletePosts={deletePosts} mailPosts={mailPosts} />

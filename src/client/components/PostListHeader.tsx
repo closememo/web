@@ -1,7 +1,8 @@
 import React, { ChangeEvent } from 'react';
 import { Button, Col, Collapse, Form, Row } from 'react-bootstrap';
 import PersonalLocalCache from 'client/cache/PersonalLocalCache';
-import Pagination from 'client/constants/Pagination';
+import { useHistory } from 'react-router-dom';
+import PagePaths from 'client/constants/PagePaths';
 
 
 interface PostListHeaderParams {
@@ -10,6 +11,8 @@ interface PostListHeaderParams {
   categoryId?: string | null;
   orderOptionOpen: boolean;
   setOrderOptionOpen: Function;
+  postCount: number;
+  setPostCount: Function;
   currentOrderType: string;
   setCurrentOrderType: Function;
   refetchPosts?: Function;
@@ -21,26 +24,37 @@ function PostListHeader({
                           categoryId,
                           orderOptionOpen,
                           setOrderOptionOpen,
+                          postCount,
+                          setPostCount,
                           currentOrderType,
                           setCurrentOrderType,
                           refetchPosts,
                         }: PostListHeaderParams) {
 
+  const history = useHistory();
+
   const handleOrderOptionOpen = async () => {
-    await PersonalLocalCache.setOrderOptionOpen(!orderOptionOpen)
+    await PersonalLocalCache.setOrderOptionOpen(!orderOptionOpen);
     setOrderOptionOpen(!orderOptionOpen);
-  }
+  };
+
+  const handlePostCount = async (event: ChangeEvent) => {
+    const newPostCount = parseInt((event.target as HTMLInputElement).value);
+    setPostCount(newPostCount);
+    await PersonalLocalCache.setPostCount(newPostCount);
+    history.push(PagePaths.Home);
+  };
 
   const handleOrderType = async (event: ChangeEvent) => {
-    const orderType = (event.target as HTMLInputElement).value;
-    setCurrentOrderType(orderType);
-    await PersonalLocalCache.setOrderType(orderType);
+    const newOrderType = (event.target as HTMLInputElement).value;
+    setCurrentOrderType(newOrderType);
+    await PersonalLocalCache.setOrderType(newOrderType);
     if (!!refetchPosts) {
       refetchPosts({
         page: currentPage,
-        limit: Pagination.PAGE_NUMBER,
+        limit: postCount,
         ...(!!categoryId && { categoryId: categoryId }),
-        orderType: orderType,
+        orderType: newOrderType,
       });
     }
   };
@@ -58,9 +72,21 @@ function PostListHeader({
       <Collapse className='my-1' in={orderOptionOpen}>
         <Row>
           <Form.Label column sm='2'>
+            표시 개수
+          </Form.Label>
+          <Col sm='4' className='mb-1'>
+            <Form.Select value={postCount} onChange={handlePostCount}>
+              <option value='5'>5</option>
+              <option value='10'>10</option>
+              <option value='20'>20</option>
+              <option value='50'>50</option>
+              <option value='100'>100</option>
+            </Form.Select>
+          </Col>
+          <Form.Label column sm='2'>
             정렬
           </Form.Label>
-          <Col sm='10' className='mb-1'>
+          <Col sm='4' className='mb-1'>
             <Form.Select value={currentOrderType} onChange={handleOrderType}>
               <option value='CREATED_NEWEST'>생성일 최신순</option>
               <option value='CREATED_OLDEST'>생성일 오래된순</option>
