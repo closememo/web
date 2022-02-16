@@ -66,7 +66,7 @@ function Navigation({ categoryId, isLoggedIn }: { categoryId?: string | null, is
           </div>
           <Navbar.Toggle />
           <Navbar.Collapse className='justify-content-between'>
-            <Nav>
+            <Nav className='my-1'>
               <Button variant='outline-success' className='w-100'
                       onClick={handleLeftOffcanvasShow}>{isLoggedIn ? '카테고리' : '도움말'}</Button>
             </Nav>
@@ -81,7 +81,7 @@ function Navigation({ categoryId, isLoggedIn }: { categoryId?: string | null, is
               />
               <Button variant='outline-success' type='submit' disabled={!isLoggedIn}>🔍</Button>
             </Form>
-            <Nav className='flex-row'>
+            <Nav className='flex-row my-1'>
               {isLoggedIn
                 ? <Button variant='outline-success' className='w-100 navi-btn'
                           onClick={handleSettingOffcanvasShow}>설정</Button>
