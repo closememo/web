@@ -1,43 +1,47 @@
 import AbstractApi from 'apollo/datasources/abstractApi';
 
 interface NewPost {
-  categoryId: string | null | undefined,
-  title: string,
-  content: string,
-  tags: [string],
+  categoryId: string | null | undefined;
+  title: string;
+  content: string;
+  tags: [string];
   option: {
-    hasAutoTag: boolean
+    hasAutoTag: boolean;
   }
 }
 
 interface newLocalPost {
-  title: string,
-  content: string,
-  localFormedDateString: string
+  title: string;
+  content: string;
+  localFormedDateString: string;
 }
 
 interface UpdatePost {
-  id: string,
-  title: string,
-  content: string,
-  tags: [string],
+  id: string;
+  title: string;
+  content: string;
+  tags: [string];
   option: {
-    hasAutoTag: boolean
+    hasAutoTag: boolean;
   }
 }
 
 interface PostsRequest {
-  categoryId: string | null | undefined,
-  page: number,
-  limit: number
+  categoryId: string | null | undefined;
+  page: number;
+  limit: number;
+  orderType: string | null | undefined;
 }
 
 class PostAPI extends AbstractApi {
 
-  public async getPosts({ categoryId, page, limit }: PostsRequest) {
+  public async getPosts({ categoryId, page, limit, orderType }: PostsRequest) {
     let path = '/query/client/documents?page=' + page + '&limit=' + limit
     if (!!categoryId) {
       path += '&categoryId=' + categoryId;
+    }
+    if (!!orderType) {
+      path += '&orderType=' + orderType;
     }
     return await this.get(path);
   }

@@ -1,45 +1,46 @@
 import PostAPI from 'apollo/datasources/post';
 
 interface DataSources {
-  postAPI: PostAPI
+  postAPI: PostAPI;
 }
 
 interface NewPost {
-  categoryId: string | null | undefined,
-  title: string,
-  content: string,
-  tags: [string],
+  categoryId: string | null | undefined;
+  title: string;
+  content: string;
+  tags: [string];
   option: {
-    hasAutoTag: boolean
+    hasAutoTag: boolean;
   }
 }
 
 interface NewLocalPost {
-  title: string,
-  content: string,
-  localFormedDateString: string
+  title: string;
+  content: string;
+  localFormedDateString: string;
 }
 
 interface UpdatePost {
-  id: string,
-  title: string,
-  content: string,
-  tags: [string],
+  id: string;
+  title: string;
+  content: string;
+  tags: [string];
   option: {
-    hasAutoTag: boolean
+    hasAutoTag: boolean;
   }
 }
 
 interface PostsRequest {
-  categoryId: string | null | undefined,
-  page: number,
-  limit: number
+  categoryId: string | null | undefined;
+  page: number;
+  limit: number;
+  orderType: string | null | undefined;
 }
 
 export default {
   Query: {
-    posts: async (_: any, { categoryId, page, limit }: PostsRequest, { dataSources }: { dataSources: DataSources }) => {
-      return await dataSources.postAPI.getPosts({ categoryId, page, limit });
+    posts: async (_: any, { categoryId, page, limit, orderType }: PostsRequest, { dataSources }: { dataSources: DataSources }) => {
+      return await dataSources.postAPI.getPosts({ categoryId, page, limit, orderType });
     },
     post: async (_: any, { id }: { id: string }, { dataSources }: { dataSources: DataSources }) => {
       return await dataSources.postAPI.getPostById({ id });

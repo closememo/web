@@ -1,5 +1,5 @@
-query GetPostList($categoryId: String, $page: Int, $limit: Int) {
-    posts(categoryId: $categoryId, page: $page, limit: $limit) {
+query GetPostList($categoryId: String, $page: Int, $limit: Int, $orderType: String) {
+    posts(categoryId: $categoryId, page: $page, limit: $limit, orderType: $orderType) {
         data {
             id
             title

@@ -369,8 +369,8 @@ export type GetNoticeQueryResult = Apollo.QueryResult<
   Types.GetNoticeQueryVariables
 >;
 export const GetPostListDocument = gql`
-  query GetPostList($categoryId: String, $page: Int, $limit: Int) {
-    posts(categoryId: $categoryId, page: $page, limit: $limit) {
+  query GetPostList($categoryId: String, $page: Int, $limit: Int, $orderType: String) {
+    posts(categoryId: $categoryId, page: $page, limit: $limit, orderType: $orderType) {
       data {
         id
         title
@@ -402,6 +402,7 @@ export const GetPostListDocument = gql`
  *      categoryId: // value for 'categoryId'
  *      page: // value for 'page'
  *      limit: // value for 'limit'
+ *      orderType: // value for 'orderType'
  *   },
  * });
  */

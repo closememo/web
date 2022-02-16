@@ -193,6 +193,7 @@ export type QueryPostArgs = {
 export type QueryPostsArgs = {
   categoryId?: Maybe<Scalars['String']>;
   limit?: Maybe<Scalars['Int']>;
+  orderType?: Maybe<Scalars['String']>;
   page?: Maybe<Scalars['Int']>;
 };
 
@@ -324,6 +325,7 @@ export type GetPostListQueryVariables = Exact<{
   categoryId?: Maybe<Scalars['String']>;
   page?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
+  orderType?: Maybe<Scalars['String']>;
 }>;
 
 export type GetPostListQuery = {

@@ -1,5 +1,5 @@
 type Query {
-    posts(categoryId: String, page: Int, limit: Int): Page
+    posts(categoryId: String, page: Int, limit: Int, orderType: String): Page
     post(id: ID!): Post!
     searchPostsByTag(tag: String): [SimplePost]!
 }
