@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   SearchPostListByTagDocument,
   useDeletePostsMutation,
@@ -11,8 +11,12 @@ import { Helmet } from 'react-helmet-async';
 import Navigation from 'client/components/Navigation';
 import { Container } from 'react-bootstrap';
 import PostList from 'client/components/PostList';
+import PostListHeader from 'client/components/PostListHeader';
 
 function Search({ location }: { location: Location }) {
+
+  const [orderOptionOpen, setOrderOptionOpen] = useState<boolean>(false);
+  const [currentOrderType, setCurrentOrderType] = useState<string>('CREATED_NEWEST');
 
   const search = location.search;
   const tag = new URLSearchParams(search).get('tag');
@@ -52,8 +56,11 @@ function Search({ location }: { location: Location }) {
       </Helmet>
       <Navigation categoryId={categoryId} isLoggedIn={isLoggedIn} />
       <Container as='main' className='home-main'>
-        <PostList heading={'[태그검색] 검색어: ' + tag} posts={searchedPosts}
-                  refreshPosts={refreshSearchPosts} deletePosts={deletePosts} mailPosts={mailPosts} />
+        <PostListHeader heading={'[태그검색] 검색어: ' + tag}
+                        orderOptionOpen={orderOptionOpen} setOrderOptionOpen={setOrderOptionOpen}
+                        currentOrderType={currentOrderType} setCurrentOrderType={setCurrentOrderType}/>
+        <PostList posts={searchedPosts} refreshPosts={refreshSearchPosts}
+                  deletePosts={deletePosts} mailPosts={mailPosts} />
       </Container>
     </>
   );

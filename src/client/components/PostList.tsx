@@ -2,13 +2,10 @@ import React, { ChangeEvent, MouseEvent, useState } from 'react';
 import {
   Button,
   ButtonGroup,
-  Col,
-  Collapse,
   Form,
   ListGroup,
   Modal,
   OverlayTrigger,
-  Row,
   Tooltip,
 } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
@@ -16,43 +13,27 @@ import PagePaths from 'client/constants/PagePaths';
 import { convertDateTimeString } from 'shared/utils/dateUtils';
 import WaitingModal from 'client/components/WaitingModal';
 import PagingHandle from 'client/components/PagingHandle';
-import Pagination from 'client/constants/Pagination';
-import PersonalLocalCache from 'client/cache/PersonalLocalCache';
 
 interface ModalInfo {
   ids: string[]
 }
 
 interface PostListParams {
-  heading: string;
   total?: number;
   currentPage?: number;
   pageSize?: number;
-  categoryId?: string | null;
-  orderOptionOpen: boolean;
-  setOrderOptionOpen?: Function;
-  currentOrderType?: string | null;
-  setCurrentOrderType?: Function;
   posts: Array<any>;
   refreshPosts: Function;
-  refetchPosts?: Function;
   deletePosts: Function;
   mailPosts: Function;
 }
 
 function PostList({
-                    heading,
                     total,
                     currentPage,
                     pageSize,
-                    categoryId,
-                    orderOptionOpen,
-                    setOrderOptionOpen,
-                    currentOrderType,
-                    setCurrentOrderType,
                     posts,
                     refreshPosts,
-                    refetchPosts,
                     deletePosts,
                     mailPosts,
                   }: PostListParams) {
@@ -61,8 +42,6 @@ function PostList({
 
   const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
 
-  const [optionOpen, setOptionOpen] = useState(orderOptionOpen);
-  const [orderOption, setOrderOption] = useState((currentOrderType ? currentOrderType : 'CREATED_NEWEST'));
   const [modalShow, setModalShow] = useState(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>({ ids: [] });
   const [waitingModalShow, setWaitingModalShow] = useState(false);
@@ -130,56 +109,8 @@ function PostList({
   const waitingModalHandleClose = () => setWaitingModalShow(false);
   const waitingModalHandleShow = () => setWaitingModalShow(true);
 
-  const handleOrderOptionOpen = async () => {
-    await PersonalLocalCache.setOrderOptionOpen(!optionOpen)
-    if (!!setOrderOptionOpen) {
-      setOrderOptionOpen(!optionOpen);
-    }
-    setOptionOpen(!optionOpen)
-  }
-
-  const handleOrderOption = async (event: ChangeEvent) => {
-    const orderOption = (event.target as HTMLInputElement).value;
-    setOrderOption(orderOption);
-    if (!!setCurrentOrderType) {
-      setCurrentOrderType(orderOption);
-    }
-    await PersonalLocalCache.setOrderType(orderOption);
-    if (!!refetchPosts) {
-      refetchPosts({
-        page: currentPage,
-        limit: Pagination.PAGE_NUMBER,
-        ...(!!categoryId && { categoryId: categoryId }),
-        orderType: orderOption,
-      });
-    }
-  };
-
-  // TODO: 제목이랑 정렬 조건을 위쪽으로 빼고 분리.
   return (
     <>
-      <div className='d-flex mt-4'>
-        <h2>{heading}</h2>
-        {optionOpen
-          ? <Button variant='outline-dark' className='ms-auto' size='sm'
-                    onClick={handleOrderOptionOpen}>▲</Button>
-          : <Button variant='outline-dark' className='ms-auto' size='sm'
-                    onClick={handleOrderOptionOpen}>▼</Button>}
-      </div>
-      <Collapse className='my-1' in={optionOpen}>
-        <Row>
-          <Form.Label column sm='2'>
-            정렬
-          </Form.Label>
-          <Col sm='10' className='mb-1'>
-            <Form.Select value={orderOption} onChange={handleOrderOption}>
-              <option value='CREATED_NEWEST'>생성일 최신순</option>
-              <option value='CREATED_OLDEST'>생성일 오래된순</option>
-              <option value='UPDATED_NEWEST'>수정일 최신순</option>
-            </Form.Select>
-          </Col>
-        </Row>
-      </Collapse>
       <div className='d-flex py-2'>
         <Button variant='success' className='me-1'
                 onClick={() => history.push(PagePaths.Write)}>새메모</Button>

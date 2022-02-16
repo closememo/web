@@ -11,13 +11,14 @@ import PostList from 'client/components/PostList';
 import Pagination from 'client/constants/Pagination';
 import { Category } from 'apollo/generated/types';
 import PersonalLocalCache from 'client/cache/PersonalLocalCache';
+import PostListHeader from 'client/components/PostListHeader';
 
 const DEFAULT_CATEGORY_NAME = '메인';
 
 function MainPage({ categoryId, currentPage }: { categoryId?: string | null, currentPage: number }) {
 
   const [orderOptionOpen, setOrderOptionOpen] = useState<boolean>(false);
-  const [currentOrderType, setCurrentOrderType] = useState<string | null>(null);
+  const [currentOrderType, setCurrentOrderType] = useState<string>('CREATED_NEWEST');
 
   useEffect(() => {
     refresh().then();
@@ -73,11 +74,14 @@ function MainPage({ categoryId, currentPage }: { categoryId?: string | null, cur
   const posts = postListQueryResult.data.posts ? postListQueryResult.data.posts.data : [];
 
   return (
-    <PostList heading={fullName} total={total} currentPage={currentPage} pageSize={pageSize}
-              categoryId={categoryId} orderOptionOpen={orderOptionOpen} setOrderOptionOpen={setOrderOptionOpen}
-              currentOrderType={currentOrderType} setCurrentOrderType={setCurrentOrderType}
-              posts={posts} refreshPosts={refreshPosts} refetchPosts={postListQueryResult.refetch}
-              deletePosts={deletePosts} mailPosts={mailPosts} />
+    <>
+      <PostListHeader heading={fullName} currentPage={currentPage} categoryId={categoryId}
+                      orderOptionOpen={orderOptionOpen} setOrderOptionOpen={setOrderOptionOpen}
+                      currentOrderType={currentOrderType} setCurrentOrderType={setCurrentOrderType}
+                      refetchPosts={postListQueryResult.refetch} />
+      <PostList total={total} currentPage={currentPage} pageSize={pageSize} posts={posts}
+                refreshPosts={refreshPosts} deletePosts={deletePosts} mailPosts={mailPosts} />
+    </>
   );
 }
 
