@@ -3,7 +3,7 @@ import NaverIcon from 'public/img/navericon.png';
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { host, naverClientId } from 'shared/constants/env';
 import { generateRandom } from 'client/utils/random';
-import WaitingModal from 'client/components/WaitingModal';
+import WaitingModal from 'client/components/modal/WaitingModal';
 import PersonalLocalCache from 'client/cache/PersonalLocalCache';
 
 function LoginModal({ isShow, closeModal }: { isShow: boolean, closeModal: Function }) {

@@ -67,6 +67,10 @@ mutation UpdatePost($id: ID!, $title: String, $content: String, $tags: [String],
     }
 }
 
+mutation ChangePostsCategory($categoryId: String, $ids: [ID!]) {
+    changePostsCategory(categoryId: $categoryId, ids: $ids)
+}
+
 mutation MailPosts($ids: [ID!]) {
     mailPosts(ids: $ids)
 }

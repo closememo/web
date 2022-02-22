@@ -11,8 +11,9 @@ import {
 import { Link, useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
 import { convertDateTimeString } from 'shared/utils/dateUtils';
-import WaitingModal from 'client/components/WaitingModal';
+import WaitingModal from 'client/components/modal/WaitingModal';
 import PagingHandle from 'client/components/PagingHandle';
+import ChangeCategoryModal from 'client/components/modal/ChangeCategoryModal';
 
 interface ModalInfo {
   ids: string[]
@@ -45,6 +46,7 @@ function PostList({
   const [modalShow, setModalShow] = useState(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>({ ids: [] });
   const [waitingModalShow, setWaitingModalShow] = useState(false);
+  const [changeCategoryModalShow, setChangeCategoryModalShow] = useState(false);
 
   const removePostAndSendMail = (event: MouseEvent, ids: string[]) => {
     if (typeof (ids) === 'undefined' || ids.length === 0) return;
@@ -109,6 +111,9 @@ function PostList({
   const waitingModalHandleClose = () => setWaitingModalShow(false);
   const waitingModalHandleShow = () => setWaitingModalShow(true);
 
+  const changeCategoryModalHandleClose = () => setChangeCategoryModalShow(false);
+  const changeCategoryModalHandleShow = () => setChangeCategoryModalShow(true);
+
   return (
     <>
       <div className='d-flex py-2'>
@@ -116,8 +121,12 @@ function PostList({
                 onClick={() => history.push(PagePaths.Write)}>새메모</Button>
         <Button variant='outline-primary' className='me-auto'
                 onClick={() => refreshPosts()}>↻</Button>
-        <Button variant='info' className='mx-1' onClick={handleAllCheckButtonClick}>
+        <Button variant='info' onClick={handleAllCheckButtonClick}>
           {(posts.length === checkedIds.size) ? '전체취소' : '전체선택'}
+        </Button>
+        <Button variant='warning' className='mx-1'
+                onClick={changeCategoryModalHandleShow} disabled={checkedIds.size === 0}>
+          이동
         </Button>
         <Button variant='danger'
                 onClick={handleAllCheckedDeleteClick} disabled={checkedIds.size === 0}>
@@ -155,6 +164,8 @@ function PostList({
       {(total && currentPage && pageSize)
         ? <PagingHandle total={total} currentPage={currentPage} pageSize={pageSize} />
         : <></>}
+      <ChangeCategoryModal isShow={changeCategoryModalShow}
+                           closeModal={changeCategoryModalHandleClose} ids={Array.from(checkedIds)}/>
       <Modal show={modalShow} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>삭제</Modal.Title>

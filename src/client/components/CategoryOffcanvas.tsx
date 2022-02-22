@@ -18,6 +18,7 @@ import { Category } from 'apollo/generated/types';
 import { currentCategoryVar } from 'apollo/caches';
 import { useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
+import { CategoryInfo, Element, makeItems } from 'client/utils/categoryUtils';
 
 interface CategoryOffcanvasParam {
   show: boolean,
@@ -25,22 +26,6 @@ interface CategoryOffcanvasParam {
   categories?: Category[],
   needToBeSelected: string[],
   needToBeExpanded: string[]
-}
-
-interface Element {
-  index: string,
-  hasChildren?: boolean,
-  children: string[],
-  data: {
-    title: string
-    count?: number | null
-    netCount?: number | null
-  },
-}
-
-interface CategoryInfo {
-  index: string,
-  name: string
 }
 
 const MAX_CATEGORY_LENGTH = 100;
@@ -297,40 +282,6 @@ function makeErrorElement(show: boolean, handleClose: Function, bodyContent: JSX
       </Offcanvas>
     </>
   );
-}
-
-function makeItems(categories: Category[]): { root: CategoryInfo | null, items: { [key: string]: Element } } {
-  let items: { [key: string]: Element } = {};
-
-  const rootCategory = categories.find(category => category.isRoot);
-
-  if (!rootCategory) {
-    return { root: null, items: items };
-  }
-
-  const elements = categories.map(category => convert(category));
-  items = elements.reduce((prev, curr) => {
-    return Object.assign({}, prev, { [curr.index]: curr });
-  }, {});
-
-  const rootElement = convert(rootCategory);
-
-  return { root: { name: rootElement.data.title, index: rootElement.index }, items: items };
-}
-
-function convert(category: Category): Element {
-  const hasChildren = !!category.childrenIds && (category.childrenIds.length > 0);
-  const children: string[] = (!!category.childrenIds) ? category.childrenIds : [];
-  return {
-    index: category.id,
-    hasChildren: hasChildren,
-    children: children,
-    data: {
-      title: category.name,
-      count: category.count,
-      netCount: category.netCount,
-    },
-  };
 }
 
 export default CategoryOffcanvas;

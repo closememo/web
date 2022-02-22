@@ -805,6 +805,55 @@ export type UpdatePostMutationOptions = Apollo.BaseMutationOptions<
   Types.UpdatePostMutation,
   Types.UpdatePostMutationVariables
 >;
+export const ChangePostsCategoryDocument = gql`
+  mutation ChangePostsCategory($categoryId: String, $ids: [ID!]) {
+    changePostsCategory(categoryId: $categoryId, ids: $ids)
+  }
+`;
+export type ChangePostsCategoryMutationFn = Apollo.MutationFunction<
+  Types.ChangePostsCategoryMutation,
+  Types.ChangePostsCategoryMutationVariables
+>;
+
+/**
+ * __useChangePostsCategoryMutation__
+ *
+ * To run a mutation, you first call `useChangePostsCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangePostsCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changePostsCategoryMutation, { data, loading, error }] = useChangePostsCategoryMutation({
+ *   variables: {
+ *      categoryId: // value for 'categoryId'
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useChangePostsCategoryMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    Types.ChangePostsCategoryMutation,
+    Types.ChangePostsCategoryMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    Types.ChangePostsCategoryMutation,
+    Types.ChangePostsCategoryMutationVariables
+  >(ChangePostsCategoryDocument, options);
+}
+export type ChangePostsCategoryMutationHookResult = ReturnType<
+  typeof useChangePostsCategoryMutation
+>;
+export type ChangePostsCategoryMutationResult =
+  Apollo.MutationResult<Types.ChangePostsCategoryMutation>;
+export type ChangePostsCategoryMutationOptions = Apollo.BaseMutationOptions<
+  Types.ChangePostsCategoryMutation,
+  Types.ChangePostsCategoryMutationVariables
+>;
 export const MailPostsDocument = gql`
   mutation MailPosts($ids: [ID!]) {
     mailPosts(ids: $ids)

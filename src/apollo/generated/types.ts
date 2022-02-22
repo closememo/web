@@ -30,6 +30,7 @@ export type LocalPostCreatesResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  changePostsCategory?: Maybe<Scalars['Boolean']>;
   createCategory?: Maybe<Scalars['Boolean']>;
   createLocalPosts?: Maybe<LocalPostCreatesResponse>;
   createNewPost?: Maybe<PostCreateResponse>;
@@ -42,6 +43,11 @@ export type Mutation = {
   updateCategory?: Maybe<Scalars['Boolean']>;
   updatePost?: Maybe<PostCreateResponse>;
   updateSuggestion?: Maybe<Scalars['Boolean']>;
+};
+
+export type MutationChangePostsCategoryArgs = {
+  categoryId?: Maybe<Scalars['String']>;
+  ids?: Maybe<Array<Scalars['ID']>>;
 };
 
 export type MutationCreateCategoryArgs = {
@@ -455,6 +461,16 @@ export type UpdatePostMutation = {
     | { __typename?: 'PostCreateResponse'; success: boolean; id: string }
     | null
     | undefined;
+};
+
+export type ChangePostsCategoryMutationVariables = Exact<{
+  categoryId?: Maybe<Scalars['String']>;
+  ids?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
+}>;
+
+export type ChangePostsCategoryMutation = {
+  __typename?: 'Mutation';
+  changePostsCategory?: boolean | null | undefined;
 };
 
 export type MailPostsMutationVariables = Exact<{

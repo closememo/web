@@ -36,7 +36,7 @@ interface PostsRequest {
 class PostAPI extends AbstractApi {
 
   public async getPosts({ categoryId, page, limit, orderType }: PostsRequest) {
-    let path = '/query/client/documents?page=' + page + '&limit=' + limit
+    let path = '/query/client/documents?page=' + page + '&limit=' + limit;
     if (!!categoryId) {
       path += '&categoryId=' + categoryId;
     }
@@ -93,13 +93,21 @@ class PostAPI extends AbstractApi {
       content: post.content,
       tags: post.tags,
       option: {
-        hasAutoTag: post.option.hasAutoTag
-      }
+        hasAutoTag: post.option.hasAutoTag,
+      },
     });
     return {
       success: true,
       id: response.id,
     };
+  }
+
+  public async changePostsCategory(categoryId: string, ids: string[]) {
+    const response = await this.post('/command/client/change-documents-category', {
+      categoryId,
+      documentIds: ids,
+    });
+    return true;
   }
 
   public async mailPosts(ids: string[]) {

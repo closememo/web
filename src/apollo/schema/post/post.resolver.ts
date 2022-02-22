@@ -65,6 +65,9 @@ export default {
     updatePost: async (_: any, post: UpdatePost, { dataSources }: { dataSources: DataSources }) => {
       return await dataSources.postAPI.updatePost(post);
     },
+    changePostsCategory: async (_: any, { categoryId, ids }: { categoryId: string, ids: string[] }, { dataSources }: { dataSources: DataSources }) => {
+      return await dataSources.postAPI.changePostsCategory(categoryId, ids);
+    },
     mailPosts: async (_: any, { ids }: { ids: string[] }, { dataSources }: { dataSources: DataSources }) => {
       return await dataSources.postAPI.mailPosts(ids);
     },

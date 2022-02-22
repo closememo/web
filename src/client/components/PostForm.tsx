@@ -3,13 +3,11 @@ import { Button, Form, FormCheck, InputGroup, Modal, Overlay, OverlayTrigger, Po
 import {
   GetCategoriesDocument,
   GetPostDocument,
-  GetPostListDocument,
   useCreateNewPostMutation,
   useUpdatePostMutation,
 } from 'apollo/generated/hooks';
 import { useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
-import Pagination from 'client/constants/Pagination';
 import QuestionSVG from 'client/assets/QuestionSVG';
 
 interface PostFormParams {
@@ -73,34 +71,28 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
 
   const [createNewPost] = useCreateNewPostMutation({
     refetchQueries: [
-      {
-        query: GetPostListDocument,
-        variables: { page: 1, limit: Pagination.PAGE_NUMBER },
-      },
       GetCategoriesDocument,
     ],
-    update: (cache) =>
+    update: (cache) => {
       cache.evict({
         id: 'ROOT_QUERY',
         fieldName: 'posts',
-      }),
+      });
+    },
   });
   const [updatePost] = useUpdatePostMutation({
     refetchQueries: [
-      {
-        query: GetPostListDocument,
-        variables: { page: 1, limit: Pagination.PAGE_NUMBER },
-      },
       {
         query: GetPostDocument,
         variables: { id },
       },
     ],
-    update: (cache) =>
+    update: (cache) => {
       cache.evict({
         id: 'ROOT_QUERY',
         fieldName: 'posts',
-      }),
+      });
+    },
   });
 
   const handleTitleChange = (event: ChangeEvent) => {

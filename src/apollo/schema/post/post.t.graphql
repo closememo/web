@@ -10,6 +10,7 @@ type Mutation {
     deletePost(id: ID!): Boolean
     deletePosts(ids: [ID!]): Boolean
     updatePost(id: ID!, title: String content: String, tags: [String], option: PostOptionInput): PostCreateResponse
+    changePostsCategory(categoryId: String, ids: [ID!]): Boolean
     mailPosts(ids: [ID!]): Boolean
 }
 
