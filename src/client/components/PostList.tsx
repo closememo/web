@@ -122,7 +122,7 @@ function PostList({
         <Button variant='outline-primary' className='me-auto'
                 onClick={() => refreshPosts()}>↻</Button>
         <Button variant='info' onClick={handleAllCheckButtonClick}>
-          {(posts.length === checkedIds.size) ? '전체취소' : '전체선택'}
+          {(posts.length === checkedIds.size) ? '취소' : '선택'}
         </Button>
         <Button variant='warning' className='mx-1'
                 onClick={changeCategoryModalHandleShow} disabled={checkedIds.size === 0}>
