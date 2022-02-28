@@ -118,19 +118,25 @@ function PostList({
     <>
       <div className='d-flex py-2'>
         <Button variant='success' className='me-1'
-                onClick={() => history.push(PagePaths.Write)}>새메모</Button>
+                onClick={() => history.push(PagePaths.Write)}>
+          <div className='d-none d-sm-block'>새메모</div>
+          <div className='d-sm-none'>➕</div>
+        </Button>
         <Button variant='outline-primary' className='me-auto'
                 onClick={() => refreshPosts()}>↻</Button>
         <Button variant='info' onClick={handleAllCheckButtonClick}>
-          {(posts.length === checkedIds.size) ? '취소' : '선택'}
+          <div className='d-none d-sm-block'>{(posts.length === checkedIds.size) ? '전체취소' : '전체선택'}</div>
+          <div className='d-sm-none'>{(posts.length === checkedIds.size) ? '☐' : '☑'}</div>
         </Button>
-        <Button variant='warning' className='mx-1'
+        <Button variant='secondary' className='mx-1'
                 onClick={changeCategoryModalHandleShow} disabled={checkedIds.size === 0}>
-          이동
+          <div className='d-none d-sm-block'>이동</div>
+          <div className='d-sm-none'>➔</div>
         </Button>
         <Button variant='danger'
                 onClick={handleAllCheckedDeleteClick} disabled={checkedIds.size === 0}>
-          삭제
+          <div className='d-none d-sm-block'>삭제</div>
+          <div className='d-sm-none'>➖</div>
         </Button>
       </div>
       <div className='py-2'>
@@ -152,10 +158,10 @@ function PostList({
               </div>
               <div className='d-flex'>
                 <small className='me-auto break-word'>{post.preview}</small>
-                <Button size='sm' variant='outline-secondary' className='mx-1'
-                        onClick={() => history.push('/update/' + post.id)}>📝</Button>
-                <Button size='sm' variant='outline-secondary'
-                        onClick={() => handleShow(post.id)}>❌</Button>
+                <Button size='sm' variant='outline-warning' className='mx-1'
+                        onClick={() => history.push('/update/' + post.id)}>✎</Button>
+                <Button size='sm' variant='outline-danger'
+                        onClick={() => handleShow(post.id)}>➖</Button>
               </div>
             </ListGroup.Item>
           ))}
