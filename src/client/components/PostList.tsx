@@ -119,6 +119,7 @@ function PostList({
     } else {
       setLock(true);
     }
+    waitingModalHandleShow();
     if (!post.bookmarked) {
       addBookmark({ variables: { postId: post.id } })
         .then(() => {
@@ -132,6 +133,7 @@ function PostList({
             },
           });
           releaseLock();
+          waitingModalHandleClose();
         });
     } else {
       removeBookmark({ variables: { postId: post.id } })
@@ -146,6 +148,7 @@ function PostList({
             },
           });
           releaseLock();
+          waitingModalHandleClose();
         });
     }
   };

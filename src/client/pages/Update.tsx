@@ -35,7 +35,7 @@ function Update() {
         <PostForm categoryId={categoryId} id={id} currentTitle={title} currentContent={content}
                   currentTags={tags} currentOption={option} />
       </Container>
-      <FixedMenu />
+      <FixedMenu isLoggedIn={isLoggedIn} />
     </>
   );
 }

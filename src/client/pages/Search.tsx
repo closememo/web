@@ -67,7 +67,7 @@ function Search({ location }: { location: Location }) {
         <PostList posts={searchedPosts} refreshPosts={refreshSearchPosts}
                   deletePosts={deletePosts} mailPosts={mailPosts} />
       </Container>
-      <FixedMenu />
+      <FixedMenu isLoggedIn={isLoggedIn} />
     </>
   );
 }

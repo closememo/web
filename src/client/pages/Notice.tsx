@@ -27,7 +27,7 @@ function Notice() {
       <Container as='main' className='home-main'>
         <NoticeList />
       </Container>
-      <FixedMenu />
+      <FixedMenu isLoggedIn={isLoggedIn} />
     </>
   );
 }

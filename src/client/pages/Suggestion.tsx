@@ -26,7 +26,7 @@ function Suggestion() {
       <Container as='main' className='home-main'>
         <SuggestionForm />
       </Container>
-      <FixedMenu />
+      <FixedMenu isLoggedIn={isLoggedIn} />
     </>
   );
 }

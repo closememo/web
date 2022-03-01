@@ -26,7 +26,7 @@ function Write() {
       <Container as='main' className='home-main'>
         <PostForm categoryId={categoryId} />
       </Container>
-      <FixedMenu />
+      <FixedMenu isLoggedIn={isLoggedIn} />
     </>
   );
 }

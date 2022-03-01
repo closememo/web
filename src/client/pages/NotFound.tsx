@@ -33,7 +33,7 @@ function NotFound() {
           />
         </div>
       </Container>
-      <FixedMenu />
+      <FixedMenu isLoggedIn={isLoggedIn} />
     </>
   );
 }

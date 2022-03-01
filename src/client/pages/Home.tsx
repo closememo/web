@@ -37,7 +37,7 @@ function HomePage({ location }: { location: Location }) {
           ? <MainPage categoryId={categoryId} currentPage={page} />
           : <LocalPage />}
       </Container>
-      <FixedMenu />
+      <FixedMenu isLoggedIn={isLoggedIn} />
     </>
   );
 }
