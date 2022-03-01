@@ -5,6 +5,7 @@ import { Container } from 'react-bootstrap';
 import PostForm from 'client/components/PostForm';
 import { useParams } from 'react-router-dom';
 import { useGetCurrentCategoryQuery, useGetLoggedInUserQuery, useGetPostQuery } from 'apollo/generated/hooks';
+import FixedMenu from 'client/components/FixedMenu';
 
 function Update() {
 
@@ -34,6 +35,7 @@ function Update() {
         <PostForm categoryId={categoryId} id={id} currentTitle={title} currentContent={content}
                   currentTags={tags} currentOption={option} />
       </Container>
+      <FixedMenu />
     </>
   );
 }

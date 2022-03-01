@@ -7,6 +7,7 @@ import LocalPage from 'client/components/local/LocalPage';
 import MainPage from 'client/components/MainPage';
 import { useGetCurrentCategoryQuery, useGetLoggedInUserQuery } from 'apollo/generated/hooks';
 import Information from 'client/components/Information';
+import FixedMenu from 'client/components/FixedMenu';
 
 function HomePage({ location }: { location: Location }) {
 
@@ -36,6 +37,7 @@ function HomePage({ location }: { location: Location }) {
           ? <MainPage categoryId={categoryId} currentPage={page} />
           : <LocalPage />}
       </Container>
+      <FixedMenu />
     </>
   );
 }

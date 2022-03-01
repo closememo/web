@@ -1,0 +1,7 @@
+mutation CreateBookmark($postId: String!) {
+    createBookmark(postId: $postId)
+}
+
+mutation DeleteBookmark($postId: String!) {
+    deleteBookmark(postId: $postId)
+}

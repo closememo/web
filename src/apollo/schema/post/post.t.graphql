@@ -1,7 +1,8 @@
 type Query {
     posts(categoryId: String, page: Int, limit: Int, orderType: String): Page
     post(id: ID!): Post!
-    searchPostsByTag(tag: String): [SimplePost]!
+    searchPostsByTag(tag: String): [SimplePost!]!
+    bookmarkedPosts: [BookmarkedPost!]!
 }
 
 type Mutation {
@@ -37,8 +38,9 @@ type SimplePost {
     title: String
     preview: String!
     tags: [String!]
-    autoTags: [String]
+    autoTags: [String!]
     createdAt: String!
+    bookmarked: Boolean!
 }
 
 type Post {
@@ -48,10 +50,18 @@ type Post {
     tags: [String!]
     createdAt: String
     option: PostOption
+    bookmarked: Boolean!
 }
 
 type PostOption {
     hasAutoTag: Boolean
+}
+
+type BookmarkedPost {
+    id: ID!
+    documentId: String!
+    title: String
+    preview: String!
 }
 
 type PostCreateResponse {

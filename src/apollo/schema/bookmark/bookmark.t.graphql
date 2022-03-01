@@ -1,0 +1,4 @@
+type Mutation {
+    createBookmark(postId: String!): Boolean
+    deleteBookmark(postId: String!): Boolean
+}

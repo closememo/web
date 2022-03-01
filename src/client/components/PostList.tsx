@@ -14,6 +14,8 @@ import { convertDateTimeString } from 'shared/utils/dateUtils';
 import WaitingModal from 'client/components/modal/WaitingModal';
 import PagingHandle from 'client/components/PagingHandle';
 import ChangeCategoryModal from 'client/components/modal/ChangeCategoryModal';
+import { BookmarkedPostsDocument, useCreateBookmarkMutation, useDeleteBookmarkMutation } from 'apollo/generated/hooks';
+import { SimplePost } from 'apollo/generated/types';
 
 interface ModalInfo {
   ids: string[]
@@ -23,7 +25,7 @@ interface PostListParams {
   total?: number;
   currentPage?: number;
   pageSize?: number;
-  posts: Array<any>;
+  posts: SimplePost[];
   refreshPosts: Function;
   deletePosts: Function;
   mailPosts: Function;
@@ -41,12 +43,20 @@ function PostList({
 
   const history = useHistory();
 
+  const [lock, setLock] = useState(false);
   const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
 
   const [modalShow, setModalShow] = useState(false);
   const [modalInfo, setModalInfo] = useState<ModalInfo>({ ids: [] });
   const [waitingModalShow, setWaitingModalShow] = useState(false);
   const [changeCategoryModalShow, setChangeCategoryModalShow] = useState(false);
+
+  const [addBookmark, createBookmarkMutationResult] = useCreateBookmarkMutation({
+    refetchQueries: [BookmarkedPostsDocument],
+  });
+  const [removeBookmark, deleteBookmarkMutationResult] = useDeleteBookmarkMutation({
+    refetchQueries: [BookmarkedPostsDocument],
+  });
 
   const removePostAndSendMail = (event: MouseEvent, ids: string[]) => {
     if (typeof (ids) === 'undefined' || ids.length === 0) return;
@@ -102,6 +112,50 @@ function PostList({
     setModalShow(true);
   };
 
+  const handleToggleBookmarkedClick = (post: SimplePost) => {
+    if (!post || !post.id) return;
+    if (lock) {
+      return;
+    } else {
+      setLock(true);
+    }
+    if (!post.bookmarked) {
+      addBookmark({ variables: { postId: post.id } })
+        .then(() => {
+          const cache = createBookmarkMutationResult.client.cache;
+          cache.modify({
+            id: cache.identify(post),
+            fields: {
+              bookmarked() {
+                return true;
+              },
+            },
+          });
+          releaseLock();
+        });
+    } else {
+      removeBookmark({ variables: { postId: post.id } })
+        .then(() => {
+          const cache = deleteBookmarkMutationResult.client.cache;
+          cache.modify({
+            id: cache.identify(post),
+            fields: {
+              bookmarked() {
+                return false;
+              },
+            },
+          });
+          releaseLock();
+        });
+    }
+  };
+
+  const releaseLock = () => {
+    setTimeout(() => {
+      setLock(false);
+    }, 500);
+  };
+
   const handleClose = () => setModalShow(false);
   const handleShow = (id: string) => {
     setModalInfo({ ids: [id] });
@@ -141,7 +195,7 @@ function PostList({
       </div>
       <div className='py-2'>
         <ListGroup>
-          {posts && posts.map((post: any) => (
+          {posts && posts.map((post: SimplePost) => (
             <ListGroup.Item key={post.id} variant='light' className='list-group-item-action'
                             onClick={(event: MouseEvent) => event.stopPropagation()}>
               <div className='d-flex w-100'>
@@ -158,6 +212,10 @@ function PostList({
               </div>
               <div className='d-flex'>
                 <small className='me-auto break-word'>{post.preview}</small>
+                <Button size='sm' variant='outline-secondary'
+                        onClick={() => handleToggleBookmarkedClick(post)}>
+                  {post.bookmarked ? '⭐' : '☆'}
+                </Button>
                 <Button size='sm' variant='outline-warning' className='mx-1'
                         onClick={() => history.push('/update/' + post.id)}>✎</Button>
                 <Button size='sm' variant='outline-danger'
@@ -171,7 +229,7 @@ function PostList({
         ? <PagingHandle total={total} currentPage={currentPage} pageSize={pageSize} />
         : <></>}
       <ChangeCategoryModal isShow={changeCategoryModalShow}
-                           closeModal={changeCategoryModalHandleClose} ids={Array.from(checkedIds)}/>
+                           closeModal={changeCategoryModalHandleClose} ids={Array.from(checkedIds)} />
       <Modal show={modalShow} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>삭제</Modal.Title>
@@ -201,7 +259,7 @@ function PostList({
   );
 }
 
-function getTitleElement(id: string, title: string): JSX.Element {
+function getTitleElement(id: string, title?: string | null): JSX.Element {
   if (!title) {
     return (
       <h5 className='mb-1'>

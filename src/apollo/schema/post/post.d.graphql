@@ -7,6 +7,7 @@ query GetPostList($categoryId: String, $page: Int, $limit: Int, $orderType: Stri
             tags
             autoTags
             createdAt
+            bookmarked
         }
         total
         currentPage
@@ -24,6 +25,7 @@ query GetPost($id: ID!) {
         option {
             hasAutoTag
         }
+        bookmarked
     }
 }
 
@@ -35,6 +37,16 @@ query SearchPostListByTag($tag: String) {
         tags
         autoTags
         createdAt
+        bookmarked
+    }
+}
+
+query BookmarkedPosts {
+    bookmarkedPosts {
+        id
+        documentId
+        title
+        preview
     }
 }
 

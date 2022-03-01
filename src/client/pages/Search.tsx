@@ -13,6 +13,8 @@ import { Container } from 'react-bootstrap';
 import PostList from 'client/components/PostList';
 import PostListHeader from 'client/components/PostListHeader';
 import Pagination from 'client/constants/Pagination';
+import FixedMenu from 'client/components/FixedMenu';
+import { SimplePost } from 'apollo/generated/types';
 
 function Search({ location }: { location: Location }) {
 
@@ -38,7 +40,7 @@ function Search({ location }: { location: Location }) {
 
   const isLoggedIn: boolean = loggedInUserQueryResult.data.me.isLoggedIn;
   const categoryId: string | null | undefined = currentCategoryQueryResult.data?.currentCategory;
-  const searchedPosts = searchPostsResult.data.searchPostsByTag;
+  const searchedPosts: SimplePost[] = searchPostsResult.data.searchPostsByTag;
 
   const refreshSearchPosts = async () => {
     await searchPostsResult.client.refetchQueries({
@@ -65,6 +67,7 @@ function Search({ location }: { location: Location }) {
         <PostList posts={searchedPosts} refreshPosts={refreshSearchPosts}
                   deletePosts={deletePosts} mailPosts={mailPosts} />
       </Container>
+      <FixedMenu />
     </>
   );
 }

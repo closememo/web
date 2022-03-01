@@ -4,6 +4,96 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {};
 
+export const CreateBookmarkDocument = gql`
+  mutation CreateBookmark($postId: String!) {
+    createBookmark(postId: $postId)
+  }
+`;
+export type CreateBookmarkMutationFn = Apollo.MutationFunction<
+  Types.CreateBookmarkMutation,
+  Types.CreateBookmarkMutationVariables
+>;
+
+/**
+ * __useCreateBookmarkMutation__
+ *
+ * To run a mutation, you first call `useCreateBookmarkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBookmarkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBookmarkMutation, { data, loading, error }] = useCreateBookmarkMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useCreateBookmarkMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    Types.CreateBookmarkMutation,
+    Types.CreateBookmarkMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<Types.CreateBookmarkMutation, Types.CreateBookmarkMutationVariables>(
+    CreateBookmarkDocument,
+    options,
+  );
+}
+export type CreateBookmarkMutationHookResult = ReturnType<typeof useCreateBookmarkMutation>;
+export type CreateBookmarkMutationResult = Apollo.MutationResult<Types.CreateBookmarkMutation>;
+export type CreateBookmarkMutationOptions = Apollo.BaseMutationOptions<
+  Types.CreateBookmarkMutation,
+  Types.CreateBookmarkMutationVariables
+>;
+export const DeleteBookmarkDocument = gql`
+  mutation DeleteBookmark($postId: String!) {
+    deleteBookmark(postId: $postId)
+  }
+`;
+export type DeleteBookmarkMutationFn = Apollo.MutationFunction<
+  Types.DeleteBookmarkMutation,
+  Types.DeleteBookmarkMutationVariables
+>;
+
+/**
+ * __useDeleteBookmarkMutation__
+ *
+ * To run a mutation, you first call `useDeleteBookmarkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteBookmarkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteBookmarkMutation, { data, loading, error }] = useDeleteBookmarkMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useDeleteBookmarkMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    Types.DeleteBookmarkMutation,
+    Types.DeleteBookmarkMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<Types.DeleteBookmarkMutation, Types.DeleteBookmarkMutationVariables>(
+    DeleteBookmarkDocument,
+    options,
+  );
+}
+export type DeleteBookmarkMutationHookResult = ReturnType<typeof useDeleteBookmarkMutation>;
+export type DeleteBookmarkMutationResult = Apollo.MutationResult<Types.DeleteBookmarkMutation>;
+export type DeleteBookmarkMutationOptions = Apollo.BaseMutationOptions<
+  Types.DeleteBookmarkMutation,
+  Types.DeleteBookmarkMutationVariables
+>;
 export const GetCategoriesDocument = gql`
   query GetCategories {
     categories {
@@ -378,6 +468,7 @@ export const GetPostListDocument = gql`
         tags
         autoTags
         createdAt
+        bookmarked
       }
       total
       currentPage
@@ -443,6 +534,7 @@ export const GetPostDocument = gql`
       option {
         hasAutoTag
       }
+      bookmarked
     }
   }
 `;
@@ -493,6 +585,7 @@ export const SearchPostListByTagDocument = gql`
       tags
       autoTags
       createdAt
+      bookmarked
     }
   }
 `;
@@ -544,6 +637,62 @@ export type SearchPostListByTagLazyQueryHookResult = ReturnType<
 export type SearchPostListByTagQueryResult = Apollo.QueryResult<
   Types.SearchPostListByTagQuery,
   Types.SearchPostListByTagQueryVariables
+>;
+export const BookmarkedPostsDocument = gql`
+  query BookmarkedPosts {
+    bookmarkedPosts {
+      id
+      documentId
+      title
+      preview
+    }
+  }
+`;
+
+/**
+ * __useBookmarkedPostsQuery__
+ *
+ * To run a query within a React component, call `useBookmarkedPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBookmarkedPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBookmarkedPostsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useBookmarkedPostsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    Types.BookmarkedPostsQuery,
+    Types.BookmarkedPostsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<Types.BookmarkedPostsQuery, Types.BookmarkedPostsQueryVariables>(
+    BookmarkedPostsDocument,
+    options,
+  );
+}
+export function useBookmarkedPostsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    Types.BookmarkedPostsQuery,
+    Types.BookmarkedPostsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<Types.BookmarkedPostsQuery, Types.BookmarkedPostsQueryVariables>(
+    BookmarkedPostsDocument,
+    options,
+  );
+}
+export type BookmarkedPostsQueryHookResult = ReturnType<typeof useBookmarkedPostsQuery>;
+export type BookmarkedPostsLazyQueryHookResult = ReturnType<typeof useBookmarkedPostsLazyQuery>;
+export type BookmarkedPostsQueryResult = Apollo.QueryResult<
+  Types.BookmarkedPostsQuery,
+  Types.BookmarkedPostsQueryVariables
 >;
 export const CreateNewPostDocument = gql`
   mutation CreateNewPost(

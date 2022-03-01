@@ -4,6 +4,7 @@ import Navigation from 'client/components/Navigation';
 import { useGetCurrentCategoryQuery, useGetLoggedInUserQuery } from 'apollo/generated/hooks';
 import { Container } from 'react-bootstrap';
 import { Route } from 'react-router-dom';
+import FixedMenu from 'client/components/FixedMenu';
 
 function NotFound() {
 
@@ -32,6 +33,7 @@ function NotFound() {
           />
         </div>
       </Container>
+      <FixedMenu />
     </>
   );
 }

@@ -4,6 +4,7 @@ import Navigation from 'client/components/Navigation';
 import { Container } from 'react-bootstrap';
 import PostForm from 'client/components/PostForm';
 import { useGetCurrentCategoryQuery, useGetLoggedInUserQuery } from 'apollo/generated/hooks';
+import FixedMenu from 'client/components/FixedMenu';
 
 function Write() {
 
@@ -25,6 +26,7 @@ function Write() {
       <Container as='main' className='home-main'>
         <PostForm categoryId={categoryId} />
       </Container>
+      <FixedMenu />
     </>
   );
 }

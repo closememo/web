@@ -48,6 +48,9 @@ export default {
     searchPostsByTag: async (_: any, { tag }: { tag: string }, { dataSources }: { dataSources: DataSources }) => {
       return await dataSources.postAPI.searchPostsByTag({ tag });
     },
+    bookmarkedPosts: async (_: any, __: any, { dataSources }: { dataSources: DataSources }) => {
+      return await dataSources.postAPI.bookmarkedPosts();
+    },
   },
   Mutation: {
     createNewPost: async (_: any, newPost: NewPost, { dataSources }: { dataSources: DataSources }) => {

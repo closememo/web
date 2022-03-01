@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import Navigation from 'client/components/Navigation';
 import { Container } from 'react-bootstrap';
 import SuggestionForm from 'client/components/SuggestionForm';
+import FixedMenu from 'client/components/FixedMenu';
 
 function Suggestion() {
 
@@ -25,6 +26,7 @@ function Suggestion() {
       <Container as='main' className='home-main'>
         <SuggestionForm />
       </Container>
+      <FixedMenu />
     </>
   );
 }

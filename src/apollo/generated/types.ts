@@ -11,6 +11,14 @@ export type Scalars = {
   Float: number;
 };
 
+export type BookmarkedPost = {
+  __typename?: 'BookmarkedPost';
+  documentId: Scalars['String'];
+  id: Scalars['ID'];
+  preview: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+};
+
 export type Category = {
   __typename?: 'Category';
   childrenIds?: Maybe<Array<Scalars['String']>>;
@@ -31,10 +39,12 @@ export type LocalPostCreatesResponse = {
 export type Mutation = {
   __typename?: 'Mutation';
   changePostsCategory?: Maybe<Scalars['Boolean']>;
+  createBookmark?: Maybe<Scalars['Boolean']>;
   createCategory?: Maybe<Scalars['Boolean']>;
   createLocalPosts?: Maybe<LocalPostCreatesResponse>;
   createNewPost?: Maybe<PostCreateResponse>;
   createSuggestion?: Maybe<Scalars['Boolean']>;
+  deleteBookmark?: Maybe<Scalars['Boolean']>;
   deleteCategory?: Maybe<Scalars['Boolean']>;
   deletePost?: Maybe<Scalars['Boolean']>;
   deletePosts?: Maybe<Scalars['Boolean']>;
@@ -48,6 +58,10 @@ export type Mutation = {
 export type MutationChangePostsCategoryArgs = {
   categoryId?: Maybe<Scalars['String']>;
   ids?: Maybe<Array<Scalars['ID']>>;
+};
+
+export type MutationCreateBookmarkArgs = {
+  postId: Scalars['String'];
 };
 
 export type MutationCreateCategoryArgs = {
@@ -69,6 +83,10 @@ export type MutationCreateNewPostArgs = {
 
 export type MutationCreateSuggestionArgs = {
   content: Scalars['String'];
+};
+
+export type MutationDeleteBookmarkArgs = {
+  postId: Scalars['String'];
 };
 
 export type MutationDeleteCategoryArgs = {
@@ -151,6 +169,7 @@ export type Page = {
 
 export type Post = {
   __typename?: 'Post';
+  bookmarked: Scalars['Boolean'];
   content: Scalars['String'];
   createdAt?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
@@ -176,6 +195,7 @@ export type PostOptionInput = {
 
 export type Query = {
   __typename?: 'Query';
+  bookmarkedPosts: Array<BookmarkedPost>;
   categories: Array<Category>;
   currentCategory?: Maybe<Scalars['String']>;
   me: User;
@@ -183,7 +203,7 @@ export type Query = {
   noticeListElements?: Maybe<NoticeListElementPage>;
   post: Post;
   posts?: Maybe<Page>;
-  searchPostsByTag: Array<Maybe<SimplePost>>;
+  searchPostsByTag: Array<SimplePost>;
   suggestion?: Maybe<Suggestion>;
   suggestions: Array<SuggestionListElement>;
 };
@@ -213,7 +233,8 @@ export type QuerySuggestionArgs = {
 
 export type SimplePost = {
   __typename?: 'SimplePost';
-  autoTags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  autoTags?: Maybe<Array<Scalars['String']>>;
+  bookmarked: Scalars['Boolean'];
   createdAt: Scalars['String'];
   id: Scalars['ID'];
   preview: Scalars['String'];
@@ -238,6 +259,24 @@ export type SuggestionListElement = {
 export type User = {
   __typename?: 'User';
   isLoggedIn: Scalars['Boolean'];
+};
+
+export type CreateBookmarkMutationVariables = Exact<{
+  postId: Scalars['String'];
+}>;
+
+export type CreateBookmarkMutation = {
+  __typename?: 'Mutation';
+  createBookmark?: boolean | null | undefined;
+};
+
+export type DeleteBookmarkMutationVariables = Exact<{
+  postId: Scalars['String'];
+}>;
+
+export type DeleteBookmarkMutation = {
+  __typename?: 'Mutation';
+  deleteBookmark?: boolean | null | undefined;
 };
 
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never }>;
@@ -349,8 +388,9 @@ export type GetPostListQuery = {
           title?: string | null | undefined;
           preview: string;
           tags?: Array<string> | null | undefined;
-          autoTags?: Array<string | null | undefined> | null | undefined;
+          autoTags?: Array<string> | null | undefined;
           createdAt: string;
+          bookmarked: boolean;
         }>;
       }
     | null
@@ -369,6 +409,7 @@ export type GetPostQuery = {
     title?: string | null | undefined;
     content: string;
     tags?: Array<string> | null | undefined;
+    bookmarked: boolean;
     option?:
       | { __typename?: 'PostOption'; hasAutoTag?: boolean | null | undefined }
       | null
@@ -382,19 +423,29 @@ export type SearchPostListByTagQueryVariables = Exact<{
 
 export type SearchPostListByTagQuery = {
   __typename?: 'Query';
-  searchPostsByTag: Array<
-    | {
-        __typename?: 'SimplePost';
-        id: string;
-        title?: string | null | undefined;
-        preview: string;
-        tags?: Array<string> | null | undefined;
-        autoTags?: Array<string | null | undefined> | null | undefined;
-        createdAt: string;
-      }
-    | null
-    | undefined
-  >;
+  searchPostsByTag: Array<{
+    __typename?: 'SimplePost';
+    id: string;
+    title?: string | null | undefined;
+    preview: string;
+    tags?: Array<string> | null | undefined;
+    autoTags?: Array<string> | null | undefined;
+    createdAt: string;
+    bookmarked: boolean;
+  }>;
+};
+
+export type BookmarkedPostsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type BookmarkedPostsQuery = {
+  __typename?: 'Query';
+  bookmarkedPosts: Array<{
+    __typename?: 'BookmarkedPost';
+    id: string;
+    documentId: string;
+    title?: string | null | undefined;
+    preview: string;
+  }>;
 };
 
 export type CreateNewPostMutationVariables = Exact<{

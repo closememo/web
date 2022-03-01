@@ -9,7 +9,7 @@ import {
 } from 'apollo/generated/hooks';
 import PostList from 'client/components/PostList';
 import Pagination from 'client/constants/Pagination';
-import { Category } from 'apollo/generated/types';
+import { Category, SimplePost } from 'apollo/generated/types';
 import PersonalLocalCache from 'client/cache/PersonalLocalCache';
 import PostListHeader from 'client/components/PostListHeader';
 
@@ -75,7 +75,7 @@ function MainPage({ categoryId, currentPage }: { categoryId?: string | null, cur
   let fullName: string = getCategoryFullName(categoriesQueryResult.data.categories, categoryId);
 
   const total = postListQueryResult.data.posts?.total;
-  const posts = postListQueryResult.data.posts ? postListQueryResult.data.posts.data : [];
+  const posts: SimplePost[] = postListQueryResult.data.posts ? postListQueryResult.data.posts.data : [];
 
   return (
     <>

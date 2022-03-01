@@ -54,6 +54,10 @@ class PostAPI extends AbstractApi {
     return await this.get('/query/client/documents-by-tag?tag=' + tag);
   }
 
+  public async bookmarkedPosts() {
+    return await this.get('/query/client/bookmarked-documents');
+  }
+
   public async createPost(newPost: NewPost) {
     const response = await this.post('/command/client/create-document', newPost);
     return {

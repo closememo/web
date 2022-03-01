@@ -5,6 +5,7 @@ import { Container } from 'react-bootstrap';
 import { useGetCurrentCategoryQuery, useGetLoggedInUserQuery } from 'apollo/generated/hooks';
 import 'client/css/pages/Home.css';
 import NoticeList from 'client/components/NoticeList';
+import FixedMenu from 'client/components/FixedMenu';
 
 function Notice() {
 
@@ -26,6 +27,7 @@ function Notice() {
       <Container as='main' className='home-main'>
         <NoticeList />
       </Container>
+      <FixedMenu />
     </>
   );
 }
