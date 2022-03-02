@@ -1,5 +1,12 @@
 query GetLoggedInUser {
     me {
+        id
         isLoggedIn
+        documentOrderType
+        documentCount
     }
+}
+
+mutation UpdateAccountOption($documentOrderType: String, $documentCount: Int) {
+    updateAccountOption(documentOrderType: $documentOrderType, documentCount: $documentCount)
 }

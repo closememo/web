@@ -4,8 +4,6 @@ import { LocalPost } from 'client/components/local/LocalPage';
 const LOCAL_POST_ID_LIST_KEY = 'postIds';
 const KEEP_LOGIN_CHECKED_KEY = 'keepLoginChecked';
 const LOCAL_MEMO_PUSH_CHECKED_KEY = 'localMemoPushChecked';
-const ORDER_TYPE_KEY = 'orderType';
-const POST_COUNT_KEY = 'postCount';
 const ORDER_OPTION_OPEN_KEY = 'orderOptionOpen';
 
 class PersonalLocalCache {
@@ -61,24 +59,6 @@ class PersonalLocalCache {
 
   public static async getOrderOptionOpen(): Promise<boolean | null> {
     return await localforage.getItem(ORDER_OPTION_OPEN_KEY);
-  }
-
-  // post count
-  public static async setPostCount(postCount: number) {
-    await localforage.setItem(POST_COUNT_KEY, postCount);
-  }
-
-  public static async getPostCount(): Promise<number | null> {
-    return await localforage.getItem(POST_COUNT_KEY);
-  }
-
-  // order type
-  public static async setOrderType(orderType: string) {
-    await localforage.setItem(ORDER_TYPE_KEY, orderType);
-  }
-
-  public static async getOrderType(): Promise<string | null> {
-    return await localforage.getItem(ORDER_TYPE_KEY);
   }
 }
 

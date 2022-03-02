@@ -8,6 +8,7 @@ import MainPage from 'client/components/MainPage';
 import { useGetCurrentCategoryQuery, useGetLoggedInUserQuery } from 'apollo/generated/hooks';
 import Information from 'client/components/Information';
 import FixedMenu from 'client/components/FixedMenu';
+import Pagination from 'client/constants/Pagination';
 
 function HomePage({ location }: { location: Location }) {
 
@@ -23,6 +24,10 @@ function HomePage({ location }: { location: Location }) {
   if (error || !data) return <p>Error</p>;
 
   const isLoggedIn: boolean = data.me.isLoggedIn;
+  const documentOrderType: string = !data.me.documentOrderType
+    ? 'CREATED_NEWEST' : data.me.documentOrderType;
+  const documentCount: number = (!data.me.documentCount || data.me.documentCount < 5)
+    ? Pagination.PAGE_NUMBER : data.me.documentCount;
   const categoryId: string | null | undefined = currentCategoryQueryResult.data?.currentCategory;
 
   return (
@@ -34,7 +39,8 @@ function HomePage({ location }: { location: Location }) {
       {!!state && <Information state={state} isLoggedIn={isLoggedIn} />}
       <Container as='main' className='home-main'>
         {isLoggedIn
-          ? <MainPage categoryId={categoryId} currentPage={page} />
+          ? <MainPage categoryId={categoryId} currentPage={page}
+                      documentOrderType={documentOrderType} documentCount={documentCount} />
           : <LocalPage />}
       </Container>
       <FixedMenu isLoggedIn={isLoggedIn} />

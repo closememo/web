@@ -8,18 +8,22 @@ import {
   useMailPostsMutation,
 } from 'apollo/generated/hooks';
 import PostList from 'client/components/PostList';
-import Pagination from 'client/constants/Pagination';
 import { Category, SimplePost } from 'apollo/generated/types';
 import PersonalLocalCache from 'client/cache/PersonalLocalCache';
 import PostListHeader from 'client/components/PostListHeader';
 
 const DEFAULT_CATEGORY_NAME = '메인';
 
-function MainPage({ categoryId, currentPage }: { categoryId?: string | null, currentPage: number }) {
+interface MainPageParams {
+  categoryId?: string | null;
+  currentPage: number;
+  documentOrderType: string;
+  documentCount: number;
+}
+
+function MainPage({ categoryId, currentPage, documentOrderType, documentCount }: MainPageParams) {
 
   const [orderOptionOpen, setOrderOptionOpen] = useState<boolean>(false);
-  const [postCount, setPostCount] = useState(Pagination.PAGE_NUMBER);
-  const [currentOrderType, setCurrentOrderType] = useState<string>('CREATED_NEWEST');
 
   useEffect(() => {
     refresh().then();
@@ -30,22 +34,14 @@ function MainPage({ categoryId, currentPage }: { categoryId?: string | null, cur
     if (!!orderOptionOpen) {
       setOrderOptionOpen(orderOptionOpen);
     }
-    const orderType = await PersonalLocalCache.getOrderType();
-    if (!!orderType) {
-      setCurrentOrderType(orderType);
-    }
-    const postCount = await PersonalLocalCache.getPostCount();
-    if (!!postCount) {
-      setPostCount(postCount);
-    }
   };
 
   const postListQueryResult = useGetPostListQuery({
     variables: {
       page: currentPage,
-      limit: postCount,
+      limit: documentCount,
       ...(!!categoryId && { categoryId: categoryId }),
-      orderType: currentOrderType,
+      orderType: documentOrderType,
     },
   });
   const categoriesQueryResult = useGetCategoriesQuery();
@@ -81,10 +77,9 @@ function MainPage({ categoryId, currentPage }: { categoryId?: string | null, cur
     <>
       <PostListHeader heading={fullName} currentPage={currentPage} categoryId={categoryId}
                       orderOptionOpen={orderOptionOpen} setOrderOptionOpen={setOrderOptionOpen}
-                      postCount={postCount} setPostCount={setPostCount}
-                      currentOrderType={currentOrderType} setCurrentOrderType={setCurrentOrderType}
+                      postCount={documentCount} currentOrderType={documentOrderType}
                       refetchPosts={postListQueryResult.refetch} />
-      <PostList total={total} currentPage={currentPage} pageSize={postCount} posts={posts}
+      <PostList total={total} currentPage={currentPage} pageSize={documentCount} posts={posts}
                 refreshPosts={refreshPosts} deletePosts={deletePosts} mailPosts={mailPosts} />
     </>
   );

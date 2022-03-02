@@ -1299,7 +1299,10 @@ export type DeleteSuggestionMutationOptions = Apollo.BaseMutationOptions<
 export const GetLoggedInUserDocument = gql`
   query GetLoggedInUser {
     me {
+      id
       isLoggedIn
+      documentOrderType
+      documentCount
     }
   }
 `;
@@ -1348,4 +1351,53 @@ export type GetLoggedInUserLazyQueryHookResult = ReturnType<typeof useGetLoggedI
 export type GetLoggedInUserQueryResult = Apollo.QueryResult<
   Types.GetLoggedInUserQuery,
   Types.GetLoggedInUserQueryVariables
+>;
+export const UpdateAccountOptionDocument = gql`
+  mutation UpdateAccountOption($documentOrderType: String, $documentCount: Int) {
+    updateAccountOption(documentOrderType: $documentOrderType, documentCount: $documentCount)
+  }
+`;
+export type UpdateAccountOptionMutationFn = Apollo.MutationFunction<
+  Types.UpdateAccountOptionMutation,
+  Types.UpdateAccountOptionMutationVariables
+>;
+
+/**
+ * __useUpdateAccountOptionMutation__
+ *
+ * To run a mutation, you first call `useUpdateAccountOptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAccountOptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAccountOptionMutation, { data, loading, error }] = useUpdateAccountOptionMutation({
+ *   variables: {
+ *      documentOrderType: // value for 'documentOrderType'
+ *      documentCount: // value for 'documentCount'
+ *   },
+ * });
+ */
+export function useUpdateAccountOptionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    Types.UpdateAccountOptionMutation,
+    Types.UpdateAccountOptionMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    Types.UpdateAccountOptionMutation,
+    Types.UpdateAccountOptionMutationVariables
+  >(UpdateAccountOptionDocument, options);
+}
+export type UpdateAccountOptionMutationHookResult = ReturnType<
+  typeof useUpdateAccountOptionMutation
+>;
+export type UpdateAccountOptionMutationResult =
+  Apollo.MutationResult<Types.UpdateAccountOptionMutation>;
+export type UpdateAccountOptionMutationOptions = Apollo.BaseMutationOptions<
+  Types.UpdateAccountOptionMutation,
+  Types.UpdateAccountOptionMutationVariables
 >;

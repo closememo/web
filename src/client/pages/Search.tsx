@@ -19,8 +19,6 @@ import { SimplePost } from 'apollo/generated/types';
 function Search({ location }: { location: Location }) {
 
   const [orderOptionOpen, setOrderOptionOpen] = useState<boolean>(false);
-  const [postCount, setPostCount] = useState(Pagination.PAGE_NUMBER);
-  const [currentOrderType, setCurrentOrderType] = useState<string>('CREATED_NEWEST');
 
   const search = location.search;
   const tag = new URLSearchParams(search).get('tag');
@@ -62,8 +60,7 @@ function Search({ location }: { location: Location }) {
       <Container as='main' className='home-main'>
         <PostListHeader heading={'[태그검색] 검색어: ' + tag}
                         orderOptionOpen={orderOptionOpen} setOrderOptionOpen={setOrderOptionOpen}
-                        postCount={postCount} setPostCount={setPostCount}
-                        currentOrderType={currentOrderType} setCurrentOrderType={setCurrentOrderType}/>
+                        postCount={Pagination.PAGE_NUMBER} currentOrderType={'CREATED_NEWEST'} />
         <PostList posts={searchedPosts} refreshPosts={refreshSearchPosts}
                   deletePosts={deletePosts} mailPosts={mailPosts} />
       </Container>

@@ -2,6 +2,13 @@ type Query {
     me: User!
 }
 
+type Mutation {
+    updateAccountOption(documentOrderType: String, documentCount: Int): Boolean
+}
+
 type User {
+    id: ID!
     isLoggedIn: Boolean!
+    documentOrderType: String
+    documentCount: Int
 }

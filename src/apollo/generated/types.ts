@@ -50,6 +50,7 @@ export type Mutation = {
   deletePosts?: Maybe<Scalars['Boolean']>;
   deleteSuggestion?: Maybe<Scalars['Boolean']>;
   mailPosts?: Maybe<Scalars['Boolean']>;
+  updateAccountOption?: Maybe<Scalars['Boolean']>;
   updateCategory?: Maybe<Scalars['Boolean']>;
   updatePost?: Maybe<PostCreateResponse>;
   updateSuggestion?: Maybe<Scalars['Boolean']>;
@@ -107,6 +108,11 @@ export type MutationDeleteSuggestionArgs = {
 
 export type MutationMailPostsArgs = {
   ids?: Maybe<Array<Scalars['ID']>>;
+};
+
+export type MutationUpdateAccountOptionArgs = {
+  documentCount?: Maybe<Scalars['Int']>;
+  documentOrderType?: Maybe<Scalars['String']>;
 };
 
 export type MutationUpdateCategoryArgs = {
@@ -258,6 +264,9 @@ export type SuggestionListElement = {
 
 export type User = {
   __typename?: 'User';
+  documentCount?: Maybe<Scalars['Int']>;
+  documentOrderType?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
   isLoggedIn: Scalars['Boolean'];
 };
 
@@ -584,5 +593,21 @@ export type GetLoggedInUserQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetLoggedInUserQuery = {
   __typename?: 'Query';
-  me: { __typename?: 'User'; isLoggedIn: boolean };
+  me: {
+    __typename?: 'User';
+    id: string;
+    isLoggedIn: boolean;
+    documentOrderType?: string | null | undefined;
+    documentCount?: number | null | undefined;
+  };
+};
+
+export type UpdateAccountOptionMutationVariables = Exact<{
+  documentOrderType?: Maybe<Scalars['String']>;
+  documentCount?: Maybe<Scalars['Int']>;
+}>;
+
+export type UpdateAccountOptionMutation = {
+  __typename?: 'Mutation';
+  updateAccountOption?: boolean | null | undefined;
 };

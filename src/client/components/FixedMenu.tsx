@@ -41,7 +41,7 @@ function FixedMenu({ isLoggedIn }: { isLoggedIn: boolean }) {
             id: postId,
           }),
           fields: {
-            bookmarked() {
+            bookmarked(): boolean {
               return false;
             },
           },
@@ -54,13 +54,13 @@ function FixedMenu({ isLoggedIn }: { isLoggedIn: boolean }) {
     <>
       <div className='fixed-bottom bg-light d-none d-md-block fixed-menu'>
         <Button variant='outline-success' size='lg' onClick={showModal}>
-          🔖
+          ⭐
         </Button>
       </div>
       <div className='fixed-bottom bg-light d-md-none'>
         <div className='d-flex p-1'>
           <Button variant='outline-success' className='ms-auto' onClick={showModal}>
-            🔖
+            ⭐
           </Button>
         </div>
       </div>

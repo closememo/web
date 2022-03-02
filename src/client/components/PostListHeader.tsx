@@ -3,6 +3,7 @@ import { Button, Col, Collapse, Form, Row } from 'react-bootstrap';
 import PersonalLocalCache from 'client/cache/PersonalLocalCache';
 import { useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
+import { useUpdateAccountOptionMutation } from 'apollo/generated/hooks';
 
 
 interface PostListHeaderParams {
@@ -12,9 +13,7 @@ interface PostListHeaderParams {
   orderOptionOpen: boolean;
   setOrderOptionOpen: Function;
   postCount: number;
-  setPostCount: Function;
   currentOrderType: string;
-  setCurrentOrderType: Function;
   refetchPosts?: Function;
 }
 
@@ -25,13 +24,13 @@ function PostListHeader({
                           orderOptionOpen,
                           setOrderOptionOpen,
                           postCount,
-                          setPostCount,
                           currentOrderType,
-                          setCurrentOrderType,
                           refetchPosts,
                         }: PostListHeaderParams) {
 
   const history = useHistory();
+
+  const [updateAccountOption, updateAccountOptionResult] = useUpdateAccountOptionMutation();
 
   const handleOrderOptionOpen = async () => {
     await PersonalLocalCache.setOrderOptionOpen(!orderOptionOpen);
@@ -40,15 +39,35 @@ function PostListHeader({
 
   const handlePostCount = async (event: ChangeEvent) => {
     const newPostCount = parseInt((event.target as HTMLInputElement).value);
-    setPostCount(newPostCount);
-    await PersonalLocalCache.setPostCount(newPostCount);
+    updateAccountOption({ variables: { documentCount: newPostCount } })
+      .then(() => {
+        const cache = updateAccountOptionResult.client.cache;
+        cache.modify({
+          id: cache.identify({ __typename: 'User', id: 'ME' }),
+          fields: {
+            documentCount(): number {
+              return newPostCount;
+            },
+          },
+        });
+      });
     history.push(PagePaths.Home);
   };
 
   const handleOrderType = async (event: ChangeEvent) => {
     const newOrderType = (event.target as HTMLInputElement).value;
-    setCurrentOrderType(newOrderType);
-    await PersonalLocalCache.setOrderType(newOrderType);
+    updateAccountOption({ variables: { documentOrderType: newOrderType } })
+      .then(() => {
+        const cache = updateAccountOptionResult.client.cache;
+        cache.modify({
+          id: cache.identify({ __typename: 'User', id: 'ME' }),
+          fields: {
+            documentOrderType(): string {
+              return newOrderType;
+            },
+          },
+        });
+      });
     if (!!refetchPosts) {
       refetchPosts({
         page: currentPage,
