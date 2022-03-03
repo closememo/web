@@ -2,6 +2,7 @@ import { NormalizedCacheObject } from '@apollo/client';
 import { ChunkExtractor } from '@loadable/server';
 import { HelmetData } from 'react-helmet-async';
 import serialize from 'serialize-javascript';
+import { isLocal } from 'shared/constants/env';
 
 type HtmlProperties = {
   content: string,
@@ -43,6 +44,17 @@ function createHtml({ content, extractor, apolloState, helmetData }: HtmlPropert
     isJSON: true,
   })}`;
 
+  const googleAnalyticsScript = isLocal
+    ? ''
+    : `
+    <script async src='https://www.googletagmanager.com/gtag/js?id=G-C01VWP6G65'></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-C01VWP6G65');
+    </script>`;
+
   return `
     <html lang='ko'>
     <head>
@@ -50,6 +62,7 @@ function createHtml({ content, extractor, apolloState, helmetData }: HtmlPropert
       <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
       <meta name='referrer' content='always' />
       <meta name='description' content='${DESCRIPTION_CONTENT}' />
+      ${googleAnalyticsScript}
       ${extractor.getStyleTags()}
       ${helmetData.meta?.toString()}
       ${helmetData.link?.toString()}
