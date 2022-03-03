@@ -18,6 +18,16 @@ const NUMBER_OF_POSTS_LIMIT = 100;
 const TITLE_MAX_LENGTH = 100;
 const CONTENT_MAX_LENGTH = 3000;
 
+const FIRST_TITLE = '클로즈메모(closememo) 소개'
+const FIRST_MEMO = '클로즈메모는 간단하게 어디서든 작성할 수 있는 웹메모장입니다.\n' +
+  '-----\n' +
+  '로그인 없이도 메모를 작성/수정 가능합니다.\n' +
+  '이 경우, 메모를 브라우저에 저장합니다. "인터넷 사용기록 삭제"시 삭제됩니다.\n' +
+  '-----\n' +
+  '로그인을 하면 메모를 서버에 저장합니다.\n' +
+  '다른 기기로 접근해도 메모를 볼 수 있습니다.\n' +
+  '태그를 추가할 수 있고, 태그 검색 기능을 사용할 수 있습니다.';
+
 function LocalWrite({ currentId, setCurrentId, refresh }: LocalWriteParam) {
 
   const [title, setTitle] = useState<string>('');
@@ -28,6 +38,19 @@ function LocalWrite({ currentId, setCurrentId, refresh }: LocalWriteParam) {
   const [errorModalInfo, setErrorModalInfo] = useState<ErrorModalInfo>({ content: '' });
 
   const isNew = !currentId;
+
+  useEffect(() => {
+    init().then();
+  }, []);
+
+  const init = async () => {
+    const firstMemoViewed: boolean | null = await PersonalLocalCache.getFirstMemoViewed();
+    if (!firstMemoViewed) {
+      setTitle(FIRST_TITLE);
+      setContent(FIRST_MEMO);
+      await PersonalLocalCache.setFirstMemoViewed(true);
+    }
+  }
 
   useEffect(() => {
     if (!isNew) {
@@ -144,7 +167,7 @@ function LocalWrite({ currentId, setCurrentId, refresh }: LocalWriteParam) {
   return (
     <>
       <div className='my-4'>
-        <h2>{(isNew) ? '[로그아웃] 메모 작성' : '[로그아웃] 메모 수정'}</h2>
+        <h2>{(isNew) ? '메모 작성' : '메모 수정'}</h2>
       </div>
       <Form onSubmit={submitForm}>
         <Form.Group controlId='title' className='mb-3'>
@@ -153,7 +176,7 @@ function LocalWrite({ currentId, setCurrentId, refresh }: LocalWriteParam) {
             onChange={handleTitleChange} onKeyPress={handleTitleKeyPress} />
         </Form.Group>
         <Form.Group controlId='content' className='mb-3 d-grid'>
-          <Form.Control as='textarea' value={content} onChange={handleContentChange} rows={10} required />
+          <Form.Control as='textarea' value={content} onChange={handleContentChange} rows={12} required />
           <div className='ms-auto'>{'(' + content.length + '/' + CONTENT_MAX_LENGTH + ')'}</div>
         </Form.Group>
         <div className='d-flex'>

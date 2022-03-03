@@ -5,6 +5,7 @@ const LOCAL_POST_ID_LIST_KEY = 'postIds';
 const KEEP_LOGIN_CHECKED_KEY = 'keepLoginChecked';
 const LOCAL_MEMO_PUSH_CHECKED_KEY = 'localMemoPushChecked';
 const ORDER_OPTION_OPEN_KEY = 'orderOptionOpen';
+const FIRST_MEMO_VIEWED = 'firstMemoViewed';
 
 class PersonalLocalCache {
 
@@ -59,6 +60,15 @@ class PersonalLocalCache {
 
   public static async getOrderOptionOpen(): Promise<boolean | null> {
     return await localforage.getItem(ORDER_OPTION_OPEN_KEY);
+  }
+
+  // first memo viewed
+  public static async setFirstMemoViewed(firstMemoViewed: boolean) {
+    await localforage.setItem(FIRST_MEMO_VIEWED, firstMemoViewed);
+  }
+
+  public static async getFirstMemoViewed(): Promise<boolean | null> {
+    return await localforage.getItem(FIRST_MEMO_VIEWED);
   }
 }
 

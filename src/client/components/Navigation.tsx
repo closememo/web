@@ -1,12 +1,12 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Button, Container, Form, FormControl, Image, Nav, Navbar } from 'react-bootstrap';
 import MainLogo from 'public/img/logo.png';
-import HelpOffcanvas from 'client/components/HelpOffcanvas';
+import HelpOffcanvas from 'client/components/offcanvas/HelpOffcanvas';
 import LoginModal from 'client/components/modal/LoginModal';
-import SettingOffcanvas from 'client/components/SettingOffcanvas';
+import SettingOffcanvas from 'client/components/offcanvas/SettingOffcanvas';
 import { Link, useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
-import CategoryOffcanvas from 'client/components/CategoryOffcanvas';
+import CategoryOffcanvas from 'client/components/offcanvas/CategoryOffcanvas';
 import { useGetCategoriesQuery } from 'apollo/generated/hooks';
 import { Category } from 'apollo/generated/types';
 

@@ -183,7 +183,7 @@ function PostList({
                 onClick={() => refreshPosts()}>↻</Button>
         <Button variant='info' onClick={handleAllCheckButtonClick}>
           <div className='d-none d-sm-block'>{(posts.length === checkedIds.size) ? '전체취소' : '전체선택'}</div>
-          <div className='d-sm-none'>{(posts.length === checkedIds.size) ? '☐' : '☑'}</div>
+          <div className='d-sm-none'>{(posts.length === checkedIds.size) ? '□' : '☑'}</div>
         </Button>
         <Button variant='secondary' className='mx-1'
                 onClick={changeCategoryModalHandleShow} disabled={checkedIds.size === 0}>
