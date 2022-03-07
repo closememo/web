@@ -268,6 +268,7 @@ export type User = {
   documentOrderType?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   isLoggedIn: Scalars['Boolean'];
+  isTempUser?: Maybe<Scalars['Boolean']>;
 };
 
 export type CreateBookmarkMutationVariables = Exact<{
@@ -597,6 +598,7 @@ export type GetLoggedInUserQuery = {
     __typename?: 'User';
     id: string;
     isLoggedIn: boolean;
+    isTempUser?: boolean | null | undefined;
     documentOrderType?: string | null | undefined;
     documentCount?: number | null | undefined;
   };

@@ -15,6 +15,7 @@ function Suggestion() {
   if (error || !data) return <p>Error</p>;
 
   const isLoggedIn: boolean = data.me.isLoggedIn;
+  const isTempUser: boolean | null | undefined = data.me.isTempUser; // TODO: tempUser 제거
   const categoryId: string | null | undefined = currentCategoryQueryResult.data?.currentCategory;
 
   return (
@@ -22,7 +23,7 @@ function Suggestion() {
       <Helmet>
         <title>건의</title>
       </Helmet>
-      <Navigation categoryId={categoryId} isLoggedIn={isLoggedIn} />
+      <Navigation categoryId={categoryId} isLoggedIn={isLoggedIn} isTempUser={!!isTempUser} />
       <Container as='main' className='home-main'>
         <SuggestionForm />
       </Container>

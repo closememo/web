@@ -4,7 +4,14 @@ import { useApolloClient } from '@apollo/client';
 import { useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
 
-function SettingOffcanvas({ newNotice, show, handleClose }: { newNotice?: boolean, show: boolean, handleClose: Function }) {
+interface SettingOffcanvasParams {
+  newNotice?: boolean;
+  show: boolean;
+  handleClose: Function;
+  isTempUser: boolean; // TODO: tempUser 제거
+}
+
+function SettingOffcanvas({ newNotice, show, handleClose, isTempUser }: SettingOffcanvasParams) {
 
   const history = useHistory();
 
@@ -46,7 +53,7 @@ function SettingOffcanvas({ newNotice, show, handleClose }: { newNotice?: boolea
                     onClick={() => history.push(PagePaths.Suggestion)}>오류신고/건의</Button>
             <Button variant='outline-success' className='w-100 navi-btn'
                     onClick={handleLogoutButtonClick}>로그아웃</Button>
-            <Button variant='outline-danger' className='w-100 navi-btn'
+            <Button variant='outline-danger' className='w-100 navi-btn' disabled={isTempUser}
                     onClick={handleModalShow}>탈퇴</Button>
           </div>
         </Offcanvas.Body>

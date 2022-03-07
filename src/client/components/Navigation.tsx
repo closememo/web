@@ -10,7 +10,13 @@ import CategoryOffcanvas from 'client/components/offcanvas/CategoryOffcanvas';
 import { useGetCategoriesQuery } from 'apollo/generated/hooks';
 import { Category } from 'apollo/generated/types';
 
-function Navigation({ categoryId, isLoggedIn }: { categoryId?: string | null, isLoggedIn: boolean }) {
+interface NavigationParams {
+  categoryId?: string | null;
+  isLoggedIn: boolean;
+  isTempUser: boolean; // TODO: tempUser 제거
+}
+
+function Navigation({ categoryId, isLoggedIn, isTempUser }: NavigationParams) {
 
   const history = useHistory();
 
@@ -91,11 +97,13 @@ function Navigation({ categoryId, isLoggedIn }: { categoryId?: string | null, is
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      {isTempUser ? <div className='bg-warning'>테스트 계정으로 로그인</div> : <></>}
       {isLoggedIn
         ? <CategoryOffcanvas show={leftOffcanvasShow} handleClose={handleLeftOffcanvasClose} categories={categories}
                              needToBeSelected={needToBeSelected} needToBeExpanded={needToBeExpanded} />
         : <HelpOffcanvas show={leftOffcanvasShow} handleClose={handleLeftOffcanvasClose} />}
-      <SettingOffcanvas show={settingOffcanvasShow} handleClose={handleSettingOffcanvasClose} />
+      <SettingOffcanvas show={settingOffcanvasShow} handleClose={handleSettingOffcanvasClose}
+                        isTempUser={isTempUser}/>
       <LoginModal isShow={loginModalShow} closeModal={handleLoginModalClose} />
     </>
   );

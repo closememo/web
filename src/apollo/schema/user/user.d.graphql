@@ -2,6 +2,7 @@ query GetLoggedInUser {
     me {
         id
         isLoggedIn
+        isTempUser
         documentOrderType
         documentCount
     }

@@ -29,6 +29,7 @@ interface PostListParams {
   refreshPosts: Function;
   deletePosts: Function;
   mailPosts: Function;
+  isTempUser: boolean; // TODO: tempUser 제거
 }
 
 function PostList({
@@ -39,6 +40,7 @@ function PostList({
                     refreshPosts,
                     deletePosts,
                     mailPosts,
+                    isTempUser,
                   }: PostListParams) {
 
   const history = useHistory();
@@ -240,7 +242,7 @@ function PostList({
         <Modal.Body>정말로 삭제하시겠습니까?</Modal.Body>
         <Modal.Footer>
           <ButtonGroup className='me-auto'>
-            <Button variant='warning'
+            <Button variant='warning' disabled={isTempUser}
                     onClick={(event: MouseEvent) => removePostAndSendMail(event, modalInfo.ids)}>
               전송+삭제
             </Button>

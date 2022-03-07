@@ -22,6 +22,7 @@ function Update() {
   if (postQueryResult.error || !postQueryResult.data) return <p>Error</p>;
 
   const isLoggedIn: boolean = loggedInUserQueryResult.data.me.isLoggedIn;
+  const isTempUser: boolean | null | undefined = loggedInUserQueryResult.data.me.isTempUser; // TODO: tempUser 제거
   const categoryId: string | null | undefined = currentCategoryQueryResult.data?.currentCategory;
   const { title, content, tags, option } = postQueryResult.data.post;
 
@@ -30,7 +31,7 @@ function Update() {
       <Helmet>
         <title>메모 수정</title>
       </Helmet>
-      <Navigation categoryId={categoryId} isLoggedIn={isLoggedIn} />
+      <Navigation categoryId={categoryId} isLoggedIn={isLoggedIn} isTempUser={!!isTempUser} />
       <Container as='main' className='home-main'>
         <PostForm categoryId={categoryId} id={id} currentTitle={title} currentContent={content}
                   currentTags={tags} currentOption={option} />

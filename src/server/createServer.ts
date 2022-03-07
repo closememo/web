@@ -5,6 +5,7 @@ import renderHtml from 'server/middleware/renderHtml';
 import naverCallback from 'server/middleware/naverCallback';
 import authFilter from 'server/middleware/authFilter';
 import cookieParser from 'cookie-parser';
+import tempLogin from 'server/middleware/tempLogin';
 
 async function createServer(App: () => JSX.Element): Promise<Express> {
   const app = express();
@@ -19,6 +20,7 @@ async function createServer(App: () => JSX.Element): Promise<Express> {
   app.use(cookieParser());
   app.use('/', authFilter);
   app.use('/naver', naverCallback);
+  app.use('/temp', tempLogin);
   // apollo
   const apolloServer = createApolloServer();
   await apolloServer.start();

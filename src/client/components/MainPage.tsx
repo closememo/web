@@ -19,9 +19,10 @@ interface MainPageParams {
   currentPage: number;
   documentOrderType: string;
   documentCount: number;
+  isTempUser?: boolean | null; // TODO: tempUser 제거
 }
 
-function MainPage({ categoryId, currentPage, documentOrderType, documentCount }: MainPageParams) {
+function MainPage({ categoryId, currentPage, documentOrderType, documentCount, isTempUser }: MainPageParams) {
 
   const [orderOptionOpen, setOrderOptionOpen] = useState<boolean>(false);
 
@@ -80,7 +81,8 @@ function MainPage({ categoryId, currentPage, documentOrderType, documentCount }:
                       postCount={documentCount} currentOrderType={documentOrderType}
                       refetchPosts={postListQueryResult.refetch} />
       <PostList total={total} currentPage={currentPage} pageSize={documentCount} posts={posts}
-                refreshPosts={refreshPosts} deletePosts={deletePosts} mailPosts={mailPosts} />
+                refreshPosts={refreshPosts} deletePosts={deletePosts} mailPosts={mailPosts}
+                isTempUser={!!isTempUser} />
     </>
   );
 }

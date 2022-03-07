@@ -1,4 +1,4 @@
-import { Form, Image, Modal } from 'react-bootstrap';
+import { Button, ButtonGroup, Form, Image, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NaverIcon from 'public/img/navericon.png';
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { host, naverClientId } from 'shared/constants/env';
@@ -38,6 +38,7 @@ function LoginModal({ isShow, closeModal }: { isShow: boolean, closeModal: Funct
   const redirectUri = encodeURIComponent(host + '/naver/login-callback' +
     '?keep=' + keepLoginChecked + '&push=' + localMemoPushChecked);
   const url = 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' + naverClientId + '&redirect_uri=' + redirectUri + '&state=' + state;
+  const tempLoginUrl = host + '/temp/login-temp-account?keep=' + keepLoginChecked + '&push=' + localMemoPushChecked;
 
   const handleKeepLoginCheckboxChange = async (event: ChangeEvent) => {
     const element: HTMLInputElement = event.target as HTMLInputElement;
@@ -60,6 +61,15 @@ function LoginModal({ isShow, closeModal }: { isShow: boolean, closeModal: Funct
     }
   };
 
+  const handleTempLoginButtonClick = (event: MouseEvent) => {
+    event.preventDefault();
+    closeModal();
+    waitingModalHandleShow();
+    if (window && window.location) {
+      window.location.href = tempLoginUrl;
+    }
+  }
+
   return (
     <>
       <Modal show={isShow} onHide={closeModal} backdrop='static' keyboard={false} centered>
@@ -73,6 +83,18 @@ function LoginModal({ isShow, closeModal }: { isShow: boolean, closeModal: Funct
             <button className='btn p-0 border-0 social-login' onClick={handleNaverLoginButtonClick}>
               <Image src={NaverIcon} className='w-100' />
             </button>
+            <hr />
+            <div className='d-flex justify-content-center'>
+              <ButtonGroup>
+                <Button variant='success' onClick={handleTempLoginButtonClick}>
+                  테스트로그인(기능데모)
+                </Button>
+                <OverlayTrigger trigger='click' placement='bottom'
+                                overlay={<Tooltip>임의의 테스트계정으로<br />로그인합니다.<br />일부 기능이 제한됩니다.<br />복수의 사용자가 사용할 수 있고 임의로 수정/삭제될 수 있습니다.</Tooltip>}>
+                  <Button variant='outline-success'>?</Button>
+                </OverlayTrigger>
+              </ButtonGroup>
+            </div>
             <hr />
             <div>
               <Form.Group controlId='keepLoginCheckbox'>

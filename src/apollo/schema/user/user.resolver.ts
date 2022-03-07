@@ -7,6 +7,7 @@ interface DataSources {
 interface Me {
   id: string;
   isLoggedIn: boolean;
+  isTempUser?: boolean;
   documentOrderType?: string;
   documentCount?: number;
 }

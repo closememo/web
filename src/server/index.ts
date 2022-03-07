@@ -9,13 +9,13 @@ async function getApp() {
 }
 
 (async function() {
-  const PORT = process.env.PORT_ENV || 3000;
+  const PORT = Number.parseInt(process.env.PORT_ENV || '3000');
   const HOST = 'localhost';
 
   const app = await createServer(await getApp());
   const server = http.createServer(app);
 
-  server.listen(PORT, () => {
+  server.listen(PORT, '0.0.0.0', 511, () => {
     console.log(`App is running: http://${HOST}:${PORT}`);
   });
 

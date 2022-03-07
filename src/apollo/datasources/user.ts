@@ -4,6 +4,7 @@ import AbstractApi from 'apollo/datasources/abstractApi';
 interface Me {
   id: string;
   isLoggedIn: boolean;
+  isTempUser?: boolean;
   documentOrderType?: string;
   documentCount?: number;
 }

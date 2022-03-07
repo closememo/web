@@ -9,6 +9,7 @@ type Mutation {
 type User {
     id: ID!
     isLoggedIn: Boolean!
+    isTempUser: Boolean
     documentOrderType: String
     documentCount: Int
 }

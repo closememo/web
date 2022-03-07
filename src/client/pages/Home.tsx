@@ -24,6 +24,7 @@ function HomePage({ location }: { location: Location }) {
   if (error || !data) return <p>Error</p>;
 
   const isLoggedIn: boolean = data.me.isLoggedIn;
+  const isTempUser: boolean | null | undefined = data.me.isTempUser; // TODO: tempUser 제거
   const documentOrderType: string = !data.me.documentOrderType
     ? 'CREATED_NEWEST' : data.me.documentOrderType;
   const documentCount: number = (!data.me.documentCount || data.me.documentCount < 5)
@@ -35,11 +36,11 @@ function HomePage({ location }: { location: Location }) {
       <Helmet>
         <title>홈</title>
       </Helmet>
-      <Navigation categoryId={categoryId} isLoggedIn={isLoggedIn} />
+      <Navigation categoryId={categoryId} isLoggedIn={isLoggedIn} isTempUser={!!isTempUser} />
       {!!state && <Information state={state} isLoggedIn={isLoggedIn} />}
       <Container as='main' className='home-main'>
         {isLoggedIn
-          ? <MainPage categoryId={categoryId} currentPage={page}
+          ? <MainPage isTempUser={isTempUser} categoryId={categoryId} currentPage={page}
                       documentOrderType={documentOrderType} documentCount={documentCount} />
           : <LocalPage />}
       </Container>

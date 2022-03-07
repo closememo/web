@@ -1,15 +1,12 @@
 import { Request, Response, Router } from 'express';
 import axios from 'axios';
 import {
-  generateAccessToken,
-  generateRefreshToken,
-  getRefreshCookieExp,
   getRefreshTokenId,
   LoginResponse,
 } from 'server/utils/jwtUtils';
 import States from 'client/constants/States';
 import ErrorTypes from 'client/constants/ErrorTypes';
-import { CookieOptions } from 'express-serve-static-core';
+import { setTokenCookies } from 'server/utils/tokenUtils';
 
 interface ErrorResponse {
   error: {
@@ -68,19 +65,6 @@ naverCallback.get('/login-callback', async (req: Request, res: Response) => {
     return res.redirect('/');
   }
 });
-
-function setTokenCookies(res: Response, loginResponse: LoginResponse, keep: boolean) {
-  const refreshToken = generateRefreshToken(loginResponse.token.tokenId, loginResponse.token.exp, keep);
-  const accessToken = generateAccessToken(loginResponse.token.tokenId);
-
-  res.cookie('accessToken', accessToken, {
-    httpOnly: true,
-  });
-  const refreshTokenOption: CookieOptions = keep
-    ? { httpOnly: true, expires: getRefreshCookieExp() }
-    : { httpOnly: true };
-  res.cookie('refreshToken', refreshToken, refreshTokenOption);
-}
 
 naverCallback.get('/logout', async (req: Request, res: Response) => {
   const { refreshToken = '' }: { refreshToken: string } = req.cookies;

@@ -1301,6 +1301,7 @@ export const GetLoggedInUserDocument = gql`
     me {
       id
       isLoggedIn
+      isTempUser
       documentOrderType
       documentCount
     }

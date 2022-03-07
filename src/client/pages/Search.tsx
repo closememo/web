@@ -37,6 +37,7 @@ function Search({ location }: { location: Location }) {
   if (searchPostsResult.error || !searchPostsResult.data) return <p>Error</p>;
 
   const isLoggedIn: boolean = loggedInUserQueryResult.data.me.isLoggedIn;
+  const isTempUser: boolean | null | undefined = loggedInUserQueryResult.data.me.isTempUser; // TODO: tempUser 제거
   const categoryId: string | null | undefined = currentCategoryQueryResult.data?.currentCategory;
   const searchedPosts: SimplePost[] = searchPostsResult.data.searchPostsByTag;
 
@@ -56,13 +57,14 @@ function Search({ location }: { location: Location }) {
       <Helmet>
         <title>검색</title>
       </Helmet>
-      <Navigation categoryId={categoryId} isLoggedIn={isLoggedIn} />
+      <Navigation categoryId={categoryId} isLoggedIn={isLoggedIn} isTempUser={!!isTempUser} />
       <Container as='main' className='home-main'>
         <PostListHeader heading={'[태그검색] 검색어: ' + tag}
                         orderOptionOpen={orderOptionOpen} setOrderOptionOpen={setOrderOptionOpen}
                         postCount={Pagination.PAGE_NUMBER} currentOrderType={'CREATED_NEWEST'} />
         <PostList posts={searchedPosts} refreshPosts={refreshSearchPosts}
-                  deletePosts={deletePosts} mailPosts={mailPosts} />
+                  deletePosts={deletePosts} mailPosts={mailPosts}
+                  isTempUser={!!isTempUser} />
       </Container>
       <FixedMenu isLoggedIn={isLoggedIn} />
     </>

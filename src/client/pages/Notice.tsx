@@ -16,6 +16,7 @@ function Notice() {
   if (error || !data) return <p>Error</p>;
 
   const isLoggedIn: boolean = data.me.isLoggedIn;
+  const isTempUser: boolean | null | undefined = data.me.isTempUser; // TODO: tempUser 제거
   const categoryId: string | null | undefined = currentCategoryQueryResult.data?.currentCategory;
 
   return (
@@ -23,7 +24,7 @@ function Notice() {
       <Helmet>
         <title>공지</title>
       </Helmet>
-      <Navigation categoryId={categoryId} isLoggedIn={isLoggedIn} />
+      <Navigation categoryId={categoryId} isLoggedIn={isLoggedIn} isTempUser={!!isTempUser} />
       <Container as='main' className='home-main'>
         <NoticeList />
       </Container>
