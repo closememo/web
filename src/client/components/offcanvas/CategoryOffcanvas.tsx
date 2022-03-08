@@ -19,6 +19,9 @@ import { currentCategoryVar } from 'apollo/caches';
 import { useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
 import { CategoryInfo, Element, makeItems } from 'client/utils/categoryUtils';
+import ErrorModal from 'client/components/modal/ErrorModal';
+import { ApolloError } from '@apollo/client';
+import ApolloErrorTypes from 'client/constants/ApolloErrorTypes';
 
 interface CategoryOffcanvasParam {
   show: boolean,
@@ -47,6 +50,8 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
   const [createModalShow, setCreateModalShow] = useState(false);
   const [updateModalShow, setUpdateModalShow] = useState(false);
   const [deleteModalShow, setDeleteModalShow] = useState(false);
+  const [errorModalShow, setErrorModalShow] = useState(false);
+  const [errorModalContent, setErrorModalContent] = useState('');
   const [currentCategory, setCurrentCategory] = useState<CategoryInfo | null>(null);
   const [newCategoryName, setNewCategoryName] = useState('');
 
@@ -86,6 +91,9 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
     createCategory({ variables: { name: newCategoryName, parentId: parentId } })
       .then(() => {
         setCreateModalShow(false);
+      })
+      .catch((error) => {
+        handleError(error);
       });
   };
 
@@ -95,7 +103,25 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
     updateCategory({ variables: { categoryId: currentCategory.index, name: newCategoryName } })
       .then(() => {
         setUpdateModalShow(false);
+      })
+      .catch((error) => {
+        handleError(error);
       });
+  };
+
+  const handleError = (error: Error) => {
+    if (error instanceof ApolloError) {
+      switch (error.message) {
+        case ApolloErrorTypes.CATEGORY_NAME_ALREADY_EXIST:
+          setErrorModalContent('같은 이름의 카테고리가 존재합니다.');
+          break;
+        default:
+          setErrorModalContent('에러가 발생하였습니다.');
+      }
+      setCreateModalShow(false);
+      setUpdateModalShow(false);
+      setErrorModalShow(true);
+    }
   };
 
   const modalDeleteCategory = () => {
@@ -135,7 +161,7 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
     setCreateModalShow(true);
     setTimeout(() => { // setTimeout 으로 해야 동작
       newCategoryNameInput.current?.focus();
-    }, 10)
+    }, 10);
   };
 
   const handleModifyCategoryButton = () => {
@@ -144,7 +170,7 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
     setUpdateModalShow(true);
     setTimeout(() => { // setTimeout 으로 해야 동작
       updateCategoryNameInput.current?.focus();
-    }, 10)
+    }, 10);
   };
 
   const handleRemoveCategoryButton = () => {
@@ -171,11 +197,11 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
 
   useEffect(() => {
     setSelectedTreeItems(needToBeSelected);
-  }, [needToBeSelected])
+  }, [needToBeSelected]);
 
   useEffect(() => {
     setExpandedTreeItems(needToBeExpanded);
-  }, [needToBeExpanded])
+  }, [needToBeExpanded]);
 
   return (
     <>
@@ -198,7 +224,7 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
             items={mergedItems}
             getItemTitle={item => item.data.title}
             renderItemTitle={({ title, item }) => {
-              return <span className='text-dark'>{`${title} `}<sup className='text-secondary'>{`(${item.data.count}/${item.data.netCount})`}</sup></span>
+              return <span className='text-dark'>{`${title} `}<sup className='text-secondary'>{`(${item.data.count}/${item.data.netCount})`}</sup></span>;
             }}
             defaultInteractionMode={InteractionMode.DoubleClickItemToExpand}
             showLiveDescription={false}
@@ -274,6 +300,8 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
           <Button variant='success' onClick={modalDeleteCategory}>확인</Button>
         </Modal.Footer>
       </Modal>
+      <ErrorModal isShow={errorModalShow} content={errorModalContent}
+                  closeModal={() => setErrorModalShow(false)} />
     </>
   );
 }
