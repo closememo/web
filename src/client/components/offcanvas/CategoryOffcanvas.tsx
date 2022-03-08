@@ -1,5 +1,5 @@
 import { Button, Form, Modal, Offcanvas } from 'react-bootstrap';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import {
   ControlledTreeEnvironment,
   InteractionMode,
@@ -53,6 +53,9 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
   const [focusedTreeItem, setFocusedTreeItem] = useState<TreeItemIndex | undefined>();
   const [expandedTreeItems, setExpandedTreeItems] = useState<TreeItemIndex[]>([]);
   const [selectedTreeItems, setSelectedTreeItems] = useState<TreeItemIndex[]>([]);
+
+  const newCategoryNameInput = useRef<HTMLInputElement>(null);
+  const updateCategoryNameInput = useRef<HTMLInputElement>(null);
 
   const [createCategory] = useCreateCategoryMutation({
     refetchQueries: [{ query: GetCategoriesDocument }],
@@ -130,12 +133,18 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
   const handleNewCategoryButton = () => {
     setNewCategoryName('');
     setCreateModalShow(true);
+    setTimeout(() => { // setTimeout 으로 해야 동작
+      newCategoryNameInput.current?.focus();
+    }, 10)
   };
 
   const handleModifyCategoryButton = () => {
     const categoryName = currentCategory ? currentCategory.name : '';
     setNewCategoryName(categoryName);
     setUpdateModalShow(true);
+    setTimeout(() => { // setTimeout 으로 해야 동작
+      updateCategoryNameInput.current?.focus();
+    }, 10)
   };
 
   const handleRemoveCategoryButton = () => {
@@ -228,7 +237,7 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
           <p>{`'${currentCategory?.name}' 아래 새 카테고리를 만듭니다.`}</p>
           <p>카테고리명은 한글, 영어, 밑줄(_) 만 가능합니다.</p>
           <Form.Control type='text' value={newCategoryName} placeholder='새 카테고리 이름'
-                        onChange={handleNewCategoryName} />
+                        ref={newCategoryNameInput} onChange={handleNewCategoryName} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant='success' onClick={modalCreateCategory}>확인</Button>
@@ -242,7 +251,7 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
           <p>{`'${currentCategory?.name}' 의 이름을 변경합니다.`}</p>
           <p>카테고리명은 한글, 영어, 밑줄(_) 만 가능합니다.</p>
           <Form.Control type='text' value={newCategoryName} placeholder='새 카테고리 이름'
-                        onChange={handleNewCategoryName} />
+                        ref={updateCategoryNameInput} onChange={handleNewCategoryName} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant='success' onClick={modalUpdateCategory}>확인</Button>
