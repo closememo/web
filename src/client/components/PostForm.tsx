@@ -198,6 +198,7 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
     }
 
     if (!validatePost()) {
+      setLock(false);
       return;
     }
 
@@ -241,6 +242,7 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
     }
 
     if (!validatePost()) {
+      setLock(false);
       return;
     }
 
