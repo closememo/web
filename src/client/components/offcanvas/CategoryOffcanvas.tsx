@@ -48,6 +48,7 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
 
   const history = useHistory();
 
+  const [lock, setLock] = useState(false);
   const [createModalShow, setCreateModalShow] = useState(false);
   const [updateModalShow, setUpdateModalShow] = useState(false);
   const [deleteModalShow, setDeleteModalShow] = useState(false);
@@ -89,13 +90,20 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
 
   const modalCreateCategory = () => {
     const parentId = currentCategory && currentCategory.index;
-    if (!newCategoryName) return;
+    if (!newCategoryName || lock) {
+      return;
+    } else {
+      setLock(true);
+    }
     createCategory({ variables: { name: newCategoryName, parentId: parentId } })
       .then(() => {
         setCreateModalShow(false);
       })
       .catch((error) => {
         handleError(error);
+      })
+      .finally(() => {
+        setLock(false);
       });
   };
 
