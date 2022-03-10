@@ -5,9 +5,14 @@ query GetLoggedInUser {
         isTempUser
         documentOrderType
         documentCount
+        recentlyViewedCategoryId
     }
 }
 
 mutation UpdateAccountOption($documentOrderType: String, $documentCount: Int) {
     updateAccountOption(documentOrderType: $documentOrderType, documentCount: $documentCount)
+}
+
+mutation UpdateAccountTrack($recentlyViewedCategoryId: String!) {
+    updateAccountTrack(recentlyViewedCategoryId: $recentlyViewedCategoryId)
 }

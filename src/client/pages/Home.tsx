@@ -29,18 +29,21 @@ function HomePage({ location }: { location: Location }) {
     ? 'CREATED_NEWEST' : data.me.documentOrderType;
   const documentCount: number = (!data.me.documentCount || data.me.documentCount < 5)
     ? Pagination.PAGE_NUMBER : data.me.documentCount;
+  const recentlyViewedCategoryId: string | null | undefined = data.me.recentlyViewedCategoryId;
   const categoryId: string | null | undefined = currentCategoryQueryResult.data?.currentCategory;
+
+  const currentCategoryId = categoryId || recentlyViewedCategoryId; // TODO: 변수 하나로 통일
 
   return (
     <>
       <Helmet>
         <title>홈</title>
       </Helmet>
-      <Navigation categoryId={categoryId} isLoggedIn={isLoggedIn} isTempUser={!!isTempUser} />
+      <Navigation categoryId={currentCategoryId} isLoggedIn={isLoggedIn} isTempUser={!!isTempUser} />
       {!!state && <Information state={state} isLoggedIn={isLoggedIn} />}
       <Container as='main' className='home-main'>
         {isLoggedIn
-          ? <MainPage isTempUser={isTempUser} categoryId={categoryId} currentPage={page}
+          ? <MainPage isTempUser={isTempUser} categoryId={currentCategoryId} currentPage={page}
                       documentOrderType={documentOrderType} documentCount={documentCount} />
           : <LocalPage />}
       </Container>

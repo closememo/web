@@ -51,6 +51,7 @@ export type Mutation = {
   deleteSuggestion?: Maybe<Scalars['Boolean']>;
   mailPosts?: Maybe<Scalars['Boolean']>;
   updateAccountOption?: Maybe<Scalars['Boolean']>;
+  updateAccountTrack?: Maybe<Scalars['Boolean']>;
   updateCategory?: Maybe<Scalars['Boolean']>;
   updatePost?: Maybe<PostCreateResponse>;
   updateSuggestion?: Maybe<Scalars['Boolean']>;
@@ -113,6 +114,10 @@ export type MutationMailPostsArgs = {
 export type MutationUpdateAccountOptionArgs = {
   documentCount?: Maybe<Scalars['Int']>;
   documentOrderType?: Maybe<Scalars['String']>;
+};
+
+export type MutationUpdateAccountTrackArgs = {
+  recentlyViewedCategoryId: Scalars['String'];
 };
 
 export type MutationUpdateCategoryArgs = {
@@ -269,6 +274,7 @@ export type User = {
   id: Scalars['ID'];
   isLoggedIn: Scalars['Boolean'];
   isTempUser?: Maybe<Scalars['Boolean']>;
+  recentlyViewedCategoryId?: Maybe<Scalars['String']>;
 };
 
 export type CreateBookmarkMutationVariables = Exact<{
@@ -601,6 +607,7 @@ export type GetLoggedInUserQuery = {
     isTempUser?: boolean | null | undefined;
     documentOrderType?: string | null | undefined;
     documentCount?: number | null | undefined;
+    recentlyViewedCategoryId?: string | null | undefined;
   };
 };
 
@@ -612,4 +619,13 @@ export type UpdateAccountOptionMutationVariables = Exact<{
 export type UpdateAccountOptionMutation = {
   __typename?: 'Mutation';
   updateAccountOption?: boolean | null | undefined;
+};
+
+export type UpdateAccountTrackMutationVariables = Exact<{
+  recentlyViewedCategoryId: Scalars['String'];
+}>;
+
+export type UpdateAccountTrackMutation = {
+  __typename?: 'Mutation';
+  updateAccountTrack?: boolean | null | undefined;
 };

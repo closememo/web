@@ -10,11 +10,16 @@ interface Me {
   isTempUser?: boolean;
   documentOrderType?: string;
   documentCount?: number;
+  recentlyViewedCategoryId?: string
 }
 
 interface UpdateAccountOptionParams {
   documentOrderType: string;
   documentCount: number;
+}
+
+interface UpdateAccountTrackParams {
+  recentlyViewedCategoryId: string;
 }
 
 export default {
@@ -26,6 +31,9 @@ export default {
   Mutation: {
     updateAccountOption: async (_: any, { documentOrderType, documentCount }: UpdateAccountOptionParams, { dataSources }: { dataSources: DataSources }) => {
       return await dataSources.userAPI.updateAccountOption(documentOrderType, documentCount);
-    }
+    },
+    updateAccountTrack: async (_: any, { recentlyViewedCategoryId }: UpdateAccountTrackParams, { dataSources }: { dataSources: DataSources }) => {
+      return await dataSources.userAPI.updateAccountTrack(recentlyViewedCategoryId);
+    },
   }
 };

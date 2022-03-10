@@ -4,6 +4,7 @@ type Query {
 
 type Mutation {
     updateAccountOption(documentOrderType: String, documentCount: Int): Boolean
+    updateAccountTrack(recentlyViewedCategoryId: String!): Boolean
 }
 
 type User {
@@ -12,4 +13,5 @@ type User {
     isTempUser: Boolean
     documentOrderType: String
     documentCount: Int
+    recentlyViewedCategoryId: String
 }

@@ -1304,6 +1304,7 @@ export const GetLoggedInUserDocument = gql`
       isTempUser
       documentOrderType
       documentCount
+      recentlyViewedCategoryId
     }
   }
 `;
@@ -1401,4 +1402,50 @@ export type UpdateAccountOptionMutationResult =
 export type UpdateAccountOptionMutationOptions = Apollo.BaseMutationOptions<
   Types.UpdateAccountOptionMutation,
   Types.UpdateAccountOptionMutationVariables
+>;
+export const UpdateAccountTrackDocument = gql`
+  mutation UpdateAccountTrack($recentlyViewedCategoryId: String!) {
+    updateAccountTrack(recentlyViewedCategoryId: $recentlyViewedCategoryId)
+  }
+`;
+export type UpdateAccountTrackMutationFn = Apollo.MutationFunction<
+  Types.UpdateAccountTrackMutation,
+  Types.UpdateAccountTrackMutationVariables
+>;
+
+/**
+ * __useUpdateAccountTrackMutation__
+ *
+ * To run a mutation, you first call `useUpdateAccountTrackMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAccountTrackMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAccountTrackMutation, { data, loading, error }] = useUpdateAccountTrackMutation({
+ *   variables: {
+ *      recentlyViewedCategoryId: // value for 'recentlyViewedCategoryId'
+ *   },
+ * });
+ */
+export function useUpdateAccountTrackMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    Types.UpdateAccountTrackMutation,
+    Types.UpdateAccountTrackMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    Types.UpdateAccountTrackMutation,
+    Types.UpdateAccountTrackMutationVariables
+  >(UpdateAccountTrackDocument, options);
+}
+export type UpdateAccountTrackMutationHookResult = ReturnType<typeof useUpdateAccountTrackMutation>;
+export type UpdateAccountTrackMutationResult =
+  Apollo.MutationResult<Types.UpdateAccountTrackMutation>;
+export type UpdateAccountTrackMutationOptions = Apollo.BaseMutationOptions<
+  Types.UpdateAccountTrackMutation,
+  Types.UpdateAccountTrackMutationVariables
 >;

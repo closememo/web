@@ -7,6 +7,7 @@ interface Me {
   isTempUser?: boolean;
   documentOrderType?: string;
   documentCount?: number;
+  recentlyViewedCategoryId?: string;
 }
 
 class UserAPI extends AbstractApi {
@@ -35,6 +36,13 @@ class UserAPI extends AbstractApi {
     await this.post('/command/client/update-account-option', {
       documentOrderType,
       documentCount,
+    });
+    return true;
+  }
+
+  public async updateAccountTrack(recentlyViewedCategoryId: string) {
+    await this.post('/command/client/update-account-track', {
+      recentlyViewedCategoryId,
     });
     return true;
   }

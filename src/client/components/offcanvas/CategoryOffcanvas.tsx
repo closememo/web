@@ -12,6 +12,7 @@ import {
   GetCategoriesDocument,
   useCreateCategoryMutation,
   useDeleteCategoryMutation,
+  useUpdateAccountTrackMutation,
   useUpdateCategoryMutation,
 } from 'apollo/generated/hooks';
 import { Category } from 'apollo/generated/types';
@@ -71,6 +72,7 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
   const [deleteCategory] = useDeleteCategoryMutation({
     refetchQueries: [{ query: GetCategoriesDocument }],
   });
+  const [updateAccountTrack, updateAccountTrackResult] = useUpdateAccountTrackMutation();
 
   if (!categories) return makeErrorElement(show, handleClose, <p>Error</p>);
 
@@ -179,7 +181,20 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
 
   const handleSelectCategoryButton = () => {
     if (!!currentCategory) {
-      currentCategoryVar(currentCategory.index);
+      const currentCategoryId = currentCategory.index;
+      currentCategoryVar(currentCategoryId);
+      updateAccountTrack({ variables: { recentlyViewedCategoryId: currentCategoryId } })
+        .then(() => {
+          const cache = updateAccountTrackResult.client.cache;
+          cache.modify({
+            id: cache.identify({ __typename: 'User', id: 'ME' }),
+            fields: {
+              recentlyViewedCategoryId(): string {
+                return currentCategoryId;
+              },
+            },
+          });
+        });
       handleClose();
       history.push(PagePaths.Home);
     }
