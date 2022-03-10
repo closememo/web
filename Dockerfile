@@ -4,6 +4,8 @@ USER node
 COPY --chown=node:node . /home/node/deploy
 WORKDIR /home/node/deploy
 
+ENV TZ=Asia/Seoul
+
 RUN npm install \
  && npm run build
 
