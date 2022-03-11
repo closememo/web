@@ -99,7 +99,8 @@ function Navigation({ categoryId, isLoggedIn, isTempUser }: NavigationParams) {
       </Navbar>
       {isTempUser ? <div className='bg-warning'>테스트 계정으로 로그인</div> : <></>}
       {isLoggedIn
-        ? <CategoryOffcanvas show={leftOffcanvasShow} handleClose={handleLeftOffcanvasClose} categories={categories}
+        ? <CategoryOffcanvas show={leftOffcanvasShow} handleClose={handleLeftOffcanvasClose}
+                             categoryId={categoryId} categories={categories}
                              needToBeSelected={needToBeSelected} needToBeExpanded={needToBeExpanded} />
         : <HelpOffcanvas show={leftOffcanvasShow} handleClose={handleLeftOffcanvasClose} />}
       <SettingOffcanvas show={settingOffcanvasShow} handleClose={handleSettingOffcanvasClose}

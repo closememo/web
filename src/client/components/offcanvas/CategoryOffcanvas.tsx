@@ -9,6 +9,7 @@ import {
 } from 'react-complex-tree';
 import 'client/css/components/CategoryOffcanvas.css';
 import {
+  BookmarkedPostsDocument,
   GetCategoriesDocument,
   useCreateCategoryMutation,
   useDeleteCategoryMutation,
@@ -19,17 +20,18 @@ import { Category } from 'apollo/generated/types';
 import { currentCategoryVar } from 'apollo/caches';
 import { useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
-import { CategoryInfo, Element, makeItems } from 'client/utils/categoryUtils';
+import { CategoryInfo, Element, isDeletingCategory, makeItems } from 'client/utils/categoryUtils';
 import ErrorModal from 'client/components/modal/ErrorModal';
 import { ApolloError } from '@apollo/client';
 import ApolloErrorTypes from 'client/constants/ApolloErrorTypes';
 
 interface CategoryOffcanvasParam {
-  show: boolean,
-  handleClose: Function,
-  categories?: Category[],
-  needToBeSelected: string[],
-  needToBeExpanded: string[]
+  show: boolean;
+  categoryId?: string | null;
+  handleClose: Function;
+  categories?: Category[];
+  needToBeSelected: string[];
+  needToBeExpanded: string[];
 }
 
 const MAX_CATEGORY_LENGTH = 100;
@@ -44,7 +46,14 @@ const DUMMY_ROOT_FORMAT = {
   },
 };
 
-function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, needToBeExpanded }: CategoryOffcanvasParam) {
+function CategoryOffcanvas({
+                             show,
+                             categoryId,
+                             handleClose,
+                             categories,
+                             needToBeSelected,
+                             needToBeExpanded,
+                           }: CategoryOffcanvasParam) {
 
   const history = useHistory();
 
@@ -54,7 +63,7 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
   const [deleteModalShow, setDeleteModalShow] = useState(false);
   const [errorModalShow, setErrorModalShow] = useState(false);
   const [errorModalContent, setErrorModalContent] = useState('');
-  const [currentCategory, setCurrentCategory] = useState<CategoryInfo | null>(null);
+  const [focusedCategory, setFocusedCategory] = useState<CategoryInfo | null>(null);
   const [newCategoryName, setNewCategoryName] = useState('');
 
   const [focusedTreeItem, setFocusedTreeItem] = useState<TreeItemIndex | undefined>();
@@ -71,7 +80,14 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
     refetchQueries: [{ query: GetCategoriesDocument }],
   });
   const [deleteCategory] = useDeleteCategoryMutation({
-    refetchQueries: [{ query: GetCategoriesDocument }],
+    refetchQueries: [{ query: GetCategoriesDocument }, BookmarkedPostsDocument],
+    update: (cache) => {
+      cache.evict({
+        id: 'ROOT_QUERY',
+        fieldName: 'posts'
+      })
+      cache.gc();
+    },
   });
   const [updateAccountTrack, updateAccountTrackResult] = useUpdateAccountTrackMutation();
 
@@ -89,7 +105,7 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
     { [DUMMY_ROOT_NAME]: dummyRoot }, items);
 
   const modalCreateCategory = () => {
-    const parentId = currentCategory && currentCategory.index;
+    const parentId = focusedCategory && focusedCategory.index;
     if (!newCategoryName || lock) {
       return;
     } else {
@@ -108,9 +124,9 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
   };
 
   const modalUpdateCategory = () => {
-    if (!currentCategory) return;
+    if (!focusedCategory) return;
     if (!newCategoryName) return;
-    updateCategory({ variables: { categoryId: currentCategory.index, name: newCategoryName } })
+    updateCategory({ variables: { categoryId: focusedCategory.index, name: newCategoryName } })
       .then(() => {
         setUpdateModalShow(false);
       })
@@ -135,13 +151,16 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
   };
 
   const modalDeleteCategory = () => {
-    if (!currentCategory) return;
-    if (currentCategory.index === root.index) {
+    if (!focusedCategory) return;
+    if (focusedCategory.index === root.index) {
       setDeleteModalShow(false);
       return;
     }
-    deleteCategory({ variables: { categoryId: currentCategory.index } })
+    deleteCategory({ variables: { categoryId: focusedCategory.index } })
       .then(() => {
+        if (!!categoryId && isDeletingCategory(categories, categoryId, focusedCategory.index)) {
+          updateRecentlyViewedCategoryId(root.index);
+        }
         setDeleteModalShow(false);
       });
   };
@@ -175,7 +194,7 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
   };
 
   const handleModifyCategoryButton = () => {
-    const categoryName = currentCategory ? currentCategory.name : '';
+    const categoryName = focusedCategory ? focusedCategory.name : '';
     setNewCategoryName(categoryName);
     setUpdateModalShow(true);
     setTimeout(() => { // setTimeout 으로 해야 동작
@@ -188,24 +207,28 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
   };
 
   const handleSelectCategoryButton = () => {
-    if (!!currentCategory) {
-      const currentCategoryId = currentCategory.index;
-      currentCategoryVar(currentCategoryId);
-      updateAccountTrack({ variables: { recentlyViewedCategoryId: currentCategoryId } })
-        .then(() => {
-          const cache = updateAccountTrackResult.client.cache;
-          cache.modify({
-            id: cache.identify({ __typename: 'User', id: 'ME' }),
-            fields: {
-              recentlyViewedCategoryId(): string {
-                return currentCategoryId;
-              },
-            },
-          });
-        });
+    if (!!focusedCategory) {
+      const currentCategoryId = focusedCategory.index;
+      updateRecentlyViewedCategoryId(currentCategoryId);
       handleClose();
       history.push(PagePaths.Home);
     }
+  };
+
+  const updateRecentlyViewedCategoryId = (categoryId: string) => {
+    currentCategoryVar(categoryId);
+    updateAccountTrack({ variables: { recentlyViewedCategoryId: categoryId } })
+      .then(() => {
+        const cache = updateAccountTrackResult.client.cache;
+        cache.modify({
+          id: cache.identify({ __typename: 'User', id: 'ME' }),
+          fields: {
+            recentlyViewedCategoryId(): string {
+              return categoryId;
+            },
+          },
+        });
+      });
   };
 
   useEffect(() => {
@@ -213,7 +236,7 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
   }, []);
 
   const init = async () => {
-    setCurrentCategory(root);
+    setFocusedCategory(root);
     setSelectedTreeItems([root.index]);
     setExpandedTreeItems([root.index]);
   };
@@ -252,7 +275,7 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
             defaultInteractionMode={InteractionMode.DoubleClickItemToExpand}
             showLiveDescription={false}
             onFocusItem={(item: TreeItem) => {
-              setCurrentCategory({
+              setFocusedCategory({
                 index: item.index as string,
                 name: item.data.title,
               });
@@ -283,7 +306,7 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
           <Modal.Title>카테고리 생성</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>{`'${currentCategory?.name}' 아래 새 카테고리를 만듭니다.`}</p>
+          <p>{`'${focusedCategory?.name}' 아래 새 카테고리를 만듭니다.`}</p>
           <p>카테고리명은 한글, 영어, 밑줄(_) 만 가능합니다.</p>
           <Form.Control type='text' value={newCategoryName} placeholder='새 카테고리 이름'
                         ref={newCategoryNameInput} onChange={handleNewCategoryName} />
@@ -297,7 +320,7 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
           <Modal.Title>카테고리 수정</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>{`'${currentCategory?.name}' 의 이름을 변경합니다.`}</p>
+          <p>{`'${focusedCategory?.name}' 의 이름을 변경합니다.`}</p>
           <p>카테고리명은 한글, 영어, 밑줄(_) 만 가능합니다.</p>
           <Form.Control type='text' value={newCategoryName} placeholder='새 카테고리 이름'
                         ref={updateCategoryNameInput} onChange={handleNewCategoryName} />
@@ -311,11 +334,11 @@ function CategoryOffcanvas({show, handleClose, categories, needToBeSelected, nee
           <Modal.Title>카테고리 삭제</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {(currentCategory?.index === root.index)
+          {(focusedCategory?.index === root.index)
             ? <p>기본 카테고리는 삭제할 수 없습니다.</p>
             : (
               <>
-                <p>{`'${currentCategory?.name}' 카테고리를 삭제합니다.`}</p>
+                <p>{`'${focusedCategory?.name}' 카테고리를 삭제합니다.`}</p>
                 <p>카테고리에 포함된 모든 글이 함께 삭제됩니다.</p>
               </>)}
         </Modal.Body>

@@ -49,3 +49,25 @@ function convert(category: Category): Element {
     },
   };
 }
+``
+/**
+ * 현재 카테고리가 삭제 대상 카테고리에 있는지 확인.
+ * 현재 카테고리의 ID 가 targetId 와 같거나, 삭제 대상(target) 의 자식 중에 현재 카테고리가 있는지 확인
+ */
+export function isDeletingCategory(categories: Category[], currentId: string, targetId: string): boolean {
+  if (currentId === targetId) {
+    return true;
+  }
+  const target = categories.find(category => category.id === targetId);
+  if (!target || !target.childrenIds) {
+    return false;
+  }
+  const childrenIds: string[] = target.childrenIds;
+  for (let i = 0; i < childrenIds.length; i++) {
+    const childrenId = childrenIds[i];
+    if (isDeletingCategory(categories, currentId, childrenId)) {
+      return true;
+    }
+  }
+  return false;
+}
