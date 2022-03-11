@@ -1,14 +1,17 @@
 import React, { ChangeEvent, FormEvent, KeyboardEvent, useRef, useState } from 'react';
 import { Button, Form, FormCheck, InputGroup, Modal, Overlay, OverlayTrigger, Popover, Tooltip } from 'react-bootstrap';
 import {
+  BookmarkedPostsDocument,
   GetCategoriesDocument,
   GetPostDocument,
   useCreateNewPostMutation,
+  useUpdateAccountTrackMutation,
   useUpdatePostMutation,
 } from 'apollo/generated/hooks';
 import { useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
 import QuestionSVG from 'client/assets/QuestionSVG';
+import { currentCategoryVar } from 'apollo/caches';
 
 interface PostFormParams {
   categoryId?: string | null,
@@ -86,6 +89,7 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
         query: GetPostDocument,
         variables: { id },
       },
+      BookmarkedPostsDocument,
     ],
     update: (cache) => {
       cache.evict({
@@ -94,6 +98,13 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
       });
     },
   });
+  const [updateAccountTrack, updateAccountTrackResult] = useUpdateAccountTrackMutation();
+
+  const handleMoveToListClick = (categoryId: string | null | undefined) => {
+    if (!categoryId) return;
+    updateRecentlyViewedCategoryId(categoryId);
+    history.push(PagePaths.Home);
+  };
 
   const handleTitleChange = (event: ChangeEvent) => {
     setTitle((event.target as HTMLInputElement).value);
@@ -264,9 +275,28 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
     } else {
       updatePost({ variables: { id, ...post } })
         .then(() => {
+          if (!!categoryId) {
+            updateRecentlyViewedCategoryId(categoryId);
+          }
           history.push(PagePaths.Home);
         });
     }
+  };
+
+  const updateRecentlyViewedCategoryId = (categoryId: string) => {
+    currentCategoryVar(categoryId);
+    updateAccountTrack({ variables: { recentlyViewedCategoryId: categoryId } })
+      .then(() => {
+        const cache = updateAccountTrackResult.client.cache;
+        cache.modify({
+          id: cache.identify({ __typename: 'User', id: 'ME' }),
+          fields: {
+            recentlyViewedCategoryId(): string {
+              return categoryId;
+            },
+          },
+        });
+      });
   };
 
   const validatePost = (): boolean => {
@@ -299,8 +329,10 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
 
   return (
     <>
-      <div className='my-4'>
+      <div className='my-4 d-flex'>
         <h2>{(isNew) ? '새 메모 작성' : '메모 수정'}</h2>
+        <Button className='ms-auto' variant='success' disabled={!categoryId}
+                onClick={() => handleMoveToListClick(categoryId)}>목록</Button>
       </div>
       <Form onSubmit={submitForm}>
         <Form.Group controlId='title' className='mb-3'>

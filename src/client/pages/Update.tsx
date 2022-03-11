@@ -4,7 +4,7 @@ import Navigation from 'client/components/Navigation';
 import { Container } from 'react-bootstrap';
 import PostForm from 'client/components/PostForm';
 import { useParams } from 'react-router-dom';
-import { useGetCurrentCategoryQuery, useGetLoggedInUserQuery, useGetPostQuery } from 'apollo/generated/hooks';
+import { useGetLoggedInUserQuery, useGetPostQuery } from 'apollo/generated/hooks';
 import FixedMenu from 'client/components/FixedMenu';
 
 function Update() {
@@ -12,7 +12,6 @@ function Update() {
   const { id }: { id: string } = useParams();
 
   const loggedInUserQueryResult = useGetLoggedInUserQuery();
-  const currentCategoryQueryResult = useGetCurrentCategoryQuery();
   const postQueryResult = useGetPostQuery({
     variables: { id },
   });
@@ -23,8 +22,7 @@ function Update() {
 
   const isLoggedIn: boolean = loggedInUserQueryResult.data.me.isLoggedIn;
   const isTempUser: boolean | null | undefined = loggedInUserQueryResult.data.me.isTempUser; // TODO: tempUser 제거
-  const categoryId: string | null | undefined = currentCategoryQueryResult.data?.currentCategory;
-  const { title, content, tags, option } = postQueryResult.data.post;
+  const { categoryId, title, content, tags, option } = postQueryResult.data.post;
 
   return (
     <>

@@ -528,6 +528,7 @@ export const GetPostDocument = gql`
   query GetPost($id: ID!) {
     post(id: $id) {
       id
+      categoryId
       title
       content
       tags

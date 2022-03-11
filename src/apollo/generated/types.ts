@@ -181,6 +181,7 @@ export type Page = {
 export type Post = {
   __typename?: 'Post';
   bookmarked: Scalars['Boolean'];
+  categoryId?: Maybe<Scalars['String']>;
   content: Scalars['String'];
   createdAt?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
@@ -422,6 +423,7 @@ export type GetPostQuery = {
   post: {
     __typename?: 'Post';
     id: string;
+    categoryId?: string | null | undefined;
     title?: string | null | undefined;
     content: string;
     tags?: Array<string> | null | undefined;

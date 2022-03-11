@@ -45,6 +45,7 @@ type SimplePost {
 
 type Post {
     id: ID!
+    categoryId: String
     title: String
     content: String!
     tags: [String!]

@@ -19,6 +19,7 @@ query GetPostList($categoryId: String, $page: Int, $limit: Int, $orderType: Stri
 query GetPost($id: ID!) {
     post(id: $id) {
         id
+        categoryId
         title
         content
         tags
