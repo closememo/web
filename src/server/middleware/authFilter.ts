@@ -1,13 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import {
-  generateAccessToken,
-  generateRefreshToken,
   getAccessTokenId,
-  getRefreshCookieExp,
   getRefreshTokenId,
   LoginResponse,
 } from 'server/utils/jwtUtils';
 import axios from 'axios';
+import { setTokenCookies } from 'server/utils/tokenUtils';
 
 const instance = axios.create({
   baseURL: process.env.API_SERVER,
@@ -34,16 +32,7 @@ async function authFilter(req: Request, res: Response, next: NextFunction) {
 
       const loginResponse: LoginResponse = response.data as LoginResponse;
 
-      const refreshToken = generateRefreshToken(loginResponse.token.tokenId, loginResponse.token.exp, keep);
-      const accessToken = generateAccessToken(loginResponse.token.tokenId);
-
-      res.cookie('refreshToken', refreshToken, {
-        expires: getRefreshCookieExp(),
-        httpOnly: true,
-      });
-      res.cookie('accessToken', accessToken, {
-        httpOnly: true,
-      });
+      setTokenCookies(res, loginResponse, keep);
 
       res.locals.token = loginResponse.token.tokenId;
     } catch (error) {

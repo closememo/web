@@ -19,7 +19,7 @@ const naverCallback = Router();
 
 const instance = axios.create({
   baseURL: process.env.API_SERVER,
-  timeout: 5000,
+  timeout: 10000,
 });
 
 // TODO: 사용되지 않음 제거할 것.
