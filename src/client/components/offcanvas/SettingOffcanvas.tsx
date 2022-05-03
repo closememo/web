@@ -21,13 +21,13 @@ function SettingOffcanvas({ newNotice, show, handleClose, isTempUser }: SettingO
 
   const handleLogoutButtonClick = async (event: MouseEvent) => {
     event.preventDefault();
-    await client.resetStore();
+    await client.clearStore();
     window.location.href = '/naver/logout';
   };
 
   const handleWithdrawButtonClick = async (event: MouseEvent) => {
     event.preventDefault();
-    await client.resetStore();
+    await client.clearStore();
     window.location.href = '/naver/withdraw';
   };
 
