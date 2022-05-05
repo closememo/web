@@ -22,12 +22,16 @@ async function authFilter(req: Request, res: Response, next: NextFunction) {
 
   if (accessTokenId) {
     res.locals.token = refreshTokenId;
+    res.locals.userIp = req.ip;
   } else if (refreshTokenId) {
     try {
       const response = await instance.post('/command/client/reissue-token', {
         tokenId: refreshTokenId,
       }, {
-        headers: { 'X-ACCESS-TOKEN': refreshTokenId },
+        headers: {
+          'X-ACCESS-TOKEN': refreshTokenId,
+          'X-USER-IP': req.ip,
+        },
       });
 
       const loginResponse: LoginResponse = response.data as LoginResponse;
@@ -35,6 +39,7 @@ async function authFilter(req: Request, res: Response, next: NextFunction) {
       setTokenCookies(res, loginResponse, keep);
 
       res.locals.token = loginResponse.token.tokenId;
+      res.locals.userIp = req.ip;
     } catch (error) {
 
       res.clearCookie('refreshToken');

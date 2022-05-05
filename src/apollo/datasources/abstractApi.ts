@@ -18,6 +18,7 @@ abstract class AbstractApi extends RESTDataSource {
   }
 
   protected willSendRequest(request: RequestOptions): ValueOrPromise<void> {
+    request.headers.set('X-USER-IP', this.context.userIp)
     request.headers.set('X-ACCESS-TOKEN', this.context.accessToken);
   }
 

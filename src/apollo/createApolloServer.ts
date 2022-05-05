@@ -28,6 +28,7 @@ const dataSources: {
 const context = async ({ req, res }: { req: Request, res: Response }) => {
   return {
     accessToken: res.locals.token,
+    userIp: res.locals.userIp,
   };
 };
 

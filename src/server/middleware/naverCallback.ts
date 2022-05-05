@@ -75,7 +75,10 @@ naverCallback.get('/logout', async (req: Request, res: Response) => {
     await instance.post('/command/client/logout', {
       tokenId: refreshTokenId,
     }, {
-      headers: { 'X-ACCESS-TOKEN': refreshTokenId },
+      headers: {
+        'X-ACCESS-TOKEN': refreshTokenId,
+        'X-USER-IP': req.ip,
+      },
     });
   } catch (error) {
     console.log(error);
@@ -96,7 +99,10 @@ naverCallback.get('/withdraw', async (req: Request, res: Response) => {
     await instance.post('/command/client/withdraw', {
       tokenId: refreshTokenId,
     }, {
-      headers: { 'X-ACCESS-TOKEN': refreshTokenId },
+      headers: {
+        'X-ACCESS-TOKEN': refreshTokenId,
+        'X-USER-IP': req.ip,
+      },
     });
   } catch (error) {
     console.log(error);
