@@ -1,11 +1,13 @@
 import * as localforage from 'localforage';
 import { LocalPost } from 'client/components/local/LocalPage';
+import { ReadNotification } from 'client/cache/ReadNotificationIdCache';
 
 const LOCAL_POST_ID_LIST_KEY = 'postIds';
 const KEEP_LOGIN_CHECKED_KEY = 'keepLoginChecked';
 const LOCAL_MEMO_PUSH_CHECKED_KEY = 'localMemoPushChecked';
 const ORDER_OPTION_OPEN_KEY = 'orderOptionOpen';
 const FIRST_MEMO_VIEWED = 'firstMemoViewed';
+const READ_NOTIFICATION_ID_LIST_KEY = 'readNotificationIds';
 
 class PersonalLocalCache {
 
@@ -69,6 +71,15 @@ class PersonalLocalCache {
 
   public static async getFirstMemoViewed(): Promise<boolean | null> {
     return await localforage.getItem(FIRST_MEMO_VIEWED);
+  }
+
+  // read notification id list
+  public static async setReadNotifications(readNotifications: ReadNotification[]) {
+    await localforage.setItem(READ_NOTIFICATION_ID_LIST_KEY, readNotifications);
+  }
+
+  public static async getReadNotifications(): Promise<ReadNotification[] | null> {
+    return await localforage.getItem(READ_NOTIFICATION_ID_LIST_KEY);
   }
 }
 

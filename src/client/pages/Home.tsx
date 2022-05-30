@@ -9,6 +9,7 @@ import { useGetCurrentCategoryQuery, useGetLoggedInUserQuery } from 'apollo/gene
 import Information from 'client/components/Information';
 import FixedMenu from 'client/components/FixedMenu';
 import Pagination from 'client/constants/Pagination';
+import NotificationModal from 'client/components/modal/NotificationModal';
 
 function HomePage({ location }: { location: Location }) {
 
@@ -43,8 +44,11 @@ function HomePage({ location }: { location: Location }) {
       {!!state && <Information state={state} isLoggedIn={isLoggedIn} />}
       <Container as='main' className='home-main'>
         {isLoggedIn
-          ? <MainPage isTempUser={isTempUser} categoryId={currentCategoryId} currentPage={page}
+          ? <>
+            <MainPage isTempUser={isTempUser} categoryId={currentCategoryId} currentPage={page}
                       documentOrderType={documentOrderType} documentCount={documentCount} />
+            <NotificationModal />
+          </>
           : <LocalPage />}
       </Container>
       <FixedMenu isLoggedIn={isLoggedIn} />

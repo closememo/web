@@ -458,6 +458,68 @@ export type GetNoticeQueryResult = Apollo.QueryResult<
   Types.GetNoticeQuery,
   Types.GetNoticeQueryVariables
 >;
+export const GetCurrentNotificationDocument = gql`
+  query GetCurrentNotification {
+    currentNotification {
+      exist
+      data {
+        id
+        title
+        content
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetCurrentNotificationQuery__
+ *
+ * To run a query within a React component, call `useGetCurrentNotificationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCurrentNotificationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCurrentNotificationQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCurrentNotificationQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    Types.GetCurrentNotificationQuery,
+    Types.GetCurrentNotificationQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    Types.GetCurrentNotificationQuery,
+    Types.GetCurrentNotificationQueryVariables
+  >(GetCurrentNotificationDocument, options);
+}
+export function useGetCurrentNotificationLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    Types.GetCurrentNotificationQuery,
+    Types.GetCurrentNotificationQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    Types.GetCurrentNotificationQuery,
+    Types.GetCurrentNotificationQueryVariables
+  >(GetCurrentNotificationDocument, options);
+}
+export type GetCurrentNotificationQueryHookResult = ReturnType<
+  typeof useGetCurrentNotificationQuery
+>;
+export type GetCurrentNotificationLazyQueryHookResult = ReturnType<
+  typeof useGetCurrentNotificationLazyQuery
+>;
+export type GetCurrentNotificationQueryResult = Apollo.QueryResult<
+  Types.GetCurrentNotificationQuery,
+  Types.GetCurrentNotificationQueryVariables
+>;
 export const GetPostListDocument = gql`
   query GetPostList($categoryId: String, $page: Int, $limit: Int, $orderType: String) {
     posts(categoryId: $categoryId, page: $page, limit: $limit, orderType: $orderType) {

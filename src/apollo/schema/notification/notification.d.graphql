@@ -1,0 +1,10 @@
+query GetCurrentNotification {
+    currentNotification {
+        exist
+        data {
+            id
+            title
+            content
+        }
+    }
+}

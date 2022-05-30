@@ -8,12 +8,14 @@ import CategoryAPI from 'apollo/datasources/category';
 import NoticeAPI from 'apollo/datasources/notice';
 import SuggestionAPI from 'apollo/datasources/suggestion';
 import BookmarkAPI from 'apollo/datasources/bookmark';
+import NotificationAPI from 'apollo/datasources/notification';
 
 const dataSources: {
   userAPI: DataSource,
   postAPI: DataSource,
   categoryAPI: DataSource,
   noticeAPI: DataSource,
+  notificationAPI: DataSource,
   suggestionAPI: DataSource,
   bookmarkAPI: DataSource,
 } = {
@@ -21,6 +23,7 @@ const dataSources: {
   postAPI: new PostAPI(),
   categoryAPI: new CategoryAPI(),
   noticeAPI: new NoticeAPI(),
+  notificationAPI: new NotificationAPI(),
   suggestionAPI: new SuggestionAPI(),
   bookmarkAPI: new BookmarkAPI(),
 };

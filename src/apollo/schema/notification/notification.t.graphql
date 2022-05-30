@@ -1,0 +1,14 @@
+type Query {
+    currentNotification: Notification
+}
+
+type Notification {
+    exist: Boolean!
+    data: NotificationData
+}
+
+type NotificationData {
+    id: ID!
+    title: String!
+    content: String!
+}

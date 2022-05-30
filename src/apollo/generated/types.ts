@@ -169,6 +169,19 @@ export type NoticeListElementPage = {
   total: Scalars['Int'];
 };
 
+export type Notification = {
+  __typename?: 'Notification';
+  data?: Maybe<NotificationData>;
+  exist: Scalars['Boolean'];
+};
+
+export type NotificationData = {
+  __typename?: 'NotificationData';
+  content: Scalars['String'];
+  id: Scalars['ID'];
+  title: Scalars['String'];
+};
+
 export type Page = {
   __typename?: 'Page';
   currentPage: Scalars['Int'];
@@ -210,6 +223,7 @@ export type Query = {
   bookmarkedPosts: Array<BookmarkedPost>;
   categories: Array<Category>;
   currentCategory?: Maybe<Scalars['String']>;
+  currentNotification?: Maybe<Notification>;
   me: User;
   notice?: Maybe<Notice>;
   noticeListElements?: Maybe<NoticeListElementPage>;
@@ -379,6 +393,23 @@ export type GetNoticeQuery = {
   __typename?: 'Query';
   notice?:
     | { __typename?: 'Notice'; id: string; title: string; content: string; createdAt: string }
+    | null
+    | undefined;
+};
+
+export type GetCurrentNotificationQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetCurrentNotificationQuery = {
+  __typename?: 'Query';
+  currentNotification?:
+    | {
+        __typename?: 'Notification';
+        exist: boolean;
+        data?:
+          | { __typename?: 'NotificationData'; id: string; title: string; content: string }
+          | null
+          | undefined;
+      }
     | null
     | undefined;
 };
