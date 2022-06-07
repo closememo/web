@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap';
 import 'client/css/pages/Home.css';
 import Navigation from 'client/components/Navigation';
 import LocalPage from 'client/components/local/LocalPage';
-import MainPage from 'client/components/MainPage';
+import HomeMain from 'client/components/HomeMain';
 import { useGetCurrentCategoryQuery, useGetLoggedInUserQuery } from 'apollo/generated/hooks';
 import Information from 'client/components/Information';
 import FixedMenu from 'client/components/FixedMenu';
@@ -45,7 +45,7 @@ function HomePage({ location }: { location: Location }) {
       <Container as='main' className='home-main'>
         {isLoggedIn
           ? <>
-            <MainPage isTempUser={isTempUser} categoryId={currentCategoryId} currentPage={page}
+            <HomeMain isTempUser={isTempUser} categoryId={currentCategoryId} currentPage={page}
                       documentOrderType={documentOrderType} documentCount={documentCount} />
             <NotificationModal />
           </>

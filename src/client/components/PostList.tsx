@@ -16,12 +16,14 @@ import PagingHandle from 'client/components/PagingHandle';
 import ChangeCategoryModal from 'client/components/modal/ChangeCategoryModal';
 import { BookmarkedPostsDocument, useCreateBookmarkMutation, useDeleteBookmarkMutation } from 'apollo/generated/hooks';
 import { SimplePost } from 'apollo/generated/types';
+import Loading from 'client/components/Loading';
 
 interface ModalInfo {
   ids: string[]
 }
 
 interface PostListParams {
+  loading: boolean;
   total?: number;
   currentPage?: number;
   pageSize?: number;
@@ -33,6 +35,7 @@ interface PostListParams {
 }
 
 function PostList({
+                    loading,
                     total,
                     currentPage,
                     pageSize,
@@ -176,14 +179,14 @@ function PostList({
   return (
     <>
       <div className='d-flex py-2'>
-        <Button variant='success' className='me-1'
+        <Button variant='success' className='me-1' disabled={loading}
                 onClick={() => history.push(PagePaths.Write)}>
           <div className='d-none d-sm-block'>새메모</div>
           <div className='d-sm-none'>➕</div>
         </Button>
-        <Button variant='outline-primary' className='me-auto'
+        <Button variant='outline-primary' className='me-auto' disabled={loading}
                 onClick={() => refreshPosts()}>↻</Button>
-        <Button variant='info' onClick={handleAllCheckButtonClick}>
+        <Button variant='info' onClick={handleAllCheckButtonClick} disabled={loading}>
           <div className='d-none d-sm-block'>{(posts.length === checkedIds.size) ? '전체취소' : '전체선택'}</div>
           <div className='d-sm-none'>{(posts.length === checkedIds.size) ? '□' : '☑'}</div>
         </Button>
@@ -198,38 +201,42 @@ function PostList({
           <div className='d-sm-none'>➖</div>
         </Button>
       </div>
-      <div className='py-2'>
-        <ListGroup>
-          {posts && posts.map((post: SimplePost) => (
-            <ListGroup.Item key={post.id} variant='light' className='list-group-item-action'
-                            onClick={(event: MouseEvent) => event.stopPropagation()}>
-              <div className='d-flex w-100'>
-                <Form.Check aria-label='option 1' className='me-1' checked={checkedIds.has(post.id)}
-                            onChange={(event: ChangeEvent) => handleCheckboxChange(event, post.id)} />
-                {getTitleElement(post.id, post.title)}
-                <small className='ms-auto'>{convertDateTimeString(post.createdAt)}</small>
-              </div>
-              <div className='mb-1'>
-                {post.tags && post.tags.map((tag: any, index: number) =>
-                  getTagElement(post.id, tag, index))}
-                {post.autoTags && post.autoTags.map((tag: any, index: number) =>
-                  getAutoTagElement(post.id, tag, index))}
-              </div>
-              <div className='d-flex'>
-                <small className='me-auto break-word'>{post.preview}</small>
-                <Button size='sm' variant='outline-secondary'
-                        onClick={() => handleToggleBookmarkedClick(post)}>
-                  {post.bookmarked ? '⭐' : '☆'}
-                </Button>
-                <Button size='sm' variant='outline-warning' className='mx-1'
-                        onClick={() => history.push('/update/' + post.id)}>✎</Button>
-                <Button size='sm' variant='outline-danger'
-                        onClick={() => handleShow(post.id)}>➖</Button>
-              </div>
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
-      </div>
+      {loading
+        ? <Loading />
+        : (
+          <div className='py-2'>
+            <ListGroup>
+              {posts && posts.map((post: SimplePost) => (
+                <ListGroup.Item key={post.id} variant='light' className='list-group-item-action'
+                                onClick={(event: MouseEvent) => event.stopPropagation()}>
+                  <div className='d-flex w-100'>
+                    <Form.Check aria-label='option 1' className='me-1' checked={checkedIds.has(post.id)}
+                                onChange={(event: ChangeEvent) => handleCheckboxChange(event, post.id)} />
+                    {getTitleElement(post.id, post.title)}
+                    <small className='ms-auto'>{convertDateTimeString(post.createdAt)}</small>
+                  </div>
+                  <div className='mb-1'>
+                    {post.tags && post.tags.map((tag: any, index: number) =>
+                      getTagElement(post.id, tag, index))}
+                    {post.autoTags && post.autoTags.map((tag: any, index: number) =>
+                      getAutoTagElement(post.id, tag, index))}
+                  </div>
+                  <div className='d-flex'>
+                    <small className='me-auto break-word'>{post.preview}</small>
+                    <Button size='sm' variant='outline-secondary'
+                            onClick={() => handleToggleBookmarkedClick(post)}>
+                      {post.bookmarked ? '⭐' : '☆'}
+                    </Button>
+                    <Button size='sm' variant='outline-warning' className='mx-1'
+                            onClick={() => history.push('/update/' + post.id)}>✎</Button>
+                    <Button size='sm' variant='outline-danger'
+                            onClick={() => handleShow(post.id)}>➖</Button>
+                  </div>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </div>
+        )}
       {(total && currentPage && pageSize)
         ? <PagingHandle total={total} currentPage={currentPage} pageSize={pageSize} />
         : <></>}

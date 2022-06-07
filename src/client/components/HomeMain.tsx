@@ -11,6 +11,7 @@ import PostList from 'client/components/PostList';
 import { Category, SimplePost } from 'apollo/generated/types';
 import PersonalLocalCache from 'client/cache/PersonalLocalCache';
 import PostListHeader from 'client/components/PostListHeader';
+import Loading from 'client/components/Loading';
 
 const DEFAULT_CATEGORY_NAME = '메인';
 
@@ -22,7 +23,7 @@ interface MainPageParams {
   isTempUser?: boolean | null; // TODO: tempUser 제거
 }
 
-function MainPage({ categoryId, currentPage, documentOrderType, documentCount, isTempUser }: MainPageParams) {
+function HomeMain({ categoryId, currentPage, documentOrderType, documentCount, isTempUser }: MainPageParams) {
 
   const [orderOptionOpen, setOrderOptionOpen] = useState<boolean>(false);
 
@@ -54,8 +55,8 @@ function MainPage({ categoryId, currentPage, documentOrderType, documentCount, i
     refetchQueries: [{ query: GetCategoriesDocument }],
   });
 
-  if (postListQueryResult.loading || categoriesQueryResult.loading) return <p>Loading...</p>;
-  if (postListQueryResult.error || !postListQueryResult.data) return <p>Error</p>;
+  if (categoriesQueryResult.loading) return <Loading />;
+  if (postListQueryResult.error) return <p>Error</p>;
   if (categoriesQueryResult.error || !categoriesQueryResult.data) return <p>Error</p>;
 
   const refreshPosts = async () => {
@@ -71,8 +72,8 @@ function MainPage({ categoryId, currentPage, documentOrderType, documentCount, i
 
   let fullName: string = getCategoryFullName(categoriesQueryResult.data.categories, categoryId);
 
-  const total = postListQueryResult.data.posts?.total;
-  const posts: SimplePost[] = postListQueryResult.data.posts ? postListQueryResult.data.posts.data : [];
+  const total: number | undefined = postListQueryResult.data?.posts?.total;
+  const posts: SimplePost[] = postListQueryResult.data?.posts ? postListQueryResult.data.posts.data : [];
 
   return (
     <>
@@ -80,9 +81,9 @@ function MainPage({ categoryId, currentPage, documentOrderType, documentCount, i
                       orderOptionOpen={orderOptionOpen} setOrderOptionOpen={setOrderOptionOpen}
                       postCount={documentCount} currentOrderType={documentOrderType}
                       refetchPosts={postListQueryResult.refetch} />
-      <PostList total={total} currentPage={currentPage} pageSize={documentCount} posts={posts}
-                refreshPosts={refreshPosts} deletePosts={deletePosts} mailPosts={mailPosts}
-                isTempUser={!!isTempUser} />
+      <PostList loading={postListQueryResult.loading} total={total} currentPage={currentPage}
+                pageSize={documentCount} posts={posts} refreshPosts={refreshPosts}
+                deletePosts={deletePosts} mailPosts={mailPosts} isTempUser={!!isTempUser} />
     </>
   );
 }
@@ -109,4 +110,4 @@ function getCategoryFullName(categories: Array<Category> | undefined, categoryId
   }
 }
 
-export default MainPage;
+export default HomeMain;
