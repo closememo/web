@@ -9,6 +9,7 @@ import noticeType from './notice/notice.t.graphql';
 import notificationType from './notification/notification.t.graphql';
 import suggestionType from './suggestion/suggestion.t.graphql';
 import bookmarkType from './bookmark/bookmark.t.graphql';
+import differenceType from './difference/difference.t.graphql';
 // resolvers
 import postResolver from './post/post.resolver';
 import userResolver from './user/user.resolver';
@@ -17,12 +18,13 @@ import noticeResolver from './notice/notice.resolver';
 import notificationResolver from './notification/notification.resolver';
 import suggestionResolver from './suggestion/suggestion.resolver';
 import bookmarkResolver from './bookmark/bookmark.resolver';
+import differenceResolver from './difference/difference.resolver';
 
 const typeDefs = mergeTypeDefs([
-  postType, userType, categoryType, noticeType, notificationType, suggestionType, bookmarkType,
+  postType, userType, categoryType, noticeType, notificationType, suggestionType, bookmarkType, differenceType,
 ]);
 const resolvers = mergeResolvers([
-  postResolver, userResolver, categoryResolver, noticeResolver, notificationResolver, suggestionResolver, bookmarkResolver,
+  postResolver, userResolver, categoryResolver, noticeResolver, notificationResolver, suggestionResolver, bookmarkResolver, differenceResolver,
 ]);
 
 export default makeExecutableSchema({

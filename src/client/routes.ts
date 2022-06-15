@@ -39,6 +39,12 @@ const routes: RouteConfig[] = [
     component: require('client/pages/Suggestion').default,
   },
   {
+    name: 'Difference',
+    path: PagePaths.Difference,
+    exact: true,
+    component: require('client/pages/Difference').default,
+  },
+  {
     path: '*',
     component: require('client/pages/NotFound').default,
   },

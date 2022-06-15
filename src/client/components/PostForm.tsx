@@ -1,8 +1,19 @@
 import React, { ChangeEvent, FormEvent, KeyboardEvent, useRef, useState } from 'react';
-import { Button, Form, FormCheck, InputGroup, Modal, Overlay, OverlayTrigger, Popover, Tooltip } from 'react-bootstrap';
+import {
+  Badge,
+  Button,
+  Form,
+  FormCheck,
+  InputGroup,
+  Modal,
+  Overlay,
+  OverlayTrigger,
+  Popover,
+  Tooltip,
+} from 'react-bootstrap';
 import {
   BookmarkedPostsDocument,
-  GetCategoriesDocument,
+  GetCategoriesDocument, GetDifferencesDocument,
   GetPostDocument,
   useCreateNewPostMutation,
   useUpdateAccountTrackMutation,
@@ -12,14 +23,16 @@ import { useHistory } from 'react-router-dom';
 import PagePaths from 'client/constants/PagePaths';
 import QuestionSVG from 'client/assets/QuestionSVG';
 import { currentCategoryVar } from 'apollo/caches';
+import DocumentHistoryModal from 'client/components/modal/DocumentHistoryModal';
 
 interface PostFormParams {
-  categoryId?: string | null,
-  id?: string | null,
-  currentTitle?: string | null,
-  currentContent?: string | null,
-  currentTags?: string[] | null
-  currentOption?: any
+  categoryId?: string | null;
+  id?: string | null;
+  currentTitle?: string | null;
+  currentContent?: string | null;
+  currentTags?: string[] | null;
+  currentOption?: any;
+  diffCount?: number;
 }
 
 interface Tag {
@@ -48,7 +61,15 @@ const DEFAULT_DOCUMENT_OPTION: DocumentOption = {
   hasAutoTag: false,
 };
 
-function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, currentOption }: PostFormParams) {
+function PostForm({
+                    categoryId,
+                    id,
+                    currentTitle,
+                    currentContent,
+                    currentTags,
+                    currentOption,
+                    diffCount,
+                  }: PostFormParams) {
 
   currentTitle = currentTitle || '';
   currentContent = currentContent || '';
@@ -70,6 +91,8 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
   const [errorModalShow, setErrorModalShow] = useState(false);
   const [errorModalInfo, setErrorModalInfo] = useState<ErrorModalInfo>({ content: '' });
 
+  const [historyModalShow, setHistoryModalShow] = useState(false);
+
   const isNew = !id;
 
   const [createNewPost] = useCreateNewPostMutation({
@@ -88,6 +111,10 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
       {
         query: GetPostDocument,
         variables: { id },
+      },
+      {
+        query: GetDifferencesDocument,
+        variables: { documentId: id },
       },
       BookmarkedPostsDocument,
     ],
@@ -330,9 +357,21 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
   return (
     <>
       <div className='my-4 d-flex'>
-        <h2>{(isNew) ? '새 메모 작성' : '메모 수정'}</h2>
-        <Button className='ms-auto' variant='success' disabled={!categoryId}
-                onClick={() => handleMoveToListClick(categoryId)}>목록</Button>
+        {(isNew)
+          ? <>
+            <h2>새 메모 작성</h2>
+            <Button className='ms-auto' variant='success' disabled={!categoryId}
+                    onClick={() => handleMoveToListClick(categoryId)}>목록</Button>
+          </>
+          : <>
+            <h2>메모 수정</h2>
+            <Button className='ms-auto' variant='secondary'
+                    onClick={() => setHistoryModalShow(true)}>
+              변경내역 <Badge bg='light' text='dark'>{diffCount || 0}</Badge>
+            </Button>
+            <Button className='ms-1' variant='success' disabled={!categoryId}
+                    onClick={() => handleMoveToListClick(categoryId)}>목록</Button>
+          </>}
       </div>
       <Form onSubmit={submitForm}>
         <Form.Group controlId='title' className='mb-3'>
@@ -407,6 +446,10 @@ function PostForm({ categoryId, id, currentTitle, currentContent, currentTags, c
           </Button>
         </Modal.Footer>
       </Modal>
+      {(isNew)
+        ? <></>
+        : <DocumentHistoryModal documentId={id} modalShow={historyModalShow}
+                                closeModal={() => setHistoryModalShow(false)} />}
     </>
   );
 }

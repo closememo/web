@@ -13,6 +13,7 @@ type Mutation {
     updatePost(id: ID!, title: String content: String, tags: [String], option: PostOptionInput): PostCreateResponse
     changePostsCategory(categoryId: String, ids: [ID!]): Boolean
     mailPosts(ids: [ID!]): Boolean
+    clearDifferences(id: ID!): Boolean
 }
 
 input NewLocalPost {
@@ -50,6 +51,7 @@ type Post {
     content: String!
     tags: [String!]
     createdAt: String
+    diffCount: Int!
     option: PostOption
     bookmarked: Boolean!
 }

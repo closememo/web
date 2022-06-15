@@ -9,6 +9,7 @@ import NoticeAPI from 'apollo/datasources/notice';
 import SuggestionAPI from 'apollo/datasources/suggestion';
 import BookmarkAPI from 'apollo/datasources/bookmark';
 import NotificationAPI from 'apollo/datasources/notification';
+import DifferenceAPI from 'apollo/datasources/difference';
 
 const dataSources: {
   userAPI: DataSource,
@@ -18,6 +19,7 @@ const dataSources: {
   notificationAPI: DataSource,
   suggestionAPI: DataSource,
   bookmarkAPI: DataSource,
+  differenceAPI: DataSource,
 } = {
   userAPI: new UserAPI(),
   postAPI: new PostAPI(),
@@ -26,6 +28,7 @@ const dataSources: {
   notificationAPI: new NotificationAPI(),
   suggestionAPI: new SuggestionAPI(),
   bookmarkAPI: new BookmarkAPI(),
+  differenceAPI: new DifferenceAPI(),
 };
 
 const context = async ({ req, res }: { req: Request, res: Response }) => {

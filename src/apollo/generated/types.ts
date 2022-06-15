@@ -30,6 +30,35 @@ export type Category = {
   netCount?: Maybe<Scalars['Int']>;
 };
 
+export type ChangePatch = {
+  __typename?: 'ChangePatch';
+  changed?: Maybe<Scalars['String']>;
+  type: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export type Difference = {
+  __typename?: 'Difference';
+  createdAt: Scalars['String'];
+  documentVersion: Scalars['Int'];
+  id: Scalars['ID'];
+  lineDeltas: Array<LineDelta>;
+};
+
+export type Line = {
+  __typename?: 'Line';
+  position: Scalars['Int'];
+  value?: Maybe<Scalars['String']>;
+};
+
+export type LineDelta = {
+  __typename?: 'LineDelta';
+  changePatches: Array<ChangePatch>;
+  source: Line;
+  target: Line;
+  type: Scalars['String'];
+};
+
 export type LocalPostCreatesResponse = {
   __typename?: 'LocalPostCreatesResponse';
   ids?: Maybe<Array<Scalars['ID']>>;
@@ -39,6 +68,7 @@ export type LocalPostCreatesResponse = {
 export type Mutation = {
   __typename?: 'Mutation';
   changePostsCategory?: Maybe<Scalars['Boolean']>;
+  clearDifferences?: Maybe<Scalars['Boolean']>;
   createBookmark?: Maybe<Scalars['Boolean']>;
   createCategory?: Maybe<Scalars['Boolean']>;
   createLocalPosts?: Maybe<LocalPostCreatesResponse>;
@@ -60,6 +90,10 @@ export type Mutation = {
 export type MutationChangePostsCategoryArgs = {
   categoryId?: Maybe<Scalars['String']>;
   ids?: Maybe<Array<Scalars['ID']>>;
+};
+
+export type MutationClearDifferencesArgs = {
+  id: Scalars['ID'];
 };
 
 export type MutationCreateBookmarkArgs = {
@@ -197,6 +231,7 @@ export type Post = {
   categoryId?: Maybe<Scalars['String']>;
   content: Scalars['String'];
   createdAt?: Maybe<Scalars['String']>;
+  diffCount: Scalars['Int'];
   id: Scalars['ID'];
   option?: Maybe<PostOption>;
   tags?: Maybe<Array<Scalars['String']>>;
@@ -224,6 +259,8 @@ export type Query = {
   categories: Array<Category>;
   currentCategory?: Maybe<Scalars['String']>;
   currentNotification?: Maybe<Notification>;
+  difference: Difference;
+  differences: Array<SimpleDifference>;
   me: User;
   notice?: Maybe<Notice>;
   noticeListElements?: Maybe<NoticeListElementPage>;
@@ -232,6 +269,14 @@ export type Query = {
   searchPostsByTag: Array<SimplePost>;
   suggestion?: Maybe<Suggestion>;
   suggestions: Array<SuggestionListElement>;
+};
+
+export type QueryDifferenceArgs = {
+  differenceId: Scalars['ID'];
+};
+
+export type QueryDifferencesArgs = {
+  documentId: Scalars['String'];
 };
 
 export type QueryNoticeArgs = {
@@ -255,6 +300,16 @@ export type QuerySearchPostsByTagArgs = {
 
 export type QuerySuggestionArgs = {
   suggestionId: Scalars['ID'];
+};
+
+export type SimpleDifference = {
+  __typename?: 'SimpleDifference';
+  changed: Scalars['Int'];
+  createdAt: Scalars['String'];
+  deleted: Scalars['Int'];
+  documentVersion: Scalars['Int'];
+  id: Scalars['ID'];
+  inserted: Scalars['Int'];
 };
 
 export type SimplePost = {
@@ -362,6 +417,49 @@ export type DeleteCategoryMutation = {
   deleteCategory?: boolean | null | undefined;
 };
 
+export type GetDifferencesQueryVariables = Exact<{
+  documentId: Scalars['String'];
+}>;
+
+export type GetDifferencesQuery = {
+  __typename?: 'Query';
+  differences: Array<{
+    __typename?: 'SimpleDifference';
+    id: string;
+    documentVersion: number;
+    createdAt: string;
+    inserted: number;
+    deleted: number;
+    changed: number;
+  }>;
+};
+
+export type GetDifferenceQueryVariables = Exact<{
+  differenceId: Scalars['ID'];
+}>;
+
+export type GetDifferenceQuery = {
+  __typename?: 'Query';
+  difference: {
+    __typename?: 'Difference';
+    id: string;
+    documentVersion: number;
+    createdAt: string;
+    lineDeltas: Array<{
+      __typename?: 'LineDelta';
+      type: string;
+      source: { __typename?: 'Line'; position: number; value?: string | null | undefined };
+      target: { __typename?: 'Line'; position: number; value?: string | null | undefined };
+      changePatches: Array<{
+        __typename?: 'ChangePatch';
+        type: string;
+        value: string;
+        changed?: string | null | undefined;
+      }>;
+    }>;
+  };
+};
+
 export type GetNoticeListElementsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetNoticeListElementsQuery = {
@@ -458,6 +556,7 @@ export type GetPostQuery = {
     title?: string | null | undefined;
     content: string;
     tags?: Array<string> | null | undefined;
+    diffCount: number;
     bookmarked: boolean;
     option?:
       | { __typename?: 'PostOption'; hasAutoTag?: boolean | null | undefined }
@@ -578,6 +677,15 @@ export type MailPostsMutationVariables = Exact<{
 }>;
 
 export type MailPostsMutation = { __typename?: 'Mutation'; mailPosts?: boolean | null | undefined };
+
+export type ClearDifferencesMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type ClearDifferencesMutation = {
+  __typename?: 'Mutation';
+  clearDifferences?: boolean | null | undefined;
+};
 
 export type GetSuggestionListElementsQueryVariables = Exact<{ [key: string]: never }>;
 

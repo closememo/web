@@ -121,6 +121,13 @@ class PostAPI extends AbstractApi {
     });
     return true;
   }
+
+  public async clearDifferences(id: string) {
+    await this.post('/command/client/clear-document-differences', {
+      documentId: id,
+    });
+    return true;
+  }
 }
 
 export default PostAPI;

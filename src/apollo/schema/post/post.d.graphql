@@ -23,6 +23,7 @@ query GetPost($id: ID!) {
         title
         content
         tags
+        diffCount
         option {
             hasAutoTag
         }
@@ -86,4 +87,8 @@ mutation ChangePostsCategory($categoryId: String, $ids: [ID!]) {
 
 mutation MailPosts($ids: [ID!]) {
     mailPosts(ids: $ids)
+}
+
+mutation ClearDifferences($id: ID!) {
+    clearDifferences(id: $id)
 }

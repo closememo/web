@@ -74,5 +74,8 @@ export default {
     mailPosts: async (_: any, { ids }: { ids: string[] }, { dataSources }: { dataSources: DataSources }) => {
       return await dataSources.postAPI.mailPosts(ids);
     },
+    clearDifferences: async (_: any, { id }: { id: string }, { dataSources }: { dataSources: DataSources }) => {
+      return await dataSources.postAPI.clearDifferences(id);
+    }
   },
 };

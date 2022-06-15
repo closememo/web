@@ -1,0 +1,34 @@
+query GetDifferences($documentId: String!) {
+    differences(documentId: $documentId) {
+        id
+        documentVersion
+        createdAt
+        inserted
+        deleted
+        changed
+    }
+}
+
+query GetDifference($differenceId: ID!) {
+    difference(differenceId: $differenceId) {
+        id
+        documentVersion
+        lineDeltas {
+            type
+            source {
+                position
+                value
+            }
+            target {
+                position
+                value
+            }
+            changePatches {
+                type
+                value
+                changed
+            }
+        }
+        createdAt
+    }
+}

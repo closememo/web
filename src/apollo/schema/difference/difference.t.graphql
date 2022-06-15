@@ -1,0 +1,38 @@
+type Query {
+    differences(documentId: String!): [SimpleDifference!]!
+    difference(differenceId: ID!): Difference!
+}
+
+type SimpleDifference {
+    id: ID!
+    documentVersion: Int!
+    createdAt: String!
+    inserted: Int!
+    deleted: Int!
+    changed: Int!
+}
+
+type Difference {
+    id: ID!
+    documentVersion: Int!
+    lineDeltas: [LineDelta!]!
+    createdAt: String!
+}
+
+type LineDelta {
+    type: String!
+    source: Line!
+    target: Line!
+    changePatches: [ChangePatch!]!
+}
+
+type Line {
+    position: Int!
+    value: String
+}
+
+type ChangePatch {
+    type: String!
+    value: String!
+    changed: String
+}

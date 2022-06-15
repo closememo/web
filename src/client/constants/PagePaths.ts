@@ -5,6 +5,7 @@ const PagePaths = {
   Search: '/search',
   Notice: '/notice',
   Suggestion: '/suggestion',
+  Difference: '/difference/:differenceId',
 };
 
 export default PagePaths;

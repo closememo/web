@@ -343,6 +343,134 @@ export type DeleteCategoryMutationOptions = Apollo.BaseMutationOptions<
   Types.DeleteCategoryMutation,
   Types.DeleteCategoryMutationVariables
 >;
+export const GetDifferencesDocument = gql`
+  query GetDifferences($documentId: String!) {
+    differences(documentId: $documentId) {
+      id
+      documentVersion
+      createdAt
+      inserted
+      deleted
+      changed
+    }
+  }
+`;
+
+/**
+ * __useGetDifferencesQuery__
+ *
+ * To run a query within a React component, call `useGetDifferencesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDifferencesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDifferencesQuery({
+ *   variables: {
+ *      documentId: // value for 'documentId'
+ *   },
+ * });
+ */
+export function useGetDifferencesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    Types.GetDifferencesQuery,
+    Types.GetDifferencesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<Types.GetDifferencesQuery, Types.GetDifferencesQueryVariables>(
+    GetDifferencesDocument,
+    options,
+  );
+}
+export function useGetDifferencesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    Types.GetDifferencesQuery,
+    Types.GetDifferencesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<Types.GetDifferencesQuery, Types.GetDifferencesQueryVariables>(
+    GetDifferencesDocument,
+    options,
+  );
+}
+export type GetDifferencesQueryHookResult = ReturnType<typeof useGetDifferencesQuery>;
+export type GetDifferencesLazyQueryHookResult = ReturnType<typeof useGetDifferencesLazyQuery>;
+export type GetDifferencesQueryResult = Apollo.QueryResult<
+  Types.GetDifferencesQuery,
+  Types.GetDifferencesQueryVariables
+>;
+export const GetDifferenceDocument = gql`
+  query GetDifference($differenceId: ID!) {
+    difference(differenceId: $differenceId) {
+      id
+      documentVersion
+      lineDeltas {
+        type
+        source {
+          position
+          value
+        }
+        target {
+          position
+          value
+        }
+        changePatches {
+          type
+          value
+          changed
+        }
+      }
+      createdAt
+    }
+  }
+`;
+
+/**
+ * __useGetDifferenceQuery__
+ *
+ * To run a query within a React component, call `useGetDifferenceQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDifferenceQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDifferenceQuery({
+ *   variables: {
+ *      differenceId: // value for 'differenceId'
+ *   },
+ * });
+ */
+export function useGetDifferenceQuery(
+  baseOptions: Apollo.QueryHookOptions<Types.GetDifferenceQuery, Types.GetDifferenceQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<Types.GetDifferenceQuery, Types.GetDifferenceQueryVariables>(
+    GetDifferenceDocument,
+    options,
+  );
+}
+export function useGetDifferenceLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    Types.GetDifferenceQuery,
+    Types.GetDifferenceQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<Types.GetDifferenceQuery, Types.GetDifferenceQueryVariables>(
+    GetDifferenceDocument,
+    options,
+  );
+}
+export type GetDifferenceQueryHookResult = ReturnType<typeof useGetDifferenceQuery>;
+export type GetDifferenceLazyQueryHookResult = ReturnType<typeof useGetDifferenceLazyQuery>;
+export type GetDifferenceQueryResult = Apollo.QueryResult<
+  Types.GetDifferenceQuery,
+  Types.GetDifferenceQueryVariables
+>;
 export const GetNoticeListElementsDocument = gql`
   query GetNoticeListElements {
     noticeListElements {
@@ -594,6 +722,7 @@ export const GetPostDocument = gql`
       title
       content
       tags
+      diffCount
       option {
         hasAutoTag
       }
@@ -1110,6 +1239,51 @@ export type MailPostsMutationResult = Apollo.MutationResult<Types.MailPostsMutat
 export type MailPostsMutationOptions = Apollo.BaseMutationOptions<
   Types.MailPostsMutation,
   Types.MailPostsMutationVariables
+>;
+export const ClearDifferencesDocument = gql`
+  mutation ClearDifferences($id: ID!) {
+    clearDifferences(id: $id)
+  }
+`;
+export type ClearDifferencesMutationFn = Apollo.MutationFunction<
+  Types.ClearDifferencesMutation,
+  Types.ClearDifferencesMutationVariables
+>;
+
+/**
+ * __useClearDifferencesMutation__
+ *
+ * To run a mutation, you first call `useClearDifferencesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useClearDifferencesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [clearDifferencesMutation, { data, loading, error }] = useClearDifferencesMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useClearDifferencesMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    Types.ClearDifferencesMutation,
+    Types.ClearDifferencesMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    Types.ClearDifferencesMutation,
+    Types.ClearDifferencesMutationVariables
+  >(ClearDifferencesDocument, options);
+}
+export type ClearDifferencesMutationHookResult = ReturnType<typeof useClearDifferencesMutation>;
+export type ClearDifferencesMutationResult = Apollo.MutationResult<Types.ClearDifferencesMutation>;
+export type ClearDifferencesMutationOptions = Apollo.BaseMutationOptions<
+  Types.ClearDifferencesMutation,
+  Types.ClearDifferencesMutationVariables
 >;
 export const GetSuggestionListElementsDocument = gql`
   query GetSuggestionListElements {

@@ -22,8 +22,8 @@ function UpdateMain({ id, setCategoryId }: { id: string, setCategoryId: Function
   if (error || !data || !post) return <p>Error</p>;
 
   return (
-    <PostForm categoryId={post.categoryId} id={id} currentTitle={post.title}
-              currentContent={post.content} currentTags={post.tags} currentOption={post.option} />
+    <PostForm categoryId={post.categoryId} id={id} currentTitle={post.title} currentContent={post.content}
+              currentTags={post.tags} currentOption={post.option} diffCount={post.diffCount}/>
   );
 }
 
